@@ -1,6 +1,8 @@
 .nyc_output
 coverage
+dist
 docs
+esm
 test/tests.js
 test/*.html
 cbor.js
