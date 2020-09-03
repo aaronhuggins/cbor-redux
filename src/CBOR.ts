@@ -82,6 +82,7 @@ export const CBOR: {
       if (value === true) return writeUint8(0xf5)
       if (value === null) return writeUint8(0xf6)
       if (value === undefined) return writeUint8(0xf7)
+      if (Object.is(value, -0)) return writeUint8Array([0xf9, 0x80, 0x00])
 
       switch (typeof value) {
         case 'number':
