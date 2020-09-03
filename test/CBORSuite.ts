@@ -1,4 +1,4 @@
-import { CBOR, TaggedValue, SimpleValue } from '../src/CBOR'
+import { CBOR, TaggedValue, SimpleValue, decode } from '../src/CBOR'
 import { testcases } from './testcases'
 import { myDeepEqual, hex2arrayBuffer } from './helpers'
 import { deepStrictEqual, strictEqual, throws, ok } from 'assert'
@@ -148,5 +148,19 @@ describe('CBOR', () => {
     const result = CBOR.encode(object)
 
     deepStrictEqual(result, expected)
+  })
+
+  it ('Polyfill adds CBOR to global scope', async () => {
+    const { polyfill } = await import('../src/polyfill')
+
+    await polyfill()
+
+    strictEqual((globalThis as any).CBOR.decode, decode)
+
+    globalThis.window = {} as any
+
+    await polyfill()
+
+    strictEqual((globalThis as any).window.CBOR.decode, decode)
   })
 })
