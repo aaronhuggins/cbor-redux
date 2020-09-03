@@ -1,6 +1,7 @@
 const POW_2_24 = 5.960464477539063e-8
 const POW_2_32 = 4294967296
 const POW_2_53 = 9007199254740992
+const DECODE_CHUNK_SIZE = 8192
 
 type TagFunction = (value: number, tag: number) => TaggedValue
 type SimpleFunction = (value: number) => SimpleValue
@@ -144,6 +145,7 @@ export const CBOR: {
 
         default:
           let length
+          let converted
           if (Array.isArray(value)) {
             length = value.length
             writeTypeAndLength(4, length)
@@ -151,6 +153,14 @@ export const CBOR: {
           } else if (value instanceof Uint8Array) {
             writeTypeAndLength(2, value.length)
             writeUint8Array(value)
+          } else if (ArrayBuffer.isView(value)) {
+            converted = new Uint8Array(value.buffer)
+            writeTypeAndLength(2, converted.length)
+            writeUint8Array(converted)
+          } else if (value instanceof ArrayBuffer || value instanceof SharedArrayBuffer) {
+            converted = new Uint8Array(value)
+            writeTypeAndLength(2, converted.length)
+            writeUint8Array(converted)
           } else {
             let keys = Object.keys(value)
             length = keys.length
@@ -325,8 +335,14 @@ export const CBOR: {
           let utf16data: number[] = []
           if (length < 0) {
             while ((length = readIndefiniteStringLength(majorType)) >= 0) appendUtf16Data(utf16data, length)
-          } else appendUtf16Data(utf16data, length)
-          return String.fromCharCode.apply(null, utf16data)
+          } else {
+            appendUtf16Data(utf16data, length)
+          }
+          let string = ''
+          for (i = 0; i < utf16data.length; i += DECODE_CHUNK_SIZE) {
+            string += String.fromCharCode.apply(null, utf16data.slice(i, i + DECODE_CHUNK_SIZE))
+          }
+          return string
         case 4:
           let retArray
           if (length < 0) {
