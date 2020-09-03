@@ -28,7 +28,7 @@ const { CBOR } = require('cbor-redux')
 
 or import in Deno:
 ```javascript
-import { CBOR } from 'https://deno.land/x/cbor-redux@0.2.0'
+import { CBOR } from 'https://deno.land/x/cbor_redux@0.2.0'
 ```
 
 or script on an HTML page:
