@@ -7,23 +7,23 @@ export const CBOR: {
   decode: (data: ArrayBuffer | SharedArrayBuffer, tagger?: Function, simpleValue?: Function) => any
 } = {
   encode (value: any): ArrayBuffer {
-    var data = new ArrayBuffer(256)
-    var dataView = new DataView(data)
-    var byteView = new Uint8Array(data)
-    var lastLength: number
-    var offset = 0
+    let data = new ArrayBuffer(256)
+    let dataView = new DataView(data)
+    let byteView = new Uint8Array(data)
+    let lastLength: number
+    let offset = 0
 
     function prepareWrite (length: number): DataView {
-      var newByteLength = data.byteLength
-      var requiredLength = offset + length
+      let newByteLength = data.byteLength
+      let requiredLength = offset + length
       while (newByteLength < requiredLength) newByteLength <<= 1
       if (newByteLength !== data.byteLength) {
-        var oldDataView = dataView
+        let oldDataView = dataView
         data = new ArrayBuffer(newByteLength)
         dataView = new DataView(data)
         byteView = new Uint8Array(data)
-        var uint32count = (offset + 3) >> 2
-        for (var i = 0; i < uint32count; ++i) dataView.setUint32(i << 2, oldDataView.getUint32(i << 2))
+        let uint32count = (offset + 3) >> 2
+        for (let i = 0; i < uint32count; ++i) dataView.setUint32(i << 2, oldDataView.getUint32(i << 2))
       }
 
       lastLength = length
@@ -50,9 +50,9 @@ export const CBOR: {
       commitWrite(prepareWrite(4).setUint32(offset, value))
     }
     function writeUint64 (value: number) {
-      var low = value % POW_2_32
-      var high = (value - low) / POW_2_32
-      var dataView = prepareWrite(8)
+      let low = value % POW_2_32
+      let high = (value - low) / POW_2_32
+      let dataView = prepareWrite(8)
       dataView.setUint32(offset, high)
       dataView.setUint32(offset + 4, low)
       commitWrite()
@@ -76,7 +76,7 @@ export const CBOR: {
     }
 
     function encodeItem (value: any) {
-      var i
+      let i
 
       if (value === false) return writeUint8(0xf4)
       if (value === true) return writeUint8(0xf5)
@@ -93,9 +93,9 @@ export const CBOR: {
           return writeFloat64(value)
 
         case 'string':
-          var utf8data = []
+          let utf8data = []
           for (i = 0; i < value.length; ++i) {
-            var charCode = value.charCodeAt(i)
+            let charCode = value.charCodeAt(i)
             if (charCode < 0x80) {
               utf8data.push(charCode)
             } else if (charCode < 0x800) {
@@ -121,7 +121,7 @@ export const CBOR: {
           return writeUint8Array(utf8data)
 
         default:
-          var length
+          let length
           if (Array.isArray(value)) {
             length = value.length
             writeTypeAndLength(4, length)
@@ -130,11 +130,11 @@ export const CBOR: {
             writeTypeAndLength(2, value.length)
             writeUint8Array(value)
           } else {
-            var keys = Object.keys(value)
+            let keys = Object.keys(value)
             length = keys.length
             writeTypeAndLength(5, length)
             for (i = 0; i < length; ++i) {
-              var key = keys[i]
+              let key = keys[i]
               encodeItem(key)
               encodeItem(value[key])
             }
@@ -146,16 +146,16 @@ export const CBOR: {
 
     if ('slice' in data) return data.slice(0, offset)
 
-    var ret = new ArrayBuffer(offset)
-    var retView = new DataView(ret)
-    for (var i = 0; i < offset; ++i) retView.setUint8(i, dataView.getUint8(i))
+    let ret = new ArrayBuffer(offset)
+    let retView = new DataView(ret)
+    for (let i = 0; i < offset; ++i) retView.setUint8(i, dataView.getUint8(i))
     return ret
   },
 
   decode (data: ArrayBuffer | SharedArrayBuffer, tagger?: Function, simpleValue?: Function): any {
-    var dataView = new DataView(data)
-    var ta = new Uint8Array(data)
-    var offset = 0
+    let dataView = new DataView(data)
+    let ta = new Uint8Array(data)
+    let offset = 0
 
     if (typeof tagger !== 'function')
       tagger = function (value: any): any {
@@ -174,13 +174,13 @@ export const CBOR: {
       return commitRead(length, new Uint8Array(data, offset, length))
     }
     function readFloat16 () {
-      var tempArrayBuffer = new ArrayBuffer(4)
-      var tempDataView = new DataView(tempArrayBuffer)
-      var value = readUint16()
+      let tempArrayBuffer = new ArrayBuffer(4)
+      let tempDataView = new DataView(tempArrayBuffer)
+      let value = readUint16()
 
-      var sign = value & 0x8000
-      var exponent = value & 0x7c00
-      var fraction = value & 0x03ff
+      let sign = value & 0x8000
+      let exponent = value & 0x7c00
+      let fraction = value & 0x03ff
 
       if (exponent === 0x7c00) exponent = 0xff << 10
       else if (exponent !== 0) exponent += (127 - 15) << 10
@@ -222,16 +222,16 @@ export const CBOR: {
       throw 'Invalid length encoding'
     }
     function readIndefiniteStringLength (majorType: number): number {
-      var initialByte = readUint8()
+      let initialByte = readUint8()
       if (initialByte === 0xff) return -1
-      var length = readLength(initialByte & 0x1f)
+      let length = readLength(initialByte & 0x1f)
       if (length < 0 || initialByte >> 5 !== majorType) throw 'Invalid indefinite length element'
       return length
     }
 
     function appendUtf16Data (utf16data: number[], length: number) {
-      for (var i = 0; i < length; ++i) {
-        var value = readUint8()
+      for (let i = 0; i < length; ++i) {
+        let value = readUint8()
         if (value & 0x80) {
           if (value < 0xe0) {
             value = ((value & 0x1f) << 6) | (readUint8() & 0x3f)
@@ -257,11 +257,11 @@ export const CBOR: {
     }
 
     function decodeItem (): any {
-      var initialByte = readUint8()
-      var majorType = initialByte >> 5
-      var additionalInformation = initialByte & 0x1f
-      var i
-      var length
+      let initialByte = readUint8()
+      let majorType = initialByte >> 5
+      let additionalInformation = initialByte & 0x1f
+      let i
+      let length
 
       if (majorType === 7) {
         switch (additionalInformation) {
@@ -284,14 +284,14 @@ export const CBOR: {
           return -1 - length
         case 2:
           if (length < 0) {
-            var elements = []
-            var fullArrayLength = 0
+            let elements = []
+            let fullArrayLength = 0
             while ((length = readIndefiniteStringLength(majorType)) >= 0) {
               fullArrayLength += length
               elements.push(readArrayBuffer(length))
             }
-            var fullArray = new Uint8Array(fullArrayLength)
-            var fullArrayOffset = 0
+            let fullArray = new Uint8Array(fullArrayLength)
+            let fullArrayOffset = 0
             for (i = 0; i < elements.length; ++i) {
               fullArray.set(elements[i], fullArrayOffset)
               fullArrayOffset += elements[i].length
@@ -300,13 +300,13 @@ export const CBOR: {
           }
           return readArrayBuffer(length)
         case 3:
-          var utf16data: number[] = []
+          let utf16data: number[] = []
           if (length < 0) {
             while ((length = readIndefiniteStringLength(majorType)) >= 0) appendUtf16Data(utf16data, length)
           } else appendUtf16Data(utf16data, length)
           return String.fromCharCode.apply(null, utf16data)
         case 4:
-          var retArray
+          let retArray
           if (length < 0) {
             retArray = []
             while (!readBreak()) retArray.push(decodeItem())
@@ -316,9 +316,9 @@ export const CBOR: {
           }
           return retArray
         case 5:
-          var retObject = {}
+          let retObject = {}
           for (i = 0; i < length || (length < 0 && !readBreak()); ++i) {
-            var key = decodeItem()
+            let key = decodeItem()
             retObject[key] = decodeItem()
           }
           return retObject
@@ -340,7 +340,7 @@ export const CBOR: {
       }
     }
 
-    var ret = decodeItem()
+    let ret = decodeItem()
     if (offset !== data.byteLength) throw 'Remaining bytes'
     return ret
   }
