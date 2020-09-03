@@ -273,29 +273,29 @@ export function encode<T = any> (value: T): ArrayBuffer {
   function commitWrite (...args: any[]) {
     offset += lastLength
   }
-  function writeFloat64 (value: number) {
-    commitWrite(prepareWrite(8).setFloat64(offset, value))
+  function writeFloat64 (val: number) {
+    commitWrite(prepareWrite(8).setFloat64(offset, val))
   }
-  function writeUint8 (value: number) {
-    commitWrite(prepareWrite(1).setUint8(offset, value))
+  function writeUint8 (val: number) {
+    commitWrite(prepareWrite(1).setUint8(offset, val))
   }
-  function writeUint8Array (value: number[] | Uint8Array) {
-    prepareWrite(value.length)
-    byteView.set(value, offset)
+  function writeUint8Array (val: number[] | Uint8Array) {
+    prepareWrite(val.length)
+    byteView.set(val, offset)
     commitWrite()
   }
-  function writeUint16 (value: number) {
-    commitWrite(prepareWrite(2).setUint16(offset, value))
+  function writeUint16 (val: number) {
+    commitWrite(prepareWrite(2).setUint16(offset, val))
   }
-  function writeUint32 (value: number) {
-    commitWrite(prepareWrite(4).setUint32(offset, value))
+  function writeUint32 (val: number) {
+    commitWrite(prepareWrite(4).setUint32(offset, val))
   }
-  function writeUint64 (value: number) {
-    let low = value % POW_2_32
-    let high = (value - low) / POW_2_32
-    let dataView = prepareWrite(8)
-    dataView.setUint32(offset, high)
-    dataView.setUint32(offset + 4, low)
+  function writeUint64 (val: number) {
+    let low = val % POW_2_32
+    let high = (val - low) / POW_2_32
+    let view = prepareWrite(8)
+    view.setUint32(offset, high)
+    view.setUint32(offset + 4, low)
     commitWrite()
   }
   function writeTypeAndLength (type: number, length: number) {
@@ -316,28 +316,28 @@ export function encode<T = any> (value: T): ArrayBuffer {
     }
   }
 
-  function encodeItem (value: any) {
+  function encodeItem (val: any) {
     let i
 
-    if (value === false) return writeUint8(0xf4)
-    if (value === true) return writeUint8(0xf5)
-    if (value === null) return writeUint8(0xf6)
-    if (value === undefined) return writeUint8(0xf7)
-    if (Object.is(value, -0)) return writeUint8Array([0xf9, 0x80, 0x00])
+    if (val === false) return writeUint8(0xf4)
+    if (val === true) return writeUint8(0xf5)
+    if (val === null) return writeUint8(0xf6)
+    if (val === undefined) return writeUint8(0xf7)
+    if (Object.is(val, -0)) return writeUint8Array([0xf9, 0x80, 0x00])
 
-    switch (typeof value) {
+    switch (typeof val) {
       case 'number':
-        if (Math.floor(value) === value) {
-          if (0 <= value && value <= POW_2_53) return writeTypeAndLength(0, value)
-          if (-POW_2_53 <= value && value < 0) return writeTypeAndLength(1, -(value + 1))
+        if (Math.floor(val) === val) {
+          if (0 <= val && val <= POW_2_53) return writeTypeAndLength(0, val)
+          if (-POW_2_53 <= val && val < 0) return writeTypeAndLength(1, -(val + 1))
         }
         writeUint8(0xfb)
-        return writeFloat64(value)
+        return writeFloat64(val)
 
       case 'string':
         let utf8data = []
-        for (i = 0; i < value.length; ++i) {
-          let charCode = value.charCodeAt(i)
+        for (i = 0; i < val.length; ++i) {
+          let charCode = val.charCodeAt(i)
           if (charCode < 0x80) {
             utf8data.push(charCode)
           } else if (charCode < 0x800) {
@@ -349,7 +349,7 @@ export function encode<T = any> (value: T): ArrayBuffer {
             utf8data.push(0x80 | (charCode & 0x3f))
           } else {
             charCode = (charCode & 0x3ff) << 10
-            charCode |= value.charCodeAt(++i) & 0x3ff
+            charCode |= val.charCodeAt(++i) & 0x3ff
             charCode += 0x10000
 
             utf8data.push(0xf0 | (charCode >> 18))
@@ -365,29 +365,29 @@ export function encode<T = any> (value: T): ArrayBuffer {
       default:
         let length
         let converted
-        if (Array.isArray(value)) {
-          length = value.length
+        if (Array.isArray(val)) {
+          length = val.length
           writeTypeAndLength(4, length)
-          for (i = 0; i < length; ++i) encodeItem(value[i])
-        } else if (value instanceof Uint8Array) {
-          writeTypeAndLength(2, value.length)
-          writeUint8Array(value)
-        } else if (ArrayBuffer.isView(value)) {
-          converted = new Uint8Array(value.buffer)
+          for (i = 0; i < length; i += 1) encodeItem(val[i])
+        } else if (val instanceof Uint8Array) {
+          writeTypeAndLength(2, val.length)
+          writeUint8Array(val)
+        } else if (ArrayBuffer.isView(val)) {
+          converted = new Uint8Array(val.buffer)
           writeTypeAndLength(2, converted.length)
           writeUint8Array(converted)
-        } else if (value instanceof ArrayBuffer || value instanceof SharedArrayBuffer) {
-          converted = new Uint8Array(value)
+        } else if (val instanceof ArrayBuffer || val instanceof SharedArrayBuffer) {
+          converted = new Uint8Array(val)
           writeTypeAndLength(2, converted.length)
           writeUint8Array(converted)
         } else {
-          let keys = Object.keys(value)
+          let keys = Object.keys(val)
           length = keys.length
           writeTypeAndLength(5, length)
-          for (i = 0; i < length; ++i) {
+          for (i = 0; i < length; i += 1) {
             let key = keys[i]
             encodeItem(key)
-            encodeItem(value[key])
+            encodeItem(val[key])
           }
         }
     }
