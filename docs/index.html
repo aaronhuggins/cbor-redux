@@ -68,36 +68,54 @@
 					<h1>cbor-redux</h1>
 				</a>
 				<p>The Concise Binary Object Representation (CBOR) data format (<a href="http://tools.ietf.org/html/rfc7049">RFC 7049</a>) implemented in pure JavaScript, revived.</p>
-				<p><a href="https://travis-ci.org/paroga/cbor-js"><img src="https://api.travis-ci.org/paroga/cbor-js.svg" alt="Build Status"></a>
-					<a href="https://coveralls.io/r/paroga/cbor-js?branch=master"><img src="https://coveralls.io/repos/paroga/cbor-js/badge.svg?branch=master" alt="Coverage Status"></a>
-					<a href="https://david-dm.org/paroga/cbor-js#info=dependencies&amp;view=table"><img src="https://david-dm.org/paroga/cbor-js/status.svg" alt="Dependency status"></a>
-					<a href="https://david-dm.org/paroga/cbor-js#info=devDependencies&amp;view=table"><img src="https://david-dm.org/paroga/cbor-js/dev-status.svg" alt="Dev Dependency Status"></a>
-					<a href="https://saucelabs.com/u/paroga-cbor-js"><img src="https://saucelabs.com/buildstatus/paroga-cbor-js" alt="Selenium Test Status"></a>
-				<a href="https://saucelabs.com/u/paroga-cbor-js"><img src="https://saucelabs.com/browser-matrix/paroga-cbor-js.svg" alt="Selenium Test Status"></a></p>
+				<p>Rewritten in TypeScript for the browser, Deno, and Node.</p>
+				<p><a href="https://github.com/standard/eslint-config-standard-with-typescript"><img src="https://img.shields.io/badge/code_style-standard-brightgreen.svg" alt="JavaScript Style Guide"></a>
+					<a href="https://codecov.io/gh/aaronhuggins/cbor-redux"><img src="https://codecov.io/gh/aaronhuggins/cbor-redux/branch/master/graph/badge.svg" alt="codecov"></a>
+					<img src="https://img.shields.io/github/last-commit/aaronhuggins/cbor-redux" alt="GitHub last commit">
+					<img src="https://img.shields.io/github/contributors/aaronhuggins/cbor-redux" alt="GitHub contributors">
+					<img src="https://img.shields.io/npm/collaborators/cbor-redux" alt="npm collaborators"><br />
+					<img src="https://img.shields.io/github/languages/top/aaronhuggins/cbor-redux" alt="GitHub top language">
+					<img src="https://img.shields.io/bundlephobia/min/cbor-redux" alt="npm bundle size">
+					<img src="https://img.shields.io/github/languages/code-size/aaronhuggins/cbor-redux" alt="GitHub code size in bytes">
+					<img src="https://img.shields.io/npm/dw/cbor-redux" alt="npm">
+					<img src="https://img.shields.io/npm/l/cbor-redux" alt="NPM"><br />
+					<a href="https://sonarcloud.io/dashboard?id=aaronhuggins_cbor-redux"><img src="https://sonarcloud.io/api/project_badges/measure?project=aaronhuggins_cbor-redux&metric=alert_status" alt="Quality Gate Status"></a>
+					<a href="https://sonarcloud.io/dashboard?id=aaronhuggins_cbor-redux"><img src="https://sonarcloud.io/api/project_badges/measure?project=aaronhuggins_cbor-redux&metric=sqale_rating" alt="Maintainability Rating"></a>
+					<a href="https://sonarcloud.io/dashboard?id=aaronhuggins_cbor-redux"><img src="https://sonarcloud.io/api/project_badges/measure?project=aaronhuggins_cbor-redux&metric=security_rating" alt="Security Rating"></a>
+				<a href="https://sonarcloud.io/dashboard?id=aaronhuggins_cbor-redux"><img src="https://sonarcloud.io/api/project_badges/measure?project=aaronhuggins_cbor-redux&metric=ncloc" alt="Lines of Code"></a></p>
+				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+					<h2>Usage</h2>
+				</a>
+				<p>Require <code>cbor-redux</code> in Node:</p>
+				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> { CBOR } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;cbor-redux&#x27;</span>)</code></pre>
+				<p>or import in Deno:</p>
+				<pre><code class="language-javascript"><span class="hljs-keyword">import</span> { CBOR } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;https://deno.land/x/cbor-redux@0.2.0&#x27;</span></code></pre>
+				<p>or script on an HTML page:</p>
+				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.skypack.dev/cbor-redux@^0.2.0&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+				<p>Then you can use it via the <code>CBOR</code>-object in your code:</p>
+				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> initial = { <span class="hljs-attr">Hello</span>: <span class="hljs-string">&#x27;World&#x27;</span> }
+<span class="hljs-keyword">const</span> encoded = CBOR.encode(initial)
+<span class="hljs-keyword">const</span> decoded = CBOR.decode(encoded)</code></pre>
+				<p>After running this example <code>initial</code> and <code>decoded</code> represent the same value.</p>
 				<a href="#api" id="api" style="color: inherit; text-decoration: none;">
 					<h2>API</h2>
 				</a>
 				<p>The <code>CBOR</code>-object provides the following two functions:</p>
-				<p>CBOR.<strong>decode</strong>(<em>data</em>)</p>
-				<blockquote>
-					<p>Take the ArrayBuffer object <em>data</em> and return it decoded as a JavaScript object.</p>
-				</blockquote>
-				<p>CBOR.<strong>encode</strong>(<em>data</em>)</p>
-				<blockquote>
-					<p>Take the JavaScript object <em>data</em> and return it encoded as a ArrayBuffer object.</p>
-				</blockquote>
-				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
-					<h2>Usage</h2>
-				</a>
-				<p>Include <code>cbor.js</code> in your or HTML page:</p>
-				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;path/to/cbor.js&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
-				<p>Then you can use it via the <code>CBOR</code>-object in your code:</p>
-				<pre><code class="language-javascript"><span class="hljs-keyword">var</span> initial = { <span class="hljs-attr">Hello</span>: <span class="hljs-string">&#x27;World&#x27;</span> }
-<span class="hljs-keyword">var</span> encoded = CBOR.encode(initial)
-<span class="hljs-keyword">var</span> decoded = CBOR.decode(encoded)</code></pre>
-				<p>After running this example <code>initial</code> and <code>decoded</code> represent the same value.</p>
+				<ul>
+					<li><p><strong>CBOR</strong>.<em><strong>decode</strong></em>(<em>data: ArrayBuffer</em>)</p>
+						<blockquote>
+							<p>Take the ArrayBuffer object <em>data</em> and return it decoded as a JavaScript object.</p>
+						</blockquote>
+					</li>
+					<li><p><strong>CBOR</strong>.<em><strong>encode</strong></em>(<em>data: any</em>)</p>
+						<blockquote>
+							<p>Take the JavaScript object <em>data</em> and return it encoded as a ArrayBuffer object.</p>
+						</blockquote>
+					</li>
+				</ul>
+				<p>For complete API details, visit the <a href="https://aaronhuggins.github.io/cbor-redux/">documentation</a>.</p>
 				<a href="#combination-with-websocket" id="combination-with-websocket" style="color: inherit; text-decoration: none;">
-					<h3>Combination with WebSocket</h3>
+					<h2>Combination with WebSocket</h2>
 				</a>
 				<p>The API was designed to play well with the <code>WebSocket</code> object in the browser:</p>
 				<pre><code class="language-javascript"><span class="hljs-keyword">var</span> websocket = <span class="hljs-keyword">new</span> WebSocket(url);

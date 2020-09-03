@@ -2,44 +2,63 @@
 
 The Concise Binary Object Representation (CBOR) data format ([RFC 7049](http://tools.ietf.org/html/rfc7049)) implemented in pure JavaScript, revived.
 
-[![Build Status](https://api.travis-ci.org/paroga/cbor-js.svg)](https://travis-ci.org/paroga/cbor-js)
-[![Coverage Status](https://coveralls.io/repos/paroga/cbor-js/badge.svg?branch=master)](https://coveralls.io/r/paroga/cbor-js?branch=master)
-[![Dependency status](https://david-dm.org/paroga/cbor-js/status.svg)](https://david-dm.org/paroga/cbor-js#info=dependencies&view=table)
-[![Dev Dependency Status](https://david-dm.org/paroga/cbor-js/dev-status.svg)](https://david-dm.org/paroga/cbor-js#info=devDependencies&view=table)
-[![Selenium Test Status](https://saucelabs.com/buildstatus/paroga-cbor-js)](https://saucelabs.com/u/paroga-cbor-js)
-[![Selenium Test Status](https://saucelabs.com/browser-matrix/paroga-cbor-js.svg)](https://saucelabs.com/u/paroga-cbor-js)
+Rewritten in TypeScript for the browser, Deno, and Node.
 
-## API
-
-The `CBOR`-object provides the following two functions:
-
-CBOR.**decode**(_data_)
-
-> Take the ArrayBuffer object _data_ and return it decoded as a JavaScript object.
-
-CBOR.**encode**(_data_)
-
-> Take the JavaScript object _data_ and return it encoded as a ArrayBuffer object.
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://github.com/standard/eslint-config-standard-with-typescript)
+[![codecov](https://codecov.io/gh/aaronhuggins/cbor-redux/branch/master/graph/badge.svg)](https://codecov.io/gh/aaronhuggins/cbor-redux)
+![GitHub last commit](https://img.shields.io/github/last-commit/aaronhuggins/cbor-redux)
+![GitHub contributors](https://img.shields.io/github/contributors/aaronhuggins/cbor-redux)
+![npm collaborators](https://img.shields.io/npm/collaborators/cbor-redux)<br />
+![GitHub top language](https://img.shields.io/github/languages/top/aaronhuggins/cbor-redux)
+![npm bundle size](https://img.shields.io/bundlephobia/min/cbor-redux)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/aaronhuggins/cbor-redux)
+![npm](https://img.shields.io/npm/dw/cbor-redux)
+![NPM](https://img.shields.io/npm/l/cbor-redux)<br />
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=aaronhuggins_cbor-redux&metric=alert_status)](https://sonarcloud.io/dashboard?id=aaronhuggins_cbor-redux)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=aaronhuggins_cbor-redux&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=aaronhuggins_cbor-redux)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=aaronhuggins_cbor-redux&metric=security_rating)](https://sonarcloud.io/dashboard?id=aaronhuggins_cbor-redux)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=aaronhuggins_cbor-redux&metric=ncloc)](https://sonarcloud.io/dashboard?id=aaronhuggins_cbor-redux)
 
 ## Usage
 
-Include `cbor.js` in your or HTML page:
+Require `cbor-redux` in Node:
+```javascript
+const { CBOR } = require('cbor-redux')
+```
 
+or import in Deno:
+```javascript
+import { CBOR } from 'https://deno.land/x/cbor-redux@0.2.0'
+```
+
+or script on an HTML page:
 ```html
-<script src="path/to/cbor.js" type="text/javascript"></script>
+<script src="https://cdn.skypack.dev/cbor-redux@^0.2.0" type="text/javascript"></script>
 ```
 
 Then you can use it via the `CBOR`-object in your code:
 
 ```javascript
-var initial = { Hello: 'World' }
-var encoded = CBOR.encode(initial)
-var decoded = CBOR.decode(encoded)
+const initial = { Hello: 'World' }
+const encoded = CBOR.encode(initial)
+const decoded = CBOR.decode(encoded)
 ```
 
 After running this example `initial` and `decoded` represent the same value.
 
-### Combination with WebSocket
+## API
+
+The `CBOR`-object provides the following two functions:
+
+- **CBOR**._**decode**_(_data: ArrayBuffer_)
+  > Take the ArrayBuffer object _data_ and return it decoded as a JavaScript object.
+
+- **CBOR**._**encode**_(_data: any_)
+  > Take the JavaScript object _data_ and return it encoded as a ArrayBuffer object.
+
+For complete API details, visit the [documentation](https://aaronhuggins.github.io/cbor-redux/).
+
+## Combination with WebSocket
 
 The API was designed to play well with the `WebSocket` object in the browser:
 
