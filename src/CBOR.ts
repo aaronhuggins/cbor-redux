@@ -2,9 +2,30 @@ const POW_2_24 = 5.960464477539063e-8
 const POW_2_32 = 4294967296
 const POW_2_53 = 9007199254740992
 
+type TagFunction = (value: number, tag: number) => TaggedValue
+type SimpleFunction = (value: number) => SimpleValue
+
+export class TaggedValue {
+  constructor (value: number, tag: number) {
+    this.value = value
+    this.tag = tag
+  }
+
+  value: number
+  tag: number
+}
+
+export class SimpleValue {
+  constructor (value: any) {
+    this.value = value
+  }
+
+  value: number
+}
+
 export const CBOR: {
   encode: (value: any) => ArrayBuffer
-  decode: (data: ArrayBuffer | SharedArrayBuffer, tagger?: Function, simpleValue?: Function) => any
+  decode: (data: ArrayBuffer | SharedArrayBuffer, tagger?: TagFunction, simpleValue?: SimpleFunction) => any
 } = {
   encode (value: any): ArrayBuffer {
     let data = new ArrayBuffer(256)
@@ -153,17 +174,17 @@ export const CBOR: {
     return ret
   },
 
-  decode (data: ArrayBuffer | SharedArrayBuffer, tagger?: Function, simpleValue?: Function): any {
+  decode (data: ArrayBuffer | SharedArrayBuffer, tagger?: TagFunction, simpleValue?: SimpleFunction): any {
     let dataView = new DataView(data)
     let ta = new Uint8Array(data)
     let offset = 0
 
     if (typeof tagger !== 'function')
-      tagger = function (value: any): any {
+      tagger = function (value: number, tag: number): any {
         return value
       }
     if (typeof simpleValue !== 'function')
-      simpleValue = function (): any {
+      simpleValue = function (value: number): SimpleValue {
         return undefined
       }
 
