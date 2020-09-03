@@ -1,0 +1,4 @@
+{
+  "inputFiles": ["src/CBOR.ts"],
+  "mode": "file"
+}

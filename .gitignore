@@ -1,6 +1,9 @@
 bower_components
+.nyc_output
 coverage
 node_modules
+dist
+esm
 
 cbor-js.zip
 cbor.min.js

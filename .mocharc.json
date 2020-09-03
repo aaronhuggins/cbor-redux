@@ -1,0 +1,9 @@
+{
+  "recursive": "./test",
+  "extension": ["ts"],
+  "require": ["ts-node/register", "source-map-support/register"],
+  "exclude": ["test/DenoMochaCBOR.ts"],
+  "reporter": ["spec"],
+  "full-trace": true,
+  "bail": false
+}
