@@ -6,7 +6,6 @@
   "main": "cbor.js",
   "keywords": ["cbor"],
   "license": "MIT",
-  "homepage": "https://github.com/paroga/cbor-js",
   "ignore": ["**/.*", "test", "*.md", "Gruntfile.js", "package.json"],
   "devDependencies": {
     "qunit": "1.23.1"
