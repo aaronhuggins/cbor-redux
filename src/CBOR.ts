@@ -7,8 +7,8 @@ const POW_2_53 = 9007199254740992
 /** @hidden */
 const DECODE_CHUNK_SIZE = 8192
 
-type TagFunction = (value: number, tag: number) => TaggedValue
-type SimpleFunction = (value: number) => SimpleValue
+type TaggedValueFunction = (value: number, tag: number) => TaggedValue
+type SimpleValueFunction = (value: number) => SimpleValue
 
 export class TaggedValue {
   constructor (value: number, tag: number) {
@@ -30,7 +30,7 @@ export class SimpleValue {
 
 export const CBOR: {
   encode: (value: any) => ArrayBuffer
-  decode: (data: ArrayBuffer | SharedArrayBuffer, tagger?: TagFunction, simpleValue?: SimpleFunction) => any
+  decode: (data: ArrayBuffer | SharedArrayBuffer, tagger?: TaggedValueFunction, simpleValue?: SimpleValueFunction) => any
 } = {
   encode (value: any): ArrayBuffer {
     let data = new ArrayBuffer(256)
@@ -188,7 +188,7 @@ export const CBOR: {
     return ret
   },
 
-  decode (data: ArrayBuffer | SharedArrayBuffer, tagger?: TagFunction, simpleValue?: SimpleFunction): any {
+  decode (data: ArrayBuffer | SharedArrayBuffer, tagger?: TaggedValueFunction, simpleValue?: SimpleValueFunction): any {
     let dataView = new DataView(data)
     let ta = new Uint8Array(data)
     let offset = 0
