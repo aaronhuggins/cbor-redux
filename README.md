@@ -1,18 +1,15 @@
-cbor-js
-=======
+# cbor-redux
 
-The Concise Binary Object Representation (CBOR) data format ([RFC 7049](http://tools.ietf.org/html/rfc7049)) implemented in pure JavaScript.
+The Concise Binary Object Representation (CBOR) data format ([RFC 7049](http://tools.ietf.org/html/rfc7049)) implemented in pure JavaScript, revived.
 
 [![Build Status](https://api.travis-ci.org/paroga/cbor-js.svg)](https://travis-ci.org/paroga/cbor-js)
 [![Coverage Status](https://coveralls.io/repos/paroga/cbor-js/badge.svg?branch=master)](https://coveralls.io/r/paroga/cbor-js?branch=master)
 [![Dependency status](https://david-dm.org/paroga/cbor-js/status.svg)](https://david-dm.org/paroga/cbor-js#info=dependencies&view=table)
 [![Dev Dependency Status](https://david-dm.org/paroga/cbor-js/dev-status.svg)](https://david-dm.org/paroga/cbor-js#info=devDependencies&view=table)
 [![Selenium Test Status](https://saucelabs.com/buildstatus/paroga-cbor-js)](https://saucelabs.com/u/paroga-cbor-js)
-
 [![Selenium Test Status](https://saucelabs.com/browser-matrix/paroga-cbor-js.svg)](https://saucelabs.com/u/paroga-cbor-js)
 
-API
----
+## API
 
 The `CBOR`-object provides the following two functions:
 
@@ -22,8 +19,7 @@ CBOR.**decode**(*data*)
 CBOR.**encode**(*data*)
 > Take the JavaScript object *data* and return it encoded as a ArrayBuffer object.
 
-Usage
------
+## Usage
 
 Include `cbor.js` in your or HTML page:
 ```html

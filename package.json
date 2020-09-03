@@ -1,27 +1,32 @@
 {
-  "name": "cbor-js",
-  "version": "0.1.1",
-  "description": "The Concise Binary Object Representation (CBOR) data format (RFC7049) implemented in pure JavaScript.",
+  "name": "cbor-redux",
+  "version": "0.2.0",
+  "description": "The Concise Binary Object Representation (CBOR) data format (RFC7049) implemented in pure JavaScript, revived.",
   "keywords": [
     "cbor"
   ],
-  "homepage": "https://github.com/paroga/cbor-js",
-  "bugs": "https://github.com/paroga/cbor-js/issues",
+  "homepage": "https://github.com/aaronhuggins/cbor-redux",
+  "bugs": "https://github.com/aaronhuggins/cbor-redux/issues",
   "license": "MIT",
-  "author": "Patrick Gansterer <paroga@paroga.com> (http://paroga.com/)",
+  "contributors": [
+    "Patrick Gansterer <paroga@paroga.com> (http://paroga.com/)",
+    "Aaron Huggins <ahuggins@aaronhuggins.com> (https://aaronhuggins.com/)"
+  ],
   "main": "cbor.js",
   "files": [
     "cbor.js"
   ],
   "repository": {
     "type": "git",
-    "url": "http://github.com/paroga/cbor-js.git"
+    "url": "https://github.com/aaronhuggins/cbor-redux.git"
   },
   "scripts": {
     "test": "grunt test",
     "ci": "grunt ci"
   },
   "devDependencies": {
+    "@types/mocha": "^8.0.3",
+    "@types/node": "^14.6.3",
     "grunt": "~0.4.5",
     "grunt-bower-install-simple": "~1.1.4",
     "grunt-cli": "~0.1.13",
@@ -32,6 +37,9 @@
     "grunt-contrib-uglify": "~0.9.1",
     "grunt-coveralls": "~1.0.0",
     "grunt-qunit-istanbul": "~0.4.7",
-    "grunt-saucelabs": "~8.6.1"
+    "grunt-saucelabs": "~8.6.1",
+    "mocha": "^8.1.3",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.2"
   }
 }
