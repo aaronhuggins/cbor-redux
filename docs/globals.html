@@ -82,6 +82,13 @@
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
+							<h3>Functions</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-has-type-parameter"><a href="globals.html#decode" class="tsd-kind-icon">decode</a></li>
+								<li class="tsd-kind-function tsd-has-type-parameter"><a href="globals.html#encode" class="tsd-kind-icon">encode</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Object literals</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-object-literal"><a href="globals.html#cbor" class="tsd-kind-icon">CBOR</a></li>
@@ -98,9 +105,14 @@
 					<div class="tsd-signature tsd-kind-icon">Simple<wbr>Value<wbr>Function<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="classes/simplevalue.html" class="tsd-signature-type">SimpleValue</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/aaronhuggins/cbor-redux/blob/4213c62/src/CBOR.ts#L11">CBOR.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/aaronhuggins/cbor-redux/blob/f0d8052/src/CBOR.ts#L13">CBOR.ts:13</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A function that extracts simple values.</p>
+						</div>
+					</div>
 					<div class="tsd-type-declaration">
 						<h4>Type declaration</h4>
 						<ul class="tsd-parameters">
@@ -129,9 +141,14 @@
 					<div class="tsd-signature tsd-kind-icon">Tagged<wbr>Value<wbr>Function<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, tag<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="classes/taggedvalue.html" class="tsd-signature-type">TaggedValue</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/aaronhuggins/cbor-redux/blob/4213c62/src/CBOR.ts#L10">CBOR.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/aaronhuggins/cbor-redux/blob/f0d8052/src/CBOR.ts#L11">CBOR.ts:11</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A function that extracts tagged values.</p>
+						</div>
+					</div>
 					<div class="tsd-type-declaration">
 						<h4>Type declaration</h4>
 						<ul class="tsd-parameters">
@@ -159,6 +176,91 @@
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
+					<a name="decode" class="tsd-anchor"></a>
+					<h3>decode</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">decode&lt;T&gt;<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ArrayBuffer</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SharedArrayBuffer</span>, tagger<span class="tsd-signature-symbol">?: </span><a href="globals.html#taggedvaluefunction" class="tsd-signature-type">TaggedValueFunction</a>, simpleValue<span class="tsd-signature-symbol">?: </span><a href="globals.html#simplevaluefunction" class="tsd-signature-type">SimpleValueFunction</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/aaronhuggins/cbor-redux/blob/f0d8052/src/CBOR.ts#L42">CBOR.ts:42</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Converts a Concise Binary Object Representation (CBOR) buffer into an object.</p>
+								</div>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T = <span class="tsd-signature-type">any</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>data: <span class="tsd-signature-type">ArrayBuffer</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SharedArrayBuffer</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>A valid CBOR buffer.</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> tagger: <a href="globals.html#taggedvaluefunction" class="tsd-signature-type">TaggedValueFunction</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> simpleValue: <a href="globals.html#simplevaluefunction" class="tsd-signature-type">SimpleValueFunction</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
+							<p>The CBOR buffer converted to a JavaScript value.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
+					<a name="encode" class="tsd-anchor"></a>
+					<h3>encode</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">encode&lt;T&gt;<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ArrayBuffer</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/aaronhuggins/cbor-redux/blob/f0d8052/src/CBOR.ts#L250">CBOR.ts:250</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Converts a JavaScript value to a Concise Binary Object Representation (CBOR) buffer.</p>
+								</div>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T = <span class="tsd-signature-type">any</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>value: <span class="tsd-signature-type">T</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>A JavaScript value, usually an object or array, to be converted.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ArrayBuffer</span></h4>
+							<p>The JavaScript value converted to CBOR format.</p>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Object literals</h2>
 				<section class="tsd-panel tsd-member tsd-kind-object-literal">
 					<a name="cbor" class="tsd-anchor"></a>
@@ -166,60 +268,34 @@
 					<div class="tsd-signature tsd-kind-icon">CBOR<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/aaronhuggins/cbor-redux/blob/4213c62/src/CBOR.ts#L31">CBOR.ts:31</a></li>
+							<li>Defined in <a href="https://github.com/aaronhuggins/cbor-redux/blob/f0d8052/src/CBOR.ts#L410">CBOR.ts:410</a></li>
 						</ul>
 					</aside>
-					<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-object-literal">
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>An intrinsic object that provides functions to convert JavaScript values
+							to and from the Concise Binary Object Representation (CBOR) format.</p>
+						</div>
+					</div>
+					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
 						<a name="cbor.decode" class="tsd-anchor"></a>
 						<h3>decode</h3>
-						<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-object-literal">
-							<li class="tsd-signature tsd-kind-icon">decode<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ArrayBuffer</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SharedArrayBuffer</span>, tagger<span class="tsd-signature-symbol">?: </span><a href="globals.html#taggedvaluefunction" class="tsd-signature-type">TaggedValueFunction</a>, simpleValue<span class="tsd-signature-symbol">?: </span><a href="globals.html#simplevaluefunction" class="tsd-signature-type">SimpleValueFunction</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
-						</ul>
-						<ul class="tsd-descriptions">
-							<li class="tsd-description">
-								<aside class="tsd-sources">
-									<ul>
-										<li>Defined in <a href="https://github.com/aaronhuggins/cbor-redux/blob/4213c62/src/CBOR.ts#L191">CBOR.ts:191</a></li>
-									</ul>
-								</aside>
-								<h4 class="tsd-parameters-title">Parameters</h4>
-								<ul class="tsd-parameters">
-									<li>
-										<h5>data: <span class="tsd-signature-type">ArrayBuffer</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SharedArrayBuffer</span></h5>
-									</li>
-									<li>
-										<h5><span class="tsd-flag ts-flagOptional">Optional</span> tagger: <a href="globals.html#taggedvaluefunction" class="tsd-signature-type">TaggedValueFunction</a></h5>
-									</li>
-									<li>
-										<h5><span class="tsd-flag ts-flagOptional">Optional</span> simpleValue: <a href="globals.html#simplevaluefunction" class="tsd-signature-type">SimpleValueFunction</a></h5>
-									</li>
-								</ul>
-								<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
-							</li>
-						</ul>
+						<div class="tsd-signature tsd-kind-icon">decode<span class="tsd-signature-symbol">:</span> <a href="globals.html#decode" class="tsd-signature-type">decode</a></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/aaronhuggins/cbor-redux/blob/f0d8052/src/CBOR.ts#L418">CBOR.ts:418</a></li>
+							</ul>
+						</aside>
 					</section>
-					<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-object-literal">
+					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
 						<a name="cbor.encode" class="tsd-anchor"></a>
 						<h3>encode</h3>
-						<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-object-literal">
-							<li class="tsd-signature tsd-kind-icon">encode<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ArrayBuffer</span></li>
-						</ul>
-						<ul class="tsd-descriptions">
-							<li class="tsd-description">
-								<aside class="tsd-sources">
-									<ul>
-										<li>Defined in <a href="https://github.com/aaronhuggins/cbor-redux/blob/4213c62/src/CBOR.ts#L35">CBOR.ts:35</a></li>
-									</ul>
-								</aside>
-								<h4 class="tsd-parameters-title">Parameters</h4>
-								<ul class="tsd-parameters">
-									<li>
-										<h5>value: <span class="tsd-signature-type">any</span></h5>
-									</li>
-								</ul>
-								<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ArrayBuffer</span></h4>
-							</li>
-						</ul>
+						<div class="tsd-signature tsd-kind-icon">encode<span class="tsd-signature-symbol">:</span> <a href="globals.html#encode" class="tsd-signature-type">encode</a></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/aaronhuggins/cbor-redux/blob/f0d8052/src/CBOR.ts#L419">CBOR.ts:419</a></li>
+							</ul>
+						</aside>
 					</section>
 				</section>
 			</section>
@@ -245,6 +321,12 @@
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#taggedvaluefunction" class="tsd-kind-icon">Tagged<wbr>Value<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#decode" class="tsd-kind-icon">decode</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#encode" class="tsd-kind-icon">encode</a>
 					</li>
 					<li class=" tsd-kind-object-literal">
 						<a href="globals.html#cbor" class="tsd-kind-icon">CBOR</a>
