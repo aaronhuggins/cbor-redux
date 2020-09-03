@@ -7,9 +7,12 @@ const POW_2_53 = 9007199254740992
 /** @hidden */
 const DECODE_CHUNK_SIZE = 8192
 
+/** A function that extracts tagged values. */
 type TaggedValueFunction = (value: number, tag: number) => TaggedValue
+/** A function that extracts simple values. */
 type SimpleValueFunction = (value: number) => SimpleValue
 
+/** Convenience class for structuring a tagged value. */
 export class TaggedValue {
   constructor (value: number, tag: number) {
     this.value = value
@@ -20,6 +23,7 @@ export class TaggedValue {
   tag: number
 }
 
+/** Convenience class for structuring a simple value. */
 export class SimpleValue {
   constructor (value: any) {
     this.value = value
@@ -28,7 +32,18 @@ export class SimpleValue {
   value: number
 }
 
-export function decode (data: ArrayBuffer | SharedArrayBuffer, tagger?: TaggedValueFunction, simpleValue?: SimpleValueFunction): any {
+/**
+ * Converts a Concise Binary Object Representation (CBOR) buffer into an object.
+ * @param {ArrayBuffer|SharedArrayBuffer} data - A valid CBOR buffer.
+ * @param {Function} [tagger] - A function that extracts tagged values. This function is called for each member of the object.
+ * @param {Function} [simpleValue] - A function that extracts simple values. This function is called for each member of the object.
+ * @returns {any} The CBOR buffer converted to a JavaScript value.
+ */
+export function decode<T = any> (
+  data: ArrayBuffer | SharedArrayBuffer,
+  tagger?: TaggedValueFunction,
+  simpleValue?: SimpleValueFunction
+): T {
   let dataView = new DataView(data)
   let ta = new Uint8Array(data)
   let offset = 0
@@ -227,7 +242,12 @@ export function decode (data: ArrayBuffer | SharedArrayBuffer, tagger?: TaggedVa
   return ret
 }
 
-export function encode (value: any): ArrayBuffer {
+/**
+ * Converts a JavaScript value to a Concise Binary Object Representation (CBOR) buffer.
+ * @param {any} value - A JavaScript value, usually an object or array, to be converted.
+ * @returns {ArrayBuffer} The JavaScript value converted to CBOR format.
+ */
+export function encode<T = any> (value: T): ArrayBuffer {
   let data = new ArrayBuffer(256)
   let dataView = new DataView(data)
   let byteView = new Uint8Array(data)
@@ -383,9 +403,17 @@ export function encode (value: any): ArrayBuffer {
   return ret
 }
 
+/**
+ * An intrinsic object that provides functions to convert JavaScript values
+ * to and from the Concise Binary Object Representation (CBOR) format.
+ */
 export const CBOR: {
-  decode: (data: ArrayBuffer | SharedArrayBuffer, tagger?: TaggedValueFunction, simpleValue?: SimpleValueFunction) => any
-  encode: (value: any) => ArrayBuffer
+  decode: <T = any>(
+    data: ArrayBuffer | SharedArrayBuffer,
+    tagger?: TaggedValueFunction,
+    simpleValue?: SimpleValueFunction
+  ) => T
+  encode: <T = any>(value: T) => ArrayBuffer
 } = {
   decode,
   encode
