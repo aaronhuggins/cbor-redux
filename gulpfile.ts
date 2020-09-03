@@ -4,6 +4,8 @@ import * as shell from 'gulp-shell'
 
 export const docs = shell.task(['typedoc'])
 
+export const codecov = shell.task(['codecov -t ae11a1a7-4cf0-4961-b157-258d7e9674b5'])
+
 // Tests
 export const deno_mocha = async function deno_mocha () {
   return await shell.task(['deno run --allow-read ./test/DenoMochaCBOR.ts'])()
