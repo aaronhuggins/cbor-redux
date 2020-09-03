@@ -47,15 +47,15 @@ export function decode<T = any> (
   let dataView = new DataView(data)
   let ta = new Uint8Array(data)
   let offset = 0
+  let tagValueFunction: TaggedValueFunction = function (value: number, tag: number): any {
+    return value
+  }
+  let simpleValFunction: SimpleValueFunction = function (value: number): SimpleValue {
+    return undefined as unknown as SimpleValue
+  }
 
-  if (typeof tagger !== 'function')
-    tagger = function (value: number, tag: number): any {
-      return value
-    }
-  if (typeof simpleValue !== 'function')
-    simpleValue = function (value: number): SimpleValue {
-      return undefined
-    }
+  if (typeof tagger === 'function') tagValueFunction = tagger
+  if (typeof simpleValue === 'function') simpleValFunction = simpleValue
 
   function commitRead<T> (length: number, value: T): T {
     offset += length
@@ -110,13 +110,13 @@ export function decode<T = any> (
     if (additionalInformation === 26) return readUint32()
     if (additionalInformation === 27) return readUint64()
     if (additionalInformation === 31) return -1
-    throw 'Invalid length encoding'
+    throw new Error('Invalid length encoding')
   }
   function readIndefiniteStringLength (majorType: number): number {
     let initialByte = readUint8()
     if (initialByte === 0xff) return -1
     let length = readLength(initialByte & 0x1f)
-    if (length < 0 || initialByte >> 5 !== majorType) throw 'Invalid indefinite length element'
+    if (length < 0 || initialByte >> 5 !== majorType) throw new Error('Invalid indefinite length element')
     return length
   }
 
@@ -166,7 +166,7 @@ export function decode<T = any> (
     }
 
     length = readLength(additionalInformation)
-    if (length < 0 && (majorType < 2 || 6 < majorType)) throw 'Invalid length'
+    if (length < 0 && (majorType < 2 || 6 < majorType)) throw new Error('Invalid length')
 
     switch (majorType) {
       case 0:
@@ -213,14 +213,14 @@ export function decode<T = any> (
         }
         return retArray
       case 5:
-        let retObject = {}
+        let retObject: any = {}
         for (i = 0; i < length || (length < 0 && !readBreak()); ++i) {
           let key = decodeItem()
           retObject[key] = decodeItem()
         }
         return retObject
       case 6:
-        return tagger(decodeItem(), length)
+        return tagValueFunction(decodeItem(), length)
       case 7:
         switch (length) {
           case 20:
@@ -232,13 +232,13 @@ export function decode<T = any> (
           case 23:
             return undefined
           default:
-            return simpleValue(length)
+            return simpleValFunction(length)
         }
     }
   }
 
   let ret = decodeItem()
-  if (offset !== data.byteLength) throw 'Remaining bytes'
+  if (offset !== data.byteLength) throw new Error('Remaining bytes')
   return ret
 }
 

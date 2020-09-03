@@ -1,5 +1,5 @@
 export function mochaTests (testcases: any[][], cborImport: any, helpers: any, assertFuncs: any) {
-  const { CBOR, TaggedValue, SimpleValue, decode } = cborImport
+  const { CBOR, TaggedValue, SimpleValue, decode, polyfillFile } = cborImport
   const { myDeepEqual, hex2arrayBuffer } = helpers
   const { strictEqual, deepStrictEqual, throws, ok } = assertFuncs
 
@@ -143,25 +143,27 @@ export function mochaTests (testcases: any[][], cborImport: any, helpers: any, a
       const object = { hello: 'world!' }
       const expected = hex2arrayBuffer('a16568656c6c6f66776f726c6421')
   
-      delete global.ArrayBuffer.prototype.slice
+      delete globalThis.ArrayBuffer.prototype.slice
   
       const result = CBOR.encode(object)
   
       deepStrictEqual(result, expected)
     })
+
+    if (typeof polyfillFile === 'string') {
+      it ('Polyfill adds CBOR to global scope', async () => {
+        const { polyfill } = await import(polyfillFile)
+    
+        await polyfill()
+    
+        strictEqual((globalThis as any).CBOR.decode, decode)
   
-    it ('Polyfill adds CBOR to global scope', async () => {
-      const { polyfill } = await import('../src/polyfill')
-  
-      await polyfill()
-  
-      strictEqual((globalThis as any).CBOR.decode, decode)
-  
-      globalThis.window = {} as any
-  
-      await polyfill()
-  
-      strictEqual((globalThis as any).window.CBOR.decode, decode)
-    })
+        ;(globalThis as any).window = {} as any
+    
+        await polyfill()
+    
+        strictEqual((globalThis as any).window.CBOR.decode, decode)
+      })
+    }
   })
 }

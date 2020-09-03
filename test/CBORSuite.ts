@@ -12,7 +12,8 @@ mochaTests(
     CBOR,
     TaggedValue,
     SimpleValue,
-    decode
+    decode,
+    polyfillFile: '../src/polyfill'
   },
   {
     myDeepEqual,
