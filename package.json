@@ -1,6 +1,6 @@
 {
   "name": "cbor-redux",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "dist/CBOR.js",
   "types": "dist/CBOR.d.ts",
   "module": "esm/CBOR.js",
@@ -16,7 +16,7 @@
   "keywords": [
     "cbor"
   ],
-  "homepage": "https://github.com/aaronhuggins/cbor-redux",
+  "homepage": "aaronhuggins.github.io/cbor-redux/",
   "bugs": "https://github.com/aaronhuggins/cbor-redux/issues",
   "license": "MIT",
   "contributors": [

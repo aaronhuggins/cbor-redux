@@ -21,17 +21,17 @@ Rewritten in TypeScript for the browser, Deno, and Node.
 
 ## Usage
 
-Require `cbor-redux` in Node:
+Require `cbor-redux` in [Node](https://www.npmjs.com/package/cbor-redux):
 ```javascript
 const { CBOR } = require('cbor-redux')
 ```
 
-or import in Deno:
+or import in [Deno](https://deno.land/x/cbor_redux@0.2.0):
 ```javascript
 import { CBOR } from 'https://deno.land/x/cbor_redux@0.2.0/mod.ts'
 ```
 
-or script on an HTML page:
+or script on an [HTML page](https://www.skypack.dev/npm/cbor-redux):
 ```html
 <script src="https://cdn.skypack.dev/cbor-redux@^0.2.0" type="text/javascript"></script>
 ```
