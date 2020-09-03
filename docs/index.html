@@ -1,0 +1,160 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>cbor-redux</title>
+	<meta name="description" content="Documentation for cbor-redux">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">cbor-redux</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1>cbor-redux</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#cbor-redux" id="cbor-redux" style="color: inherit; text-decoration: none;">
+					<h1>cbor-redux</h1>
+				</a>
+				<p>The Concise Binary Object Representation (CBOR) data format (<a href="http://tools.ietf.org/html/rfc7049">RFC 7049</a>) implemented in pure JavaScript, revived.</p>
+				<p><a href="https://travis-ci.org/paroga/cbor-js"><img src="https://api.travis-ci.org/paroga/cbor-js.svg" alt="Build Status"></a>
+					<a href="https://coveralls.io/r/paroga/cbor-js?branch=master"><img src="https://coveralls.io/repos/paroga/cbor-js/badge.svg?branch=master" alt="Coverage Status"></a>
+					<a href="https://david-dm.org/paroga/cbor-js#info=dependencies&amp;view=table"><img src="https://david-dm.org/paroga/cbor-js/status.svg" alt="Dependency status"></a>
+					<a href="https://david-dm.org/paroga/cbor-js#info=devDependencies&amp;view=table"><img src="https://david-dm.org/paroga/cbor-js/dev-status.svg" alt="Dev Dependency Status"></a>
+					<a href="https://saucelabs.com/u/paroga-cbor-js"><img src="https://saucelabs.com/buildstatus/paroga-cbor-js" alt="Selenium Test Status"></a>
+				<a href="https://saucelabs.com/u/paroga-cbor-js"><img src="https://saucelabs.com/browser-matrix/paroga-cbor-js.svg" alt="Selenium Test Status"></a></p>
+				<a href="#api" id="api" style="color: inherit; text-decoration: none;">
+					<h2>API</h2>
+				</a>
+				<p>The <code>CBOR</code>-object provides the following two functions:</p>
+				<p>CBOR.<strong>decode</strong>(<em>data</em>)</p>
+				<blockquote>
+					<p>Take the ArrayBuffer object <em>data</em> and return it decoded as a JavaScript object.</p>
+				</blockquote>
+				<p>CBOR.<strong>encode</strong>(<em>data</em>)</p>
+				<blockquote>
+					<p>Take the JavaScript object <em>data</em> and return it encoded as a ArrayBuffer object.</p>
+				</blockquote>
+				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+					<h2>Usage</h2>
+				</a>
+				<p>Include <code>cbor.js</code> in your or HTML page:</p>
+				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;path/to/cbor.js&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+				<p>Then you can use it via the <code>CBOR</code>-object in your code:</p>
+				<pre><code class="language-javascript"><span class="hljs-keyword">var</span> initial = { <span class="hljs-attr">Hello</span>: <span class="hljs-string">&#x27;World&#x27;</span> }
+<span class="hljs-keyword">var</span> encoded = CBOR.encode(initial)
+<span class="hljs-keyword">var</span> decoded = CBOR.decode(encoded)</code></pre>
+				<p>After running this example <code>initial</code> and <code>decoded</code> represent the same value.</p>
+				<a href="#combination-with-websocket" id="combination-with-websocket" style="color: inherit; text-decoration: none;">
+					<h3>Combination with WebSocket</h3>
+				</a>
+				<p>The API was designed to play well with the <code>WebSocket</code> object in the browser:</p>
+				<pre><code class="language-javascript"><span class="hljs-keyword">var</span> websocket = <span class="hljs-keyword">new</span> WebSocket(url);
+websocket.binaryType = <span class="hljs-string">&quot;arraybuffer&quot;</span>;
+...
+websocket.onmessage = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event</span>) </span>{
+  <span class="hljs-keyword">var</span> message = CBOR.decode(event.data);
+};
+...
+websocket.send(CBOR.encode(message));</code></pre>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-class">
+						<a href="classes/simplevalue.html" class="tsd-kind-icon">Simple<wbr>Value</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/taggedvalue.html" class="tsd-kind-icon">Tagged<wbr>Value</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#simplefunction" class="tsd-kind-icon">Simple<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#tagfunction" class="tsd-kind-icon">Tag<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#cbor" class="tsd-kind-icon">CBOR</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
