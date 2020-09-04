@@ -142,26 +142,26 @@ export function mochaTests (testcases: any[][], cborImport: any, helpers: any, a
     it('should return without slice method', () => {
       const object = { hello: 'world!' }
       const expected = hex2arrayBuffer('a16568656c6c6f66776f726c6421')
-  
-      delete globalThis.ArrayBuffer.prototype.slice
-  
+
+      delete (globalThis as any).ArrayBuffer.prototype.slice
+
       const result = CBOR.encode(object)
-  
+
       deepStrictEqual(result, expected)
     })
 
     if (typeof polyfillFile === 'string') {
       it ('Polyfill adds CBOR to global scope', async () => {
         const { polyfill } = await import(polyfillFile)
-    
+
         await polyfill()
-    
+
         strictEqual((globalThis as any).CBOR.decode, decode)
-  
+
         ;(globalThis as any).window = {} as any
-    
+
         await polyfill()
-    
+
         strictEqual((globalThis as any).window.CBOR.decode, decode)
       })
     }
