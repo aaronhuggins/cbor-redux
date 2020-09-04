@@ -8,8 +8,8 @@ import { mochaTests } from './mochaTests.ts'
 
 const { myDeepEqual, hex2arrayBuffer } = helpers(deepStrictEqual, ok)
 
-;(window as any).location = new URL("http://localhost:0")
-mocha.setup({ ui: "bdd", reporter: "spec" })
+;(window as any).location = new URL('http://localhost:0')
+mocha.setup({ ui: 'bdd', reporter: 'spec' })
 mocha.checkLeaks()
 
 mochaTests(
