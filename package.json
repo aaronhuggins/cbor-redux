@@ -1,6 +1,6 @@
 {
   "name": "cbor-redux",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "main": "dist/CBOR.js",
   "types": "dist/CBOR.d.ts",
   "module": "esm/CBOR.js",
