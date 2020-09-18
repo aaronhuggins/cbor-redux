@@ -18,8 +18,13 @@ export const nyc = async function nyc () {
 export const test = series(deno_mocha, nyc)
 
 // Compiler
-export const tsc = shell.task(['tsc --sourceMap false', 'tsc --sourceMap false --module es2020 --outDir esm '])
+export const tsc = shell.task([
+  'tsc --sourceMap false',
+  'tsc --sourceMap false --module es2020 --outDir esm',
+  'browserify ./esm/CBOR.js --standalone CBOR --transform [ babelify --presets [ @babel/preset-env ] ] --outfile ./es5/CBOR.js'
+])
 export const clean = async () => {
   rmdirSync('./dist', { recursive: true })
   rmdirSync('./esm', { recursive: true })
+  rmdirSync('./es5', { recursive: true })
 }

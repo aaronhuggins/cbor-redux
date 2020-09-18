@@ -4,6 +4,7 @@ coverage
 node_modules
 dist
 esm
+es5
 
 cbor-js.zip
 cbor.min.js
