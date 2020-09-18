@@ -7,6 +7,20 @@ const POW_2_53 = 9007199254740992
 /** @hidden */
 const DECODE_CHUNK_SIZE = 8192
 
+/** @hidden */
+function objectIs (x: any, y: any) {
+  if (typeof Object.is === 'function') return Object.is(x, y)
+
+  // SameValue algorithm
+  if (x === y) { // Steps 1-5, 7-10
+    // Steps 6.b-6.e: +0 != -0
+    return x !== 0 || 1 / x === 1 / y;
+  }
+
+  // Step 6.a: NaN == NaN
+  return x !== x && y !== y
+}
+
 /** A function that extracts tagged values. */
 type TaggedValueFunction = (value: number, tag: number) => TaggedValue
 /** A function that extracts simple values. */
@@ -323,7 +337,7 @@ export function encode<T = any> (value: T): ArrayBuffer {
     if (val === true) return writeUint8(0xf5)
     if (val === null) return writeUint8(0xf6)
     if (val === undefined) return writeUint8(0xf7)
-    if (Object.is(val, -0)) return writeUint8Array([0xf9, 0x80, 0x00])
+    if (objectIs(val, -0)) return writeUint8Array([0xf9, 0x80, 0x00])
 
     switch (typeof val) {
       case 'number':
@@ -376,7 +390,10 @@ export function encode<T = any> (value: T): ArrayBuffer {
           converted = new Uint8Array(val.buffer)
           writeTypeAndLength(2, converted.length)
           writeUint8Array(converted)
-        } else if (val instanceof ArrayBuffer || val instanceof SharedArrayBuffer) {
+        } else if (
+          val instanceof ArrayBuffer ||
+          (typeof SharedArrayBuffer === 'function' && val instanceof SharedArrayBuffer)
+        ) {
           converted = new Uint8Array(val)
           writeTypeAndLength(2, converted.length)
           writeUint8Array(converted)
