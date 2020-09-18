@@ -22,6 +22,19 @@ mochaTests(
   {
     deepStrictEqual,
     strictEqual,
+    doesNotThrow (block: Function, message: string | Error) {
+      try {
+        block()
+      } catch (error) {
+        if (typeof message === 'string') {
+          throw new Error(message)
+        } else if (message instanceof Error) {
+          throw message
+        } else {
+          throw error
+        }
+      }
+    },
     throws,
     ok
   }

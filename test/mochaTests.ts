@@ -1,7 +1,7 @@
 export function mochaTests (testcases: any[][], cborImport: any, helpers: any, assertFuncs: any) {
   const { CBOR, TaggedValue, SimpleValue, decode, polyfillFile } = cborImport
   const { myDeepEqual, hex2arrayBuffer } = helpers
-  const { strictEqual, deepStrictEqual, throws, ok } = assertFuncs
+  const { strictEqual, deepStrictEqual, doesNotThrow, throws, ok } = assertFuncs
 
   describe('CBOR', () => {
     for (const testcase of testcases) {
@@ -148,6 +148,16 @@ export function mochaTests (testcases: any[][], cborImport: any, helpers: any, a
       const result = CBOR.encode(object)
 
       deepStrictEqual(result, expected)
+    })
+
+    it('should use objectIs polyfill', () => {
+      const object = { hello: 'world!', greetings: -0 }
+
+      delete (globalThis as any).Object.is
+
+      doesNotThrow(() => {
+        CBOR.encode(object)
+      })
     })
 
     if (typeof polyfillFile === 'string') {
