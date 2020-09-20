@@ -22,18 +22,18 @@ function objectIs (x: any, y: any) {
 }
 
 /** A function that extracts tagged values. */
-type TaggedValueFunction = (value: number, tag: number) => TaggedValue
+type TaggedValueFunction = (value: any, tag: number) => TaggedValue
 /** A function that extracts simple values. */
-type SimpleValueFunction = (value: number) => SimpleValue
+type SimpleValueFunction = (value: any) => SimpleValue
 
 /** Convenience class for structuring a tagged value. */
 export class TaggedValue {
-  constructor (value: number, tag: number) {
+  constructor (value: any, tag: number) {
     this.value = value
     this.tag = tag
   }
 
-  value: number
+  value: any
   tag: number
 }
 
@@ -43,7 +43,7 @@ export class SimpleValue {
     this.value = value
   }
 
-  value: number
+  value: any
 }
 
 /**
