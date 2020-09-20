@@ -62,7 +62,7 @@ export function decode<T = any> (
   let ta = new Uint8Array(data)
   let offset = 0
   let tagValueFunction: TaggedValueFunction = function (value: number, tag: number): any {
-    return value
+    return new TaggedValue(value, tag);
   }
   let simpleValFunction: SimpleValueFunction = function (value: number): SimpleValue {
     return undefined as unknown as SimpleValue
@@ -312,6 +312,25 @@ export function encode<T = any> (value: T): ArrayBuffer {
     view.setUint32(offset + 4, low)
     commitWrite()
   }
+  function writeVarUint(val: number, mod: number = 0) {
+    if (val <= 0xff) {
+      if (val < 24) {
+        writeUint8(val | mod);
+      } else {
+        writeUint8(0x18 | mod);
+        writeUint8(val)
+      }
+    } else if (val <= 0xffff) {
+      writeUint8(0x19 | mod);
+      writeUint16(val);
+    } else if (val <= 0xffffffff) {
+      writeUint8(0x1A | mod);
+      writeUint32(val);
+    } else {
+      writeUint8(0x1B | mod);
+      writeUint64(val);
+    }
+  }
   function writeTypeAndLength (type: number, length: number) {
     if (length < 24) {
       writeUint8((type << 5) | length)
@@ -397,6 +416,9 @@ export function encode<T = any> (value: T): ArrayBuffer {
           converted = new Uint8Array(val)
           writeTypeAndLength(2, converted.length)
           writeUint8Array(converted)
+        } else if (val instanceof TaggedValue) {
+          writeVarUint(val.tag, 0b11000000)
+          encodeItem(val.value)
         } else {
           let keys = Object.keys(val)
           length = keys.length

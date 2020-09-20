@@ -1,3 +1,5 @@
+import { TaggedValue } from "../src/CBOR";
+
 function generateArrayBuffer (data: number[]) {
   const ret = new ArrayBuffer(data.length)
   const uintArray = new Uint8Array(ret)
@@ -77,7 +79,6 @@ export const testcases: any[][] = [
   ],
   ["Object {_ 'a': 1, 'b': [_ 2, 3]}", 'bf61610161629f0203ffff', { a: 1, b: [2, 3] }, true],
   ["Object {_ 'Fun': true, 'Amt': -2}", 'bf6346756ef563416d7421ff', { Fun: true, Amt: -2 }, true],
-  ['Tag Self-describe CBOR 0', 'd9d9f700', 0, true],
   ['false', 'f4', false],
   ['true', 'f5', true],
   ['null', 'f6', null],
@@ -107,5 +108,9 @@ export const testcases: any[][] = [
   ['Float64 -9007199254740994', 'fbc340000000000001', -9007199254740994],
   ['Float64 +Infinity', 'fb7ff0000000000000', Infinity],
   ['Float64 NaN', 'fb7ff8000000000000', NaN, true],
-  ['Float64 -Infinity', 'fbfff0000000000000', -Infinity]
+  ['Float64 -Infinity', 'fbfff0000000000000', -Infinity],
+  ['Tagged 55799(0) (aka Self-describe CBOR)', 'd9d9f700', new TaggedValue(0, 55799)],
+  ['Tagged 0("2020-09-20T00:11:24.937Z") (aka iso date)', 'c07818323032302d30392d32305430303a31313a32342e3933375a', new TaggedValue('2020-09-20T00:11:24.937Z', 0)],
+  ['Tagged 1(1600560146.876) (aka fractional date)', 'c1fb41d7d9a704b81062', new TaggedValue(1600560146.876, 1)],
+  ['Tagged 1(1600560146) (aka integer date)', 'c11a5f669c12', new TaggedValue(1600560146, 1)]
 ]
