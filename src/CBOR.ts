@@ -313,7 +313,7 @@ export function encode<T = any> (value: T): ArrayBuffer {
     view.setUint32(offset + 4, low)
     commitWrite()
   }
-  function writeVarUint (val: number, mod: number = 0) {
+  function writeVarUint (val: number, mod: number) {
     if (val <= 0xff) {
       if (val < 24) {
         writeUint8(val | mod)
