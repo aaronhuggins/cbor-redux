@@ -9,3 +9,5 @@ es5
 cbor-js.zip
 cbor.min.js
 sauce_connect.log
+debug.log
+**/debug.log

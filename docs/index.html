@@ -86,12 +86,15 @@
 				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
 					<h2>Usage</h2>
 				</a>
-				<p>Require <code>cbor-redux</code> in Node:</p>
+				<p>Require <code>cbor-redux</code> in <a href="https://www.npmjs.com/package/cbor-redux">Node</a>:</p>
 				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> { CBOR } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;cbor-redux&#x27;</span>)</code></pre>
-				<p>or import in Deno:</p>
-				<pre><code class="language-javascript"><span class="hljs-keyword">import</span> { CBOR } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;https://deno.land/x/cbor-redux@0.2.0&#x27;</span></code></pre>
-				<p>or script on an HTML page:</p>
-				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.skypack.dev/cbor-redux@^0.2.0&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+				<p>or import in <a href="https://deno.land/x/cbor_redux">Deno</a>:</p>
+				<pre><code class="language-javascript"><span class="hljs-keyword">import</span> { CBOR } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;https://deno.land/x/cbor_redux@0.4.0/mod.ts&#x27;</span></code></pre>
+				<p>or script on an <a href="https://www.skypack.dev/npm/cbor-redux">HTML page</a>:</p>
+				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.skypack.dev/cbor-redux@^0.4.0&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+				<blockquote>
+					<p>For ES5 polyfill, use es5/CBOR.js in the npm package or else <code>&lt;script src=&quot;https://unpkg.com/cbor-redux@0.4.0/es5/CBOR.js&quot;&gt;&lt;/script&gt;</code>.</p>
+				</blockquote>
 				<p>Then you can use it via the <code>CBOR</code>-object in your code:</p>
 				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> initial = { <span class="hljs-attr">Hello</span>: <span class="hljs-string">&#x27;World&#x27;</span> }
 <span class="hljs-keyword">const</span> encoded = CBOR.encode(initial)
