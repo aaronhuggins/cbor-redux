@@ -1,15 +1,17 @@
 export function mochaTests (testcases: any[][], cborImport: any, helpers: any, assertFuncs: any) {
   const { CBOR, TaggedValue, SimpleValue, decode, polyfillFile } = cborImport
-  const { myDeepEqual, hex2arrayBuffer } = helpers
+  const { myDeepEqual, hex2arrayBuffer, TestTaggedValue } = helpers
   const { strictEqual, deepStrictEqual, doesNotThrow, throws, ok } = assertFuncs
 
   describe('CBOR', () => {
     for (const testcase of testcases) {
       const name = testcase[0]
       const data = testcase[1]
-      const expected = testcase[2]
+      const expected = testcase[2] instanceof TestTaggedValue
+        ? new TaggedValue(...testcase[2].toArgs())
+        : testcase[2]
       const binaryDifference = testcase[3]
-  
+
       it(name, () => {
         myDeepEqual(CBOR.decode(hex2arrayBuffer(data)), expected, 'Decoding')
   

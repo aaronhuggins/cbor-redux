@@ -1,5 +1,5 @@
 import { CBOR, TaggedValue, SimpleValue, decode } from '../src/CBOR'
-import { testcases } from './testcases'
+import { testcases, TestTaggedValue } from './testcases'
 import { helpers } from './helpers'
 import { deepStrictEqual, strictEqual, doesNotThrow, throws, ok } from 'assert'
 import { mochaTests } from './mochaTests'
@@ -17,7 +17,8 @@ mochaTests(
   },
   {
     myDeepEqual,
-    hex2arrayBuffer
+    hex2arrayBuffer,
+    TestTaggedValue
   },
   {
     deepStrictEqual,
