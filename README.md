@@ -30,16 +30,16 @@ const { CBOR } = require('cbor-redux')
 or import in [Deno](https://deno.land/x/cbor_redux):
 
 ```javascript
-import { CBOR } from 'https://deno.land/x/cbor_redux@0.3.0/mod.ts'
+import { CBOR } from 'https://deno.land/x/cbor_redux@0.4.0/mod.ts'
 ```
 
 or script on an [HTML page](https://www.skypack.dev/npm/cbor-redux):
 
 ```html
-<script src="https://cdn.skypack.dev/cbor-redux@^0.3.0" type="text/javascript"></script>
+<script src="https://cdn.skypack.dev/cbor-redux@^0.4.0" type="text/javascript"></script>
 ```
 
-> For ES5 polyfill, use es5/CBOR.js in the npm package or else `<script src="https://unpkg.com/cbor-redux@0.3.0/es5/CBOR.js"></script>`.
+> For ES5 polyfill, use es5/CBOR.js in the npm package or else `<script src="https://unpkg.com/cbor-redux@0.4.0/es5/CBOR.js"></script>`.
 
 Then you can use it via the `CBOR`-object in your code:
 
