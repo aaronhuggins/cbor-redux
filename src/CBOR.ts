@@ -12,9 +12,10 @@ function objectIs (x: any, y: any) {
   if (typeof Object.is === 'function') return Object.is(x, y)
 
   // SameValue algorithm
-  if (x === y) { // Steps 1-5, 7-10
+  // Steps 1-5, 7-10
+  if (x === y) {
     // Steps 6.b-6.e: +0 != -0
-    return x !== 0 || 1 / x === 1 / y;
+    return x !== 0 || 1 / x === 1 / y
   }
 
   // Step 6.a: NaN == NaN
@@ -62,10 +63,10 @@ export function decode<T = any> (
   let ta = new Uint8Array(data)
   let offset = 0
   let tagValueFunction: TaggedValueFunction = function (value: number, tag: number): any {
-    return new TaggedValue(value, tag);
+    return new TaggedValue(value, tag)
   }
   let simpleValFunction: SimpleValueFunction = function (value: number): SimpleValue {
-    return undefined as unknown as SimpleValue
+    return (undefined as unknown) as SimpleValue
   }
 
   if (typeof tagger === 'function') tagValueFunction = tagger
@@ -312,23 +313,23 @@ export function encode<T = any> (value: T): ArrayBuffer {
     view.setUint32(offset + 4, low)
     commitWrite()
   }
-  function writeVarUint(val: number, mod: number = 0) {
+  function writeVarUint (val: number, mod: number = 0) {
     if (val <= 0xff) {
       if (val < 24) {
-        writeUint8(val | mod);
+        writeUint8(val | mod)
       } else {
-        writeUint8(0x18 | mod);
+        writeUint8(0x18 | mod)
         writeUint8(val)
       }
     } else if (val <= 0xffff) {
-      writeUint8(0x19 | mod);
-      writeUint16(val);
+      writeUint8(0x19 | mod)
+      writeUint16(val)
     } else if (val <= 0xffffffff) {
-      writeUint8(0x1A | mod);
-      writeUint32(val);
+      writeUint8(0x1a | mod)
+      writeUint32(val)
     } else {
-      writeUint8(0x1B | mod);
-      writeUint64(val);
+      writeUint8(0x1b | mod)
+      writeUint64(val)
     }
   }
   function writeTypeAndLength (type: number, length: number) {

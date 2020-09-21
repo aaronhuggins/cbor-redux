@@ -22,19 +22,23 @@ Rewritten in TypeScript for the browser, Deno, and Node.
 ## Usage
 
 Require `cbor-redux` in [Node](https://www.npmjs.com/package/cbor-redux):
+
 ```javascript
 const { CBOR } = require('cbor-redux')
 ```
 
 or import in [Deno](https://deno.land/x/cbor_redux):
+
 ```javascript
 import { CBOR } from 'https://deno.land/x/cbor_redux@0.3.0/mod.ts'
 ```
 
 or script on an [HTML page](https://www.skypack.dev/npm/cbor-redux):
+
 ```html
 <script src="https://cdn.skypack.dev/cbor-redux@^0.3.0" type="text/javascript"></script>
 ```
+
 > For ES5 polyfill, use es5/CBOR.js in the npm package or else `<script src="https://unpkg.com/cbor-redux@0.3.0/es5/CBOR.js"></script>`.
 
 Then you can use it via the `CBOR`-object in your code:
@@ -52,9 +56,11 @@ After running this example `initial` and `decoded` represent the same value.
 The `CBOR`-object provides the following two functions:
 
 - **CBOR**._**decode**_(_data: ArrayBuffer_)
+
   > Take the ArrayBuffer object _data_ and return it decoded as a JavaScript object.
 
 - **CBOR**._**encode**_(_data: any_)
+
   > Take the JavaScript object _data_ and return it encoded as a ArrayBuffer object.
 
 For complete API details, visit the [documentation](https://aaronhuggins.github.io/cbor-redux/).

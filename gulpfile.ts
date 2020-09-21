@@ -7,7 +7,9 @@ export const docs = shell.task(['typedoc'])
 export const codecov = shell.task(['codecov -t ae11a1a7-4cf0-4961-b157-258d7e9674b5'])
 
 // Tests
-export const install_deno_mocha = shell.task(['deno install --allow-all --allow-run https://deno.land/x/deno_mocha/deno_mocha.ts'])
+export const install_deno_mocha = shell.task([
+  'deno install --allow-all --allow-run https://deno.land/x/deno_mocha/deno_mocha.ts'
+])
 export const deno_mocha = async function deno_mocha () {
   return await shell.task(['deno_mocha --file test/DenoMochaCBOR.ts'])()
 }
