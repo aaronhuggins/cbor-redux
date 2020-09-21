@@ -122,6 +122,9 @@ export const testcases: any[][] = [
   ['Float64 NaN', 'fb7ff8000000000000', NaN, true],
   ['Float64 -Infinity', 'fbfff0000000000000', -Infinity],
   ['Tagged 55799(0) (aka Self-describe CBOR)', 'd9d9f700', new TestTaggedValue(0, 55799)],
+  ['Tagged 0xffffffff(0)', 'db000000ffffffffff00', new TestTaggedValue(0, 0xffffffffff)],
+  ['Tagged 0xffffffff(0)', 'daffffffff00', new TestTaggedValue(0, 0xffffffff)],
+  ['Tagged 25(0)', 'd81900', new TestTaggedValue(0, 25)],
   ['Tagged 0("2020-09-20T00:11:24.937Z") (aka iso date)', 'c07818323032302d30392d32305430303a31313a32342e3933375a', new TestTaggedValue('2020-09-20T00:11:24.937Z', 0)],
   ['Tagged 1(1600560146.876) (aka fractional date)', 'c1fb41d7d9a704b81062', new TestTaggedValue(1600560146.876, 1)],
   ['Tagged 1(1600560146) (aka integer date)', 'c11a5f669c12', new TestTaggedValue(1600560146, 1)]
