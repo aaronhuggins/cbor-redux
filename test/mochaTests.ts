@@ -119,7 +119,7 @@ export function mochaTests (testcases: any[][], cborImport: any, helpers: any, a
         view[i] = i * 3
       }
 
-      const expectedView = hex2arrayBuffer('a16864617461566965775000000000030000000600000009000000')
+      const expectedView = hex2arrayBuffer('a1686461746156696577d8465000000000030000000600000009000000');
       const expectedBuf = hex2arrayBuffer('a16662756666657248000306090c0f1215')
       const resultView = CBOR.encode(objView)
       const resultBuf = CBOR.encode(objBuf)

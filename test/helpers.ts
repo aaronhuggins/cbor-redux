@@ -1,6 +1,12 @@
 export function helpers (deepStrictEqual: Function, ok: Function) {
   return {
     myDeepEqual (actual: any, expected: any, message?: string) {
+      if (actual === expected) {
+        return true;
+      }
+      if (expected instanceof ArrayBuffer) {
+        expected = new Uint8Array(expected)
+      }
       if (actual instanceof Uint8Array && expected instanceof Uint8Array) {
         let bufferMatch = actual.length === expected.length
 

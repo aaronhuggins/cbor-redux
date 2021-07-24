@@ -1,12 +1,6 @@
 function generateArrayBuffer (data: number[]) {
-  const ret = new ArrayBuffer(data.length)
-  const uintArray = new Uint8Array(ret)
-
-  for (let i = 0; i < data.length; i += 1) {
-    uintArray[i] = data[i]
-  }
-
-  return new Uint8Array(data)
+  const uintArray = new Uint8Array(data)
+  return uintArray.buffer.slice(uintArray.byteOffset, uintArray.byteLength + uintArray.byteOffset);
 }
 
 export class TestTaggedValue {
@@ -91,7 +85,7 @@ export const testcases: any[][] = [
   ],
   ["Object {_ 'a': 1, 'b': [_ 2, 3]}", 'bf61610161629f0203ffff', { a: 1, b: [2, 3] }, true],
   ["Object {_ 'Fun': true, 'Amt': -2}", 'bf6346756ef563416d7421ff', { Fun: true, Amt: -2 }, true],
-  ['false', 'f4', false],
+ ['false', 'f4', false],
   ['true', 'f5', true],
   ['null', 'f6', null],
   ['undefined', 'f7', undefined],
@@ -127,5 +121,17 @@ export const testcases: any[][] = [
   ['Tagged 25(0)', 'd81900', new TestTaggedValue(0, 25)],
   ['Tagged 0("2020-09-20T00:11:24.937Z") (aka iso date)', 'c07818323032302d30392d32305430303a31313a32342e3933375a', new TestTaggedValue('2020-09-20T00:11:24.937Z', 0)],
   ['Tagged 1(1600560146.876) (aka fractional date)', 'c1fb41d7d9a704b81062', new TestTaggedValue(1600560146.876, 1)],
-  ['Tagged 1(1600560146) (aka integer date)', 'c11a5f669c12', new TestTaggedValue(1600560146, 1)]
+  ['Tagged 1(1600560146) (aka integer date)', 'c11a5f669c12', new TestTaggedValue(1600560146, 1)],
+  ['Uint8Array [1,2]', 'd8404401020304', new Uint8Array([1, 2, 3, 4])],
+  ['Int8Array [1,2]', 'd848440102fdfc', new Int8Array([1, 2, -3, -4])],
+  ['Uint16Array', 'd8454801000200ffff0400', new Uint16Array([1, 2, 65535, 4])],
+  ['Int16Array', 'd84d4801000200ff7ffcff', new Int16Array([1, 2, 32767, -4])],
+  ['Uint32Array', 'd8465001000000020000000000010004000000', new Uint32Array([1, 2, 65536, 4])],
+  ['Int32Array', 'd84e50010000000200000000000100fcffffff', new Int32Array([1, 2, 65536, -4])],
+  ['Float32Array', 'd855500000803f000000400000a03f0000a0bf', new Float32Array([1, 2, 1.25, -1.25])],
+  [
+    'Float64Array',
+    'd8565820000000000000f03f0000000000000040000000000000f43f000000000000f4bf',
+    new Float64Array([1, 2, 1.25, -1.25])
+  ]
 ]

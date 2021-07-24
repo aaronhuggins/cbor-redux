@@ -7,6 +7,19 @@ const POW_2_53 = 9007199254740992
 /** @hidden */
 const DECODE_CHUNK_SIZE = 8192
 
+/** @hidden CBOR defined tag values */
+const kCborTag = 6;
+
+// RFC8746 Tag values for typed little endian arrays
+const kCborTagUint8 = 64;
+const kCborTagUint16 = 69;
+const kCborTagUint32 = 70;
+const kCborTagInt8 = 72;
+const kCborTagInt16 = 77;
+const kCborTagInt32 = 78;
+const kCborTagFloat32 = 85;
+const kCborTagFloat64 = 86;
+
 /** @hidden */
 function objectIs (x: any, y: any) {
   if (typeof Object.is === 'function') return Object.is(x, y)
@@ -62,7 +75,27 @@ export function decode<T = any> (
   let dataView = new DataView(data)
   let ta = new Uint8Array(data)
   let offset = 0
-  let tagValueFunction: TaggedValueFunction = function (value: number, tag: number): any {
+  let tagValueFunction: TaggedValueFunction = function (value: any, tag: number): any {
+    if (value instanceof Uint8Array) {
+       switch (tag) {
+        case kCborTagUint8:
+          return new Uint8Array(value);
+        case kCborTagInt8:
+          return new Int8Array(value.buffer.slice(value.byteOffset, value.byteLength + value.byteOffset));
+        case kCborTagUint16:
+          return new Uint16Array(value.buffer.slice(value.byteOffset, value.byteLength + value.byteOffset));
+        case kCborTagInt16:
+          return new Int16Array(value.buffer.slice(value.byteOffset, value.byteLength + value.byteOffset));
+        case kCborTagUint32:
+          return new Uint32Array(value.buffer.slice(value.byteOffset, value.byteLength + value.byteOffset));
+        case kCborTagInt32:
+          return new Int32Array(value.buffer.slice(value.byteOffset, value.byteLength + value.byteOffset));
+        case kCborTagFloat32:
+          return new Float32Array(value.buffer.slice(value.byteOffset, value.byteLength + value.byteOffset));
+        case kCborTagFloat64:
+          return new Float64Array(value.buffer.slice(value.byteOffset, value.byteLength + value.byteOffset));
+      }
+    }
     return new TaggedValue(value, tag)
   }
   let simpleValFunction: SimpleValueFunction = function (value: number): SimpleValue {
@@ -332,7 +365,7 @@ export function encode<T = any> (value: T): ArrayBuffer {
       writeUint64(val)
     }
   }
-  function writeTypeAndLength (type: number, length: number) {
+ function writeTypeAndLength (type: number, length: number) {
     if (length < 24) {
       writeUint8((type << 5) | length)
     } else if (length < 0x100) {
@@ -403,10 +436,44 @@ export function encode<T = any> (value: T): ArrayBuffer {
           length = val.length
           writeTypeAndLength(4, length)
           for (i = 0; i < length; i += 1) encodeItem(val[i])
-        } else if (val instanceof Uint8Array) {
+        }
+
+        // RFC8746 CBOR Tags
+        else if (val instanceof Uint8Array) {
+          writeVarUint(kCborTagUint8, kCborTag << 5)
           writeTypeAndLength(2, val.length)
           writeUint8Array(val)
-        } else if (ArrayBuffer.isView(val)) {
+        } else if (val instanceof Int8Array) {
+           writeVarUint(kCborTagInt8, kCborTag << 5)
+           writeTypeAndLength(2, val.byteLength)
+           writeUint8Array(new Uint8Array(val.buffer))
+        } else if (val instanceof Uint16Array) {
+           writeVarUint(kCborTagUint16, kCborTag << 5)
+           writeTypeAndLength(2, val.byteLength)
+           writeUint8Array(new Uint8Array(val.buffer))
+        } else if (val instanceof Int16Array) {
+           writeVarUint(kCborTagInt16, kCborTag << 5)
+           writeTypeAndLength(2, val.byteLength)
+           writeUint8Array(new Uint8Array(val.buffer))
+        } else if (val instanceof Uint32Array) {
+           writeVarUint(kCborTagUint32, kCborTag << 5)
+           writeTypeAndLength(2, val.byteLength)
+           writeUint8Array(new Uint8Array(val.buffer))
+        } else if (val instanceof Int32Array) {
+           writeVarUint(kCborTagInt32, kCborTag << 5)
+           writeTypeAndLength(2, val.byteLength)
+           writeUint8Array(new Uint8Array(val.buffer))
+        } else if (val instanceof Float32Array) {
+          writeVarUint(kCborTagFloat32, kCborTag << 5)
+          writeTypeAndLength(2, val.byteLength)
+          writeUint8Array(new Uint8Array(val.buffer))
+         } else if (val instanceof Float64Array) {
+          writeVarUint(kCborTagFloat64, kCborTag << 5)
+          writeTypeAndLength(2, val.byteLength)
+          writeUint8Array(new Uint8Array(val.buffer))
+        }
+
+        else if (ArrayBuffer.isView(val)) {
           converted = new Uint8Array(val.buffer)
           writeTypeAndLength(2, converted.length)
           writeUint8Array(converted)
