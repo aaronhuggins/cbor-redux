@@ -5,8 +5,11 @@
   "types": "dist/CBOR.d.ts",
   "module": "esm/CBOR.js",
   "exports": {
-    "import": "./esm/CBOR.js",
-    "require": "./dist/CBOR.js"
+    "./package.json": "./package.json",
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./wrapper.mjs"
+    }
   },
   "files": [
     "dist",

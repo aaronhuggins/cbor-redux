@@ -1,6 +1,6 @@
 # cbor-redux
 
-The Concise Binary Object Representation (CBOR) data format ([RFC 7049](http://tools.ietf.org/html/rfc7049)) implemented in pure JavaScript, revived.
+The Concise Binary Object Representation (CBOR) data format ([RFC 7049](http://tools.ietf.org/html/rfc7049)) implemented in pure JavaScript, revived.  Typed arrays such as Uint8Array, Int16Array or Float32Array are encoded with tags according to [RFC8746 CBOR tags for Typed Arrays](https://datatracker.ietf.org/doc/html/rfc8746).
 
 Rewritten in TypeScript for the browser, Deno, and Node.
 
