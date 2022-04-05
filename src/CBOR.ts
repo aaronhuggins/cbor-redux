@@ -1,13 +1,9 @@
-/** @hidden */
 const POW_2_24 = 5.960464477539063e-8
-/** @hidden */
 const POW_2_32 = 4294967296
-/** @hidden */
 const POW_2_53 = 9007199254740992
-/** @hidden */
 const DECODE_CHUNK_SIZE = 8192
 
-/** @hidden CBOR defined tag values */
+// CBOR defined tag values
 const kCborTag = 6;
 
 // RFC8746 Tag values for typed little endian arrays
@@ -20,7 +16,6 @@ const kCborTagInt32 = 78;
 const kCborTagFloat32 = 85;
 const kCborTagFloat64 = 86;
 
-/** @hidden */
 function objectIs (x: any, y: any) {
   if (typeof Object.is === 'function') return Object.is(x, y)
 
