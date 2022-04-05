@@ -542,6 +542,13 @@ export function encode<T = any>(value: T): ArrayBuffer {
         } else if (val instanceof TaggedValue) {
           writeVarUint(val.tag, 0b11000000);
           encodeItem(val.value);
+        } else if (val instanceof Map) {
+          length = val.size
+          writeTypeAndLength(5, length);
+          for (const [key, value] of val.entries()) {
+            encodeItem(key);
+            encodeItem(value);
+          }
         } else {
           const keys = Object.keys(val);
           length = keys.length;
