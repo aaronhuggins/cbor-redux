@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 function generateArrayBuffer(data: number[]) {
   const uintArray = new Uint8Array(data);
   return uintArray.buffer.slice(

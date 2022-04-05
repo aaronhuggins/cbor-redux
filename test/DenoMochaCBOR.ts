@@ -1,16 +1,16 @@
-import "https://deno.land/x/deno_mocha/mod.ts";
 import { CBOR, decode, SimpleValue, TaggedValue } from "../mod.ts";
 import { testcases, TestTaggedValue } from "./testcases.ts";
 import { helpers } from "./helpers.ts";
 import { mochaTests } from "./mochaTests.ts";
 import {
   deepStrictEqual,
-  ok,
   strictEqual,
+  doesNotThrow,
   throws,
-} from "https://deno.land/std/node/assert.ts";
+  ok,
+} from "https://deno.land/std@0.133.0/node/assert.ts";
 
-const { myDeepEqual, hex2arrayBuffer } = helpers(deepStrictEqual, ok);
+const { myDeepEqual, hex2arrayBuffer } = helpers();
 
 mochaTests(
   testcases,
@@ -19,6 +19,7 @@ mochaTests(
     TaggedValue,
     SimpleValue,
     decode,
+    polyfillFile: '../polyfill.ts'
   },
   {
     myDeepEqual,
@@ -28,20 +29,8 @@ mochaTests(
   {
     deepStrictEqual,
     strictEqual,
-    doesNotThrow(block: Function, message: string | Error) {
-      try {
-        block();
-      } catch (error) {
-        if (typeof message === "string") {
-          throw new Error(message);
-        } else if (message instanceof Error) {
-          throw message;
-        } else {
-          throw error;
-        }
-      }
-    },
+    doesNotThrow,
     throws,
     ok,
-  },
+  }
 );

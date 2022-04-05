@@ -1,4 +1,7 @@
-export function helpers(deepStrictEqual: Function, ok: Function) {
+// deno-lint-ignore-file no-explicit-any
+import { deepStrictEqual, ok } from "https://deno.land/std@0.133.0/node/assert.ts";
+
+export function helpers () {
   return {
     myDeepEqual(actual: any, expected: any, message?: string) {
       if (actual === expected) {
@@ -29,7 +32,7 @@ export function helpers(deepStrictEqual: Function, ok: Function) {
 
     hex2arrayBuffer(data: string) {
       const length = data.length / 2;
-      let ret = new Uint8Array(length);
+      const ret = new Uint8Array(length);
 
       for (let i = 0; i < length; i += 1) {
         ret[i] = parseInt(data.substr(i * 2, 2), 16);

@@ -1,9 +1,13 @@
+// deno-lint-ignore-file no-explicit-any
+import 'https://gist.githubusercontent.com/aaronhuggins/a54934b0d45e0ad477e6f158bb039cfd/raw/91453b8af9a067ea7765b0cab4e63c32ede9b3bb/deno_mocha.ts'
+
 export function mochaTests(
   testcases: any[][],
   cborImport: any,
   helpers: any,
   assertFuncs: any,
 ) {
+  console.log(assertFuncs)
   const { CBOR, TaggedValue, SimpleValue, decode, polyfillFile } = cborImport;
   const { myDeepEqual, hex2arrayBuffer, TestTaggedValue } = helpers;
   const { strictEqual, deepStrictEqual, doesNotThrow, throws, ok } =
@@ -29,7 +33,7 @@ export function mochaTests(
           let hex = "";
           const uint8Array = new Uint8Array(encoded);
 
-          for (var i = 0; i < uint8Array.length; ++i) {
+          for (let i = 0; i < uint8Array.length; ++i) {
             hex += (uint8Array[i] < 0x10 ? "0" : "") +
               uint8Array[i].toString(16);
           }
@@ -143,7 +147,7 @@ export function mochaTests(
       // See issue https://github.com/paroga/cbor-js/issues/24.
       let value = "";
 
-      for (var i = 0; i < 150000; ++i) {
+      for (let i = 0; i < 150000; ++i) {
         value += Math.floor(i % 10).toString();
       }
 
@@ -178,11 +182,12 @@ export function mochaTests(
         await polyfill();
 
         strictEqual((globalThis as any).CBOR.decode, decode);
-        (globalThis as any).window = {} as any;
+        if (typeof (globalThis as any).window === 'undefined') {
+          (globalThis as any).window = {} as any;
+          await polyfill();
 
-        await polyfill();
-
-        strictEqual((globalThis as any).window.CBOR.decode, decode);
+          strictEqual((globalThis as any).window.CBOR.decode, decode);
+        }
       });
     }
   });
