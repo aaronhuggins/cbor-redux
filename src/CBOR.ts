@@ -1,4 +1,4 @@
-// deno-lint-ignore-file no-explicit-any
+// deno-lint-ignore-file no-explicit-any no-unused-vars
 
 const POW_2_24 = 5.960464477539063e-8
 const POW_2_32 = 4294967296
