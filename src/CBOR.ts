@@ -220,13 +220,13 @@ export function decode<T = any> (
         return -1 - length
       case 2: {
         if (length < 0) {
-          let elements = []
+          const elements = []
           let fullArrayLength = 0
           while ((length = readIndefiniteStringLength(majorType)) >= 0) {
             fullArrayLength += length
             elements.push(readArrayBuffer(length))
           }
-          let fullArray = new Uint8Array(fullArrayLength)
+          const fullArray = new Uint8Array(fullArrayLength)
           let fullArrayOffset = 0
           for (i = 0; i < elements.length; ++i) {
             fullArray.set(elements[i], fullArrayOffset)
@@ -237,7 +237,7 @@ export function decode<T = any> (
         return readArrayBuffer(length)
       }
       case 3: {
-        let utf16data: number[] = []
+        const utf16data: number[] = []
         if (length < 0) {
           while ((length = readIndefiniteStringLength(majorType)) >= 0) appendUtf16Data(utf16data, length)
         } else {
@@ -261,9 +261,9 @@ export function decode<T = any> (
         return retArray
       }
       case 5: {
-        let retObject: any = {}
+        const retObject: any = {}
         for (i = 0; i < length || (length < 0 && !readBreak()); ++i) {
-          let key = decodeItem()
+          const key = decodeItem()
           retObject[key] = decodeItem()
         }
         return retObject
@@ -286,7 +286,7 @@ export function decode<T = any> (
     }
   }
 
-  let ret = decodeItem()
+  const ret = decodeItem()
   if (offset !== data.byteLength) throw new Error('Remaining bytes')
   return ret
 }
@@ -305,14 +305,14 @@ export function encode<T = any> (value: T): ArrayBuffer {
 
   function prepareWrite (length: number): DataView {
     let newByteLength = data.byteLength
-    let requiredLength = offset + length
+    const requiredLength = offset + length
     while (newByteLength < requiredLength) newByteLength <<= 1
     if (newByteLength !== data.byteLength) {
-      let oldDataView = dataView
+      const oldDataView = dataView
       data = new ArrayBuffer(newByteLength)
       dataView = new DataView(data)
       byteView = new Uint8Array(data)
-      let uint32count = (offset + 3) >> 2
+      const uint32count = (offset + 3) >> 2
       for (let i = 0; i < uint32count; ++i) dataView.setUint32(i << 2, oldDataView.getUint32(i << 2))
     }
 
@@ -340,9 +340,9 @@ export function encode<T = any> (value: T): ArrayBuffer {
     commitWrite(prepareWrite(4).setUint32(offset, val))
   }
   function writeUint64 (val: number) {
-    let low = val % POW_2_32
-    let high = (val - low) / POW_2_32
-    let view = prepareWrite(8)
+    const low = val % POW_2_32
+    const high = (val - low) / POW_2_32
+    const view = prepareWrite(8)
     view.setUint32(offset, high)
     view.setUint32(offset + 4, low)
     commitWrite()
@@ -403,7 +403,7 @@ export function encode<T = any> (value: T): ArrayBuffer {
         return writeFloat64(val)
 
       case 'string': {
-        let utf8data = []
+        const utf8data = []
         for (i = 0; i < val.length; ++i) {
           let charCode = val.charCodeAt(i)
           if (charCode < 0x80) {
@@ -489,11 +489,11 @@ export function encode<T = any> (value: T): ArrayBuffer {
           writeVarUint(val.tag, 0b11000000)
           encodeItem(val.value)
         } else {
-          let keys = Object.keys(val)
+          const keys = Object.keys(val)
           length = keys.length
           writeTypeAndLength(5, length)
           for (i = 0; i < length; i += 1) {
-            let key = keys[i]
+            const key = keys[i]
             encodeItem(key)
             encodeItem(val[key])
           }
@@ -506,8 +506,8 @@ export function encode<T = any> (value: T): ArrayBuffer {
 
   if ('slice' in data) return data.slice(0, offset)
 
-  let ret = new ArrayBuffer(offset)
-  let retView = new DataView(ret)
+  const ret = new ArrayBuffer(offset)
+  const retView = new DataView(ret)
   for (let i = 0; i < offset; ++i) retView.setUint8(i, dataView.getUint8(i))
   return ret
 }
