@@ -218,7 +218,7 @@ export function decode<T = any> (
         return length
       case 1:
         return -1 - length
-      case 2:
+      case 2: {
         if (length < 0) {
           let elements = []
           let fullArrayLength = 0
@@ -235,7 +235,8 @@ export function decode<T = any> (
           return fullArray
         }
         return readArrayBuffer(length)
-      case 3:
+      }
+      case 3: {
         let utf16data: number[] = []
         if (length < 0) {
           while ((length = readIndefiniteStringLength(majorType)) >= 0) appendUtf16Data(utf16data, length)
@@ -247,7 +248,8 @@ export function decode<T = any> (
           string += String.fromCharCode.apply(null, utf16data.slice(i, i + DECODE_CHUNK_SIZE))
         }
         return string
-      case 4:
+      }
+      case 4: {
         let retArray
         if (length < 0) {
           retArray = []
@@ -257,13 +259,15 @@ export function decode<T = any> (
           for (i = 0; i < length; ++i) retArray[i] = decodeItem()
         }
         return retArray
-      case 5:
+      }
+      case 5: {
         let retObject: any = {}
         for (i = 0; i < length || (length < 0 && !readBreak()); ++i) {
           let key = decodeItem()
           retObject[key] = decodeItem()
         }
         return retObject
+      }
       case 6:
         return tagValueFunction(decodeItem(), length)
       case 7:
@@ -398,7 +402,7 @@ export function encode<T = any> (value: T): ArrayBuffer {
         writeUint8(0xfb)
         return writeFloat64(val)
 
-      case 'string':
+      case 'string': {
         let utf8data = []
         for (i = 0; i < val.length; ++i) {
           let charCode = val.charCodeAt(i)
@@ -425,8 +429,8 @@ export function encode<T = any> (value: T): ArrayBuffer {
 
         writeTypeAndLength(3, utf8data.length)
         return writeUint8Array(utf8data)
-
-      default:
+      }
+      default: {
         let length
         let converted
         if (Array.isArray(val)) {
@@ -494,6 +498,7 @@ export function encode<T = any> (value: T): ArrayBuffer {
             encodeItem(val[key])
           }
         }
+      }
     }
   }
 
