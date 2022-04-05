@@ -4,10 +4,10 @@ import { helpers } from "./helpers.ts";
 import { mochaTests } from "./mochaTests.ts";
 import {
   deepStrictEqual,
-  strictEqual,
   doesNotThrow,
-  throws,
   ok,
+  strictEqual,
+  throws,
 } from "https://deno.land/std@0.133.0/node/assert.ts";
 
 const { myDeepEqual, hex2arrayBuffer } = helpers();
@@ -19,7 +19,7 @@ mochaTests(
     TaggedValue,
     SimpleValue,
     decode,
-    polyfillFile: '../polyfill.ts'
+    polyfillFile: "../polyfill.ts",
   },
   {
     myDeepEqual,
@@ -32,5 +32,5 @@ mochaTests(
     doesNotThrow,
     throws,
     ok,
-  }
+  },
 );

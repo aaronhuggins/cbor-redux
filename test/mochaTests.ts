@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import 'https://gist.githubusercontent.com/aaronhuggins/a54934b0d45e0ad477e6f158bb039cfd/raw/91453b8af9a067ea7765b0cab4e63c32ede9b3bb/deno_mocha.ts'
+import "https://gist.githubusercontent.com/aaronhuggins/a54934b0d45e0ad477e6f158bb039cfd/raw/91453b8af9a067ea7765b0cab4e63c32ede9b3bb/deno_mocha.ts";
 
 export function mochaTests(
   testcases: any[][],
@@ -7,7 +7,6 @@ export function mochaTests(
   helpers: any,
   assertFuncs: any,
 ) {
-  console.log(assertFuncs)
   const { CBOR, TaggedValue, SimpleValue, decode, polyfillFile } = cborImport;
   const { myDeepEqual, hex2arrayBuffer, TestTaggedValue } = helpers;
   const { strictEqual, deepStrictEqual, doesNotThrow, throws, ok } =
@@ -182,7 +181,7 @@ export function mochaTests(
         await polyfill();
 
         strictEqual((globalThis as any).CBOR.decode, decode);
-        if (typeof (globalThis as any).window === 'undefined') {
+        if (typeof (globalThis as any).window === "undefined") {
           (globalThis as any).window = {} as any;
           await polyfill();
 

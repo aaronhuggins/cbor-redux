@@ -1,7 +1,10 @@
 // deno-lint-ignore-file no-explicit-any
-import { deepStrictEqual, ok } from "https://deno.land/std@0.133.0/node/assert.ts";
+import {
+  deepStrictEqual,
+  ok,
+} from "https://deno.land/std@0.133.0/node/assert.ts";
 
-export function helpers () {
+export function helpers() {
   return {
     myDeepEqual(actual: any, expected: any, message?: string) {
       if (actual === expected) {
