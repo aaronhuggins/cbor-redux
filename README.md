@@ -1,6 +1,10 @@
 # cbor-redux
 
-The Concise Binary Object Representation (CBOR) data format ([RFC 7049](http://tools.ietf.org/html/rfc7049)) implemented in pure JavaScript, revived.  Typed arrays such as Uint8Array, Int16Array or Float32Array are encoded with tags according to [RFC8746 CBOR tags for Typed Arrays](https://datatracker.ietf.org/doc/html/rfc8746).
+The Concise Binary Object Representation (CBOR) data format
+([RFC 7049](http://tools.ietf.org/html/rfc7049)) implemented in pure JavaScript,
+revived. Typed arrays such as Uint8Array, Int16Array or Float32Array are encoded
+with tags according to
+[RFC8746 CBOR tags for Typed Arrays](https://datatracker.ietf.org/doc/html/rfc8746).
 
 Rewritten in TypeScript for the browser, Deno, and Node.
 
@@ -24,13 +28,13 @@ Rewritten in TypeScript for the browser, Deno, and Node.
 Require `cbor-redux` in [Node](https://www.npmjs.com/package/cbor-redux):
 
 ```javascript
-const { CBOR } = require('cbor-redux')
+const { CBOR } = require("cbor-redux");
 ```
 
 or import in [Deno](https://deno.land/x/cbor_redux):
 
 ```javascript
-import { CBOR } from 'https://deno.land/x/cbor_redux@0.4.0/mod.ts'
+import { CBOR } from "https://deno.land/x/cbor_redux@0.4.0/mod.ts";
 ```
 
 or script on an [HTML page](https://www.skypack.dev/npm/cbor-redux):
@@ -39,14 +43,15 @@ or script on an [HTML page](https://www.skypack.dev/npm/cbor-redux):
 <script src="https://cdn.skypack.dev/cbor-redux@^0.4.0" type="text/javascript"></script>
 ```
 
-> For ES5 polyfill, use es5/CBOR.js in the npm package or else `<script src="https://unpkg.com/cbor-redux@0.4.0/es5/CBOR.js"></script>`.
+> For ES5 polyfill, use es5/CBOR.js in the npm package or else
+> `<script src="https://unpkg.com/cbor-redux@0.4.0/es5/CBOR.js"></script>`.
 
 Then you can use it via the `CBOR`-object in your code:
 
 ```javascript
-const initial = { Hello: 'World' }
-const encoded = CBOR.encode(initial)
-const decoded = CBOR.decode(encoded)
+const initial = { Hello: "World" };
+const encoded = CBOR.encode(initial);
+const decoded = CBOR.decode(encoded);
 ```
 
 After running this example `initial` and `decoded` represent the same value.
@@ -57,13 +62,16 @@ The `CBOR`-object provides the following two functions:
 
 - **CBOR**._**decode**_(_data: ArrayBuffer_)
 
-  > Take the ArrayBuffer object _data_ and return it decoded as a JavaScript object.
+  > Take the ArrayBuffer object _data_ and return it decoded as a JavaScript
+  > object.
 
 - **CBOR**._**encode**_(_data: any_)
 
-  > Take the JavaScript object _data_ and return it encoded as a ArrayBuffer object.
+  > Take the JavaScript object _data_ and return it encoded as a ArrayBuffer
+  > object.
 
-For complete API details, visit the [documentation](https://aaronhuggins.github.io/cbor-redux/).
+For complete API details, visit the
+[documentation](https://aaronhuggins.github.io/cbor-redux/).
 
 ## Combination with WebSocket
 

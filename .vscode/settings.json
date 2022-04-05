@@ -3,7 +3,7 @@
   "deno.enable": true,
   "deno.codeLens.test": true,
   "deno.codeLens.testArgs": [
-      "--allow-all"
+    "--allow-all"
   ],
   "deno.lint": true,
   "deno.suggest.autoImports": true,
@@ -11,6 +11,6 @@
   "deno.suggest.paths": true,
   "deno.unstable": true,
   "deno.suggest.imports.hosts": {
-      "https://deno.land": true
+    "https://deno.land": true
   }
 }

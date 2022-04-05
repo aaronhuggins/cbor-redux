@@ -1,10 +1,10 @@
-import { CBOR, TaggedValue, SimpleValue, decode } from '../src/CBOR'
-import { testcases, TestTaggedValue } from './testcases'
-import { helpers } from './helpers'
-import { deepStrictEqual, strictEqual, doesNotThrow, throws, ok } from 'assert'
-import { mochaTests } from './mochaTests'
+import { CBOR, decode, SimpleValue, TaggedValue } from "../src/CBOR";
+import { testcases, TestTaggedValue } from "./testcases";
+import { helpers } from "./helpers";
+import { deepStrictEqual, doesNotThrow, ok, strictEqual, throws } from "assert";
+import { mochaTests } from "./mochaTests";
 
-const { myDeepEqual, hex2arrayBuffer } = helpers(deepStrictEqual, ok)
+const { myDeepEqual, hex2arrayBuffer } = helpers(deepStrictEqual, ok);
 
 mochaTests(
   testcases,
@@ -13,18 +13,18 @@ mochaTests(
     TaggedValue,
     SimpleValue,
     decode,
-    polyfillFile: '../src/polyfill'
+    polyfillFile: "../src/polyfill",
   },
   {
     myDeepEqual,
     hex2arrayBuffer,
-    TestTaggedValue
+    TestTaggedValue,
   },
   {
     deepStrictEqual,
     strictEqual,
     doesNotThrow,
     throws,
-    ok
-  }
-)
+    ok,
+  },
+);
