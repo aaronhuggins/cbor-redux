@@ -1,3 +1,5 @@
+// deno-lint-ignore-file no-explicit-any
+
 const POW_2_24 = 5.960464477539063e-8
 const POW_2_32 = 4294967296
 const POW_2_53 = 9007199254740992
@@ -67,8 +69,8 @@ export function decode<T = any> (
   tagger?: TaggedValueFunction,
   simpleValue?: SimpleValueFunction
 ): T {
-  let dataView = new DataView(data)
-  let ta = new Uint8Array(data)
+  const dataView = new DataView(data)
+  const ta = new Uint8Array(data)
   let offset = 0
   let tagValueFunction: TaggedValueFunction = function (value: any, tag: number): any {
     if (value instanceof Uint8Array) {
@@ -108,13 +110,13 @@ export function decode<T = any> (
     return commitRead(length, new Uint8Array(data, offset, length))
   }
   function readFloat16 () {
-    let tempArrayBuffer = new ArrayBuffer(4)
-    let tempDataView = new DataView(tempArrayBuffer)
-    let value = readUint16()
+    const tempArrayBuffer = new ArrayBuffer(4)
+    const tempDataView = new DataView(tempArrayBuffer)
+    const value = readUint16()
 
-    let sign = value & 0x8000
+    const sign = value & 0x8000
     let exponent = value & 0x7c00
-    let fraction = value & 0x03ff
+    const fraction = value & 0x03ff
 
     if (exponent === 0x7c00) exponent = 0xff << 10
     else if (exponent !== 0) exponent += (127 - 15) << 10
@@ -156,9 +158,9 @@ export function decode<T = any> (
     throw new Error('Invalid length encoding')
   }
   function readIndefiniteStringLength (majorType: number): number {
-    let initialByte = readUint8()
+    const initialByte = readUint8()
     if (initialByte === 0xff) return -1
-    let length = readLength(initialByte & 0x1f)
+    const length = readLength(initialByte & 0x1f)
     if (length < 0 || initialByte >> 5 !== majorType) throw new Error('Invalid indefinite length element')
     return length
   }
@@ -191,9 +193,9 @@ export function decode<T = any> (
   }
 
   function decodeItem (): any {
-    let initialByte = readUint8()
-    let majorType = initialByte >> 5
-    let additionalInformation = initialByte & 0x1f
+    const initialByte = readUint8()
+    const majorType = initialByte >> 5
+    const additionalInformation = initialByte & 0x1f
     let i
     let length
 
