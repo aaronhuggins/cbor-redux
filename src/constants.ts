@@ -5,7 +5,9 @@ export const CBOR_OPTIONS = Object.freeze<CBOROptions>({
   mode: "strict",
 });
 
+/** A symbol which is emitted when a value is not associated with a key or CBOR label. */
 export const EMPTY_KEY = Symbol("EMPTY_KEY");
+/** A symbol which may be returned by the user in the encoder's `replacer` function to omit values. */
 export const OMIT_VALUE = Symbol("OMIT_VALUE");
 
 export const POW_2_24 = 5.960464477539063e-8;
