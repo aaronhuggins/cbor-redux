@@ -307,7 +307,7 @@ export function decode<T = any>(
               );
           }
         }
-        return tagValueFunction(decodeItem(), length);
+        return tagValueFunction(value, tag);
       }
       case 7:
         switch (length) {
