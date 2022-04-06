@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 import "https://raw.githubusercontent.com/aaronhuggins/deno_mocha/e6c179156821c626354a8c792518958625078a82/global_mocha.ts";
-import { CBOR, decode, SimpleValue, TaggedValue } from "../mod.ts";
+import { CBOR, CBOROptions, decode, SimpleValue, TaggedValue } from "../mod.ts";
 import { testcases, TestTaggedValue } from "./testcases.ts";
 import {
   deepStrictEqual,
@@ -95,14 +95,6 @@ describe("CBOR", () => {
     const decoded = CBOR.decode(
       arrayBuffer,
       null,
-      {
-        tagger: (value: any, tag: any) => {
-          return new TaggedValue(value, tag);
-        },
-        simpleValue: (value: any) => {
-          return new SimpleValue(value);
-        },
-      }
     );
 
     ok(decoded[0] instanceof TaggedValue, "first item is a TaggedValue");
@@ -163,12 +155,17 @@ describe("CBOR", () => {
   });
 
   it("should use javascript map", () => {
+    const opts: CBOROptions = { dictionary: "map" };
     const value = new Map<any, any>([[1, "value1"], [
       new Uint8Array([4, 5, 6]),
       "value2",
     ]]);
 
-    deepStrictEqual(CBOR.decode(CBOR.encode(value), null, { dictionary: 'map' }), value, "deepEqual");
+    deepStrictEqual(
+      CBOR.decode(CBOR.encode(value), null, opts),
+      value,
+      "deepEqual",
+    );
   });
 
   it("should return without slice method", () => {

@@ -1,4 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
+import { SimpleValue } from "./SimpleValue.ts";
 function generateArrayBuffer(data: number[]) {
   const buffer = new ArrayBuffer(data.length);
   new Uint8Array(buffer).set(new Uint8Array(data));
@@ -201,7 +202,7 @@ export const testcases: any[][] = [
   ["true", "f5", true],
   ["null", "f6", null],
   ["undefined", "f7", undefined],
-  ["UnassignedSimpleValue 255", "f8ff", undefined, true],
+  ["UnassignedSimpleValue 255", "f8ff", new SimpleValue(0xff), true],
   ["Float16 0.0", "f90000", 0.0, true],
   ["Float16 -0.0", "f98000", -0.0, true],
   ["Float16 1.0", "f93c00", 1.0, true],

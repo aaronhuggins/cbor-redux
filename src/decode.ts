@@ -1,6 +1,7 @@
 // deno-lint-ignore-file no-explicit-any no-unused-vars
 import {
   DECODE_CHUNK_SIZE,
+  EMPTY_KEY,
   kCborTagFloat32,
   kCborTagFloat64,
   kCborTagInt16,
@@ -15,42 +16,28 @@ import {
 import { options } from "./helpers.ts";
 import { SimpleValue } from "./SimpleValue.ts";
 import { TaggedValue } from "./TaggedValue.ts";
-import {
-  CBOROptions,
-  SimpleValueFunction,
-  TaggedValueFunction,
-} from "./types.ts";
+import { CBOROptions, CBORReviver } from "./types.ts";
 
 /**
  * Converts a Concise Binary Object Representation (CBOR) buffer into an object.
  * @param data - A valid CBOR buffer.
- * @param tagger - A function that extracts tagged values. This function is called for each member of the object.
- * @param simpleValue - A function that extracts simple values. This function is called for each member of the object.
+ * @param reviver - If a function, this prescribes how the value originally produced by parsing is transformed, before being returned.
+ * @param cborOptions - An options bag to specify the dictionary type and mode for the decoder.
  * @returns The CBOR buffer converted to a JavaScript value.
  */
 export function decode<T = any>(
   data: ArrayBuffer | SharedArrayBuffer,
-  reviver?: any, // TODO: Define reviver functionality.
+  reviver?: CBORReviver | null,
   cborOptions: CBOROptions = {},
 ): T {
-  const { dictionary, mode, tagger, simpleValue } = options(cborOptions);
+  const { dictionary, mode } = options(cborOptions);
   const dataView = new DataView(data);
   const ta = new Uint8Array(data);
   let offset = 0;
-  let tagValueFunction: TaggedValueFunction = function (
-    value: any,
-    tag: number,
-  ): any {
-    return new TaggedValue(value, tag);
+  let reviverFunction: CBORReviver = function (key, value) {
+    return value;
   };
-  let simpleValFunction: SimpleValueFunction = function (
-    value: number,
-  ): SimpleValue {
-    return (undefined as unknown) as SimpleValue;
-  };
-
-  if (typeof tagger === "function") tagValueFunction = tagger;
-  if (typeof simpleValue === "function") simpleValFunction = simpleValue;
+  if (typeof reviver === "function") reviverFunction = reviver;
 
   function commitRead<T>(length: number, value: T): T {
     offset += length;
@@ -173,9 +160,9 @@ export function decode<T = any>(
 
     switch (majorType) {
       case 0:
-        return length;
+        return reviverFunction(EMPTY_KEY, length);
       case 1:
-        return -1 - length;
+        return reviverFunction(EMPTY_KEY, -1 - length);
       case 2: {
         if (length < 0) {
           const elements = [];
@@ -190,9 +177,9 @@ export function decode<T = any>(
             fullArray.set(elements[i], fullArrayOffset);
             fullArrayOffset += elements[i].length;
           }
-          return fullArray;
+          return reviverFunction(EMPTY_KEY, fullArray);
         }
-        return readArrayBuffer(length);
+        return reviverFunction(EMPTY_KEY, readArrayBuffer(length));
       }
       case 3: {
         const utf16data: number[] = [];
@@ -210,18 +197,23 @@ export function decode<T = any>(
             utf16data.slice(i, i + DECODE_CHUNK_SIZE),
           );
         }
-        return string;
+        return reviverFunction(EMPTY_KEY, string);
       }
       case 4: {
         let retArray;
         if (length < 0) {
           retArray = [];
-          while (!readBreak()) retArray.push(decodeItem());
+          let index = 0;
+          while (!readBreak()) {
+            retArray.push(reviverFunction(index++, decodeItem()));
+          }
         } else {
           retArray = new Array(length);
-          for (i = 0; i < length; ++i) retArray[i] = decodeItem();
+          for (i = 0; i < length; ++i) {
+            retArray[i] = reviverFunction(i, decodeItem());
+          }
         }
-        return retArray;
+        return reviverFunction(EMPTY_KEY, retArray);
       }
       case 5: {
         if (dictionary === "map") {
@@ -231,9 +223,9 @@ export function decode<T = any>(
             if (mode === "strict" && retMap.has(key)) {
               throw new Error("CBORError: Duplicate key encountered");
             }
-            retMap.set(key, decodeItem());
+            retMap.set(key, reviverFunction(key, decodeItem()));
           }
-          return retMap;
+          return reviverFunction(EMPTY_KEY, retMap);
         }
         const retObject: any = {};
         for (i = 0; i < length || (length < 0 && !readBreak()); ++i) {
@@ -244,88 +236,58 @@ export function decode<T = any>(
           ) {
             throw new Error("CBORError: Duplicate key encountered");
           }
-          retObject[key] = decodeItem();
+          retObject[key] = reviverFunction(key, decodeItem());
         }
-        return retObject;
+        return reviverFunction(EMPTY_KEY, retObject);
       }
       case 6: {
         const value = decodeItem();
         const tag = length;
         if (value instanceof Uint8Array) {
           // Handles round-trip of typed arrays as they are a built-in JS language feature.
+          // Similar decision was made for built-in JS language primitives with SimpleValue.
+          const buffer = value.buffer.slice(
+            value.byteOffset,
+            value.byteLength + value.byteOffset,
+          );
           switch (tag) {
             case kCborTagUint8:
-              return new Uint8Array(value);
+              return reviverFunction(EMPTY_KEY, new Uint8Array(buffer));
             case kCborTagInt8:
-              return new Int8Array(
-                value.buffer.slice(
-                  value.byteOffset,
-                  value.byteLength + value.byteOffset,
-                ),
-              );
+              return reviverFunction(EMPTY_KEY, new Int8Array(buffer));
             case kCborTagUint16:
-              return new Uint16Array(
-                value.buffer.slice(
-                  value.byteOffset,
-                  value.byteLength + value.byteOffset,
-                ),
-              );
+              return reviverFunction(EMPTY_KEY, new Uint16Array(buffer));
             case kCborTagInt16:
-              return new Int16Array(
-                value.buffer.slice(
-                  value.byteOffset,
-                  value.byteLength + value.byteOffset,
-                ),
-              );
+              return reviverFunction(EMPTY_KEY, new Int16Array(buffer));
             case kCborTagUint32:
-              return new Uint32Array(
-                value.buffer.slice(
-                  value.byteOffset,
-                  value.byteLength + value.byteOffset,
-                ),
-              );
+              return reviverFunction(EMPTY_KEY, new Uint32Array(buffer));
             case kCborTagInt32:
-              return new Int32Array(
-                value.buffer.slice(
-                  value.byteOffset,
-                  value.byteLength + value.byteOffset,
-                ),
-              );
+              return reviverFunction(EMPTY_KEY, new Int32Array(buffer));
             case kCborTagFloat32:
-              return new Float32Array(
-                value.buffer.slice(
-                  value.byteOffset,
-                  value.byteLength + value.byteOffset,
-                ),
-              );
+              return reviverFunction(EMPTY_KEY, new Float32Array(buffer));
             case kCborTagFloat64:
-              return new Float64Array(
-                value.buffer.slice(
-                  value.byteOffset,
-                  value.byteLength + value.byteOffset,
-                ),
-              );
+              return reviverFunction(EMPTY_KEY, new Float64Array(buffer));
           }
         }
-        return tagValueFunction(value, tag);
+        return reviverFunction(EMPTY_KEY, new TaggedValue(value, tag));
       }
       case 7:
         switch (length) {
           case 20:
-            return false;
+            return reviverFunction(EMPTY_KEY, false);
           case 21:
-            return true;
+            return reviverFunction(EMPTY_KEY, true);
           case 22:
-            return null;
+            return reviverFunction(EMPTY_KEY, null);
           case 23:
-            return undefined;
+            return reviverFunction(EMPTY_KEY, undefined);
           default:
-            return simpleValFunction(length);
+            return reviverFunction(EMPTY_KEY, new SimpleValue(length));
         }
     }
   }
 
-  const ret = decodeItem();
+  const ret = reviverFunction(EMPTY_KEY, decodeItem());
   if (offset !== data.byteLength) throw new Error("CBORError: Remaining bytes");
   return ret;
 }

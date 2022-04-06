@@ -13,6 +13,7 @@ import {
   POW_2_53,
 } from "./constants.ts";
 import { objectIs } from "./helpers.ts";
+import { SimpleValue } from "./SimpleValue.ts";
 import { TaggedValue } from "./TaggedValue.ts";
 
 /**
@@ -213,6 +214,8 @@ export function encode<T = any>(value: T): ArrayBuffer {
         } else if (val instanceof TaggedValue) {
           writeVarUint(val.tag, 0b11000000);
           encodeItem(val.value);
+        } else if (val instanceof SimpleValue) {
+          writeTypeAndLength(7, val.value);
         } else if (val instanceof Map) {
           length = val.size;
           writeTypeAndLength(5, length);

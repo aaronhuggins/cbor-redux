@@ -31,12 +31,6 @@ export function options(options?: CBOROptions): Readonly<CBOROptions> {
       ? options.dictionary
       : CBOR_OPTIONS.dictionary;
     bag.mode = isMode(options.mode) ? options.mode : CBOR_OPTIONS.mode;
-    bag.tagger = typeof options.tagger === "function"
-      ? options.tagger
-      : undefined;
-    bag.simpleValue = typeof options.simpleValue === "function"
-      ? options.simpleValue
-      : undefined;
   }
 
   return Object.freeze(bag);
