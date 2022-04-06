@@ -177,39 +177,42 @@ describe("CBOR", () => {
   it("should return without slice method", () => {
     const object = { hello: "world!" };
     const expected = hex2arrayBuffer("a16568656c6c6f66776f726c6421");
+    const originalSlice = (globalThis as any).ArrayBuffer.prototype.slice;
 
     delete (globalThis as any).ArrayBuffer.prototype.slice;
 
     const result = CBOR.encode(object);
 
     deepStrictEqual(result, expected);
+
+    (globalThis as any).ArrayBuffer.prototype.slice = originalSlice;
   });
 
   it("should use objectIs polyfill", () => {
     const object = { hello: "world!", greetings: -0 };
+    const originalObjectIs = (globalThis as any).Object.is
 
     delete (globalThis as any).Object.is;
 
     doesNotThrow(() => {
       CBOR.encode(object);
+      (globalThis as any).Object.is = originalObjectIs;
     });
   });
 
-  if (typeof polyfillFile === "string") {
-    it("Polyfill adds CBOR to global scope", async () => {
-      const { polyfill } = await import(polyfillFile);
+  it("Polyfill adds CBOR to global scope", async () => {
+    const { polyfill } = await import(polyfillFile);
 
+    await polyfill();
+
+    strictEqual((globalThis as any).CBOR.decode.name, decode.name);
+    if (typeof (globalThis as any).window === "undefined") {
+      (globalThis as any).window = {} as any;
       await polyfill();
 
-      strictEqual((globalThis as any).CBOR.decode.name, decode.name);
-      if (typeof (globalThis as any).window === "undefined") {
-        (globalThis as any).window = {} as any;
-        await polyfill();
-
-        strictEqual((globalThis as any).window.CBOR.decode.name, decode.name);
-      }
-    });
-  }
+      strictEqual((globalThis as any).window.CBOR.decode.name, decode.name);
+    }
+  });
 });
 
 function myDeepEqual(actual: any, expected: any, message?: string) {
