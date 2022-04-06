@@ -1,5 +1,6 @@
 {
   "tasks": {
+    // Allows shorthand test command with permissions baked in.
     "test": "deno test --allow-read"
   }
 }
