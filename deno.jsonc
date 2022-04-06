@@ -1,6 +1,10 @@
 {
   "tasks": {
     // Allows shorthand test command with permissions baked in.
-    "test": "deno test --allow-read"
+    "test": "deno test --allow-read",
+    // Command to build for npm.
+    "build": "deno run -A scripts/build_npm.ts",
+    // Command to publish to npm repository.
+    "publish": "cd ./npm && npm publish"
   }
 }
