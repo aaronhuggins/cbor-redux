@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import "https://gist.githubusercontent.com/aaronhuggins/a54934b0d45e0ad477e6f158bb039cfd/raw/91453b8af9a067ea7765b0cab4e63c32ede9b3bb/deno_mocha.ts";
+import "https://raw.githubusercontent.com/aaronhuggins/deno_mocha/e6c179156821c626354a8c792518958625078a82/global_mocha.ts";
 import { CBOR, decode, SimpleValue, TaggedValue } from "../mod.ts";
 import { testcases, TestTaggedValue } from "./testcases.ts";
 import {
