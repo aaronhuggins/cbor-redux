@@ -18,4 +18,4 @@ export async function polyfill() {
   }
 }
 
-await polyfill();
+polyfill();
