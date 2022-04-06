@@ -1,86 +1,9 @@
 // deno-lint-ignore-file no-explicit-any no-unused-vars
-
-type DictionaryOption = "object" | "map";
-
-export interface CBOROptions {
-  /** Set the dictionary type for supported environments; defaults to `object`. */
-  dictionary?: DictionaryOption;
-}
-
-/** A function that extracts tagged values. */
-export type TaggedValueFunction = (value: any, tag: number) => TaggedValue;
-/** A function that extracts simple values. */
-export type SimpleValueFunction = (value: any) => SimpleValue;
-
-const CBOR_OPTIONS: CBOROptions = {
-  dictionary: "object",
-};
-
-const POW_2_24 = 5.960464477539063e-8;
-const POW_2_32 = 4294967296;
-const POW_2_53 = 9007199254740992;
-const DECODE_CHUNK_SIZE = 8192;
-
-// CBOR defined tag values
-const kCborTag = 6;
-
-// RFC8746 Tag values for typed little endian arrays
-const kCborTagUint8 = 64;
-const kCborTagUint16 = 69;
-const kCborTagUint32 = 70;
-const kCborTagInt8 = 72;
-const kCborTagInt16 = 77;
-const kCborTagInt32 = 78;
-const kCborTagFloat32 = 85;
-const kCborTagFloat64 = 86;
-
-function objectIs(x: any, y: any) {
-  if (typeof Object.is === "function") return Object.is(x, y);
-
-  // SameValue algorithm
-  // Steps 1-5, 7-10
-  if (x === y) {
-    // Steps 6.b-6.e: +0 != -0
-    return x !== 0 || 1 / x === 1 / y;
-  }
-
-  // Step 6.a: NaN == NaN
-  return x !== x && y !== y;
-}
-
-/** Convenience class for structuring a tagged value. */
-export class TaggedValue {
-  constructor(value: any, tag: number) {
-    this.value = value;
-    this.tag = tag;
-  }
-
-  value: any;
-  tag: number;
-}
-
-/** Convenience class for structuring a simple value. */
-export class SimpleValue {
-  constructor(value: any) {
-    this.value = value;
-  }
-
-  value: any;
-}
-
-export function options(options?: CBOROptions): Readonly<CBOROptions> {
-  function isDictionary(value: any): value is DictionaryOption {
-    return typeof value === "string" && ["object", "map"].includes(value);
-  }
-
-  if (typeof options === "object") {
-    CBOR_OPTIONS.dictionary = isDictionary(options.dictionary)
-      ? options.dictionary
-      : "object";
-  }
-
-  return Object.freeze({ ...CBOR_OPTIONS });
-}
+import type { CBOROptions, SimpleValueFunction, TaggedValueFunction } from './types.ts'
+import { SimpleValue } from './SimpleValue.ts'
+import { TaggedValue } from './TaggedValue.ts'
+import { objectIs, options } from './helpers.ts'
+import { CBOR_OPTIONS, DECODE_CHUNK_SIZE, kCborTag, kCborTagFloat32, kCborTagFloat64, kCborTagInt16, kCborTagInt32, kCborTagInt8, kCborTagUint16, kCborTagUint32, kCborTagUint8, POW_2_24, POW_2_32, POW_2_53 } from './constants.ts'
 
 /**
  * Converts a Concise Binary Object Representation (CBOR) buffer into an object.
