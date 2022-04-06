@@ -94,12 +94,15 @@ describe("CBOR", () => {
     const arrayBuffer = hex2arrayBuffer("83d81203d9456708f8f0");
     const decoded = CBOR.decode(
       arrayBuffer,
-      (value: any, tag: any) => {
-        return new TaggedValue(value, tag);
-      },
-      (value: any) => {
-        return new SimpleValue(value);
-      },
+      null,
+      {
+        tagger: (value: any, tag: any) => {
+          return new TaggedValue(value, tag);
+        },
+        simpleValue: (value: any) => {
+          return new SimpleValue(value);
+        },
+      }
     );
 
     ok(decoded[0] instanceof TaggedValue, "first item is a TaggedValue");
@@ -165,16 +168,7 @@ describe("CBOR", () => {
       "value2",
     ]]);
 
-    CBOR.options({ dictionary: "map" });
-
-    deepStrictEqual(CBOR.decode(CBOR.encode(value)), value, "deepEqual");
-  });
-
-  it("should configure CBOR options", () => {
-    const expected: any = { dictionary: "object" };
-    const actual = CBOR.options(expected);
-
-    deepStrictEqual(actual, expected, "deepEqual");
+    deepStrictEqual(CBOR.decode(CBOR.encode(value), null, { dictionary: 'map' }), value, "deepEqual");
   });
 
   it("should return without slice method", () => {
