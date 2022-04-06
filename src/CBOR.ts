@@ -337,6 +337,14 @@ export function decode<T = any>(
         return retArray;
       }
       case 5: {
+        if (CBOR_OPTIONS.dictionary === 'map') {
+          const retMap = new Map<any, any>()
+          for (i = 0; i < length || (length < 0 && !readBreak()); ++i) {
+            const key = decodeItem();
+            retMap.set(key, decodeItem());
+          }
+          return retMap
+        }
         const retObject: any = {};
         for (i = 0; i < length || (length < 0 && !readBreak()); ++i) {
           const key = decodeItem();
