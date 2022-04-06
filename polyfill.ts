@@ -10,11 +10,13 @@ declare global {
 
 /** Method for polyfilling CBOR instead of intentionally importing. */
 export async function polyfill() {
+  // dnt-shim-ignore
   if (typeof window === "object") {
-    window.CBOR = await import("./src/CBOR.ts");
+    // dnt-shim-ignore
+    window.CBOR = await import("./mod.ts");
   } else {
-    // @ts-expect-error: CBOR actually is declared on the global scope so we want this.
-    globalThis.CBOR = await import("./src/CBOR.ts");
+    // dnt-shim-ignore
+    (globalThis as any).CBOR = await import("./mod.ts");
   }
 }
 

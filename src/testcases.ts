@@ -1,10 +1,8 @@
 // deno-lint-ignore-file no-explicit-any
 function generateArrayBuffer(data: number[]) {
-  const uintArray = new Uint8Array(data);
-  return uintArray.buffer.slice(
-    uintArray.byteOffset,
-    uintArray.byteLength + uintArray.byteOffset,
-  );
+  const buffer = new ArrayBuffer(data.length);
+  new Uint8Array(buffer).set(new Uint8Array(data));
+  return buffer;
 }
 
 export class TestTaggedValue {

@@ -10,7 +10,9 @@ import {
   throws,
 } from "https://deno.land/std@0.133.0/node/assert.ts";
 
-const polyfillFile = "../polyfill.ts";
+declare let process: any
+
+const polyfillFile = (typeof process !== 'undefined') && (process.release.name === 'node') ? "../polyfill.js" : "../polyfill.ts";
 const ok: any = okay;
 
 describe("CBOR", () => {
@@ -199,12 +201,12 @@ describe("CBOR", () => {
 
       await polyfill();
 
-      strictEqual((globalThis as any).CBOR.decode, decode);
+      strictEqual((globalThis as any).CBOR.decode.name, decode.name);
       if (typeof (globalThis as any).window === "undefined") {
         (globalThis as any).window = {} as any;
         await polyfill();
 
-        strictEqual((globalThis as any).window.CBOR.decode, decode);
+        strictEqual((globalThis as any).window.CBOR.decode.name, decode.name);
       }
     });
   }
