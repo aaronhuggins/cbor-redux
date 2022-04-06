@@ -153,6 +153,21 @@ export function mochaTests(
       deepStrictEqual(CBOR.decode(CBOR.encode(value)), value, "deepEqual");
     });
 
+    it('should use javascript map', () => {
+      const value = new Map<any, any>([[1, 'value1'], [new Uint8Array([4, 5, 6]), 'value2']]);
+
+      CBOR.options({ dictionary: 'map' })
+
+      deepStrictEqual(CBOR.decode(CBOR.encode(value)), value, "deepEqual");
+    });
+
+    it('should configure CBOR options', () => {
+      const expected = { dictionary: 'object' }
+      const actual = CBOR.options(expected)
+
+      deepStrictEqual(actual, expected, "deepEqual")
+    })
+
     it("should return without slice method", () => {
       const object = { hello: "world!" };
       const expected = hex2arrayBuffer("a16568656c6c6f66776f726c6421");
