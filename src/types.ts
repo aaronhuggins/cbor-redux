@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
-import type { SimpleValue } from './SimpleValue.ts'
-import type { TaggedValue } from './TaggedValue.ts'
+import type { SimpleValue } from "./SimpleValue.ts";
+import type { TaggedValue } from "./TaggedValue.ts";
 
 export type DictionaryOption = "object" | "map";
 

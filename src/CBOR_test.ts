@@ -10,9 +10,12 @@ import {
   throws,
 } from "https://deno.land/std@0.133.0/node/assert.ts";
 
-declare let process: any
+declare let process: any;
 
-const polyfillFile = (typeof process !== 'undefined') && (process.release.name === 'node') ? "../polyfill.js" : "../polyfill.ts";
+const polyfillFile =
+  (typeof process !== "undefined") && (process.release.name === "node")
+    ? "../polyfill.js"
+    : "../polyfill.ts";
 const ok: any = okay;
 
 describe("CBOR", () => {
@@ -190,7 +193,7 @@ describe("CBOR", () => {
 
   it("should use objectIs polyfill", () => {
     const object = { hello: "world!", greetings: -0 };
-    const originalObjectIs = (globalThis as any).Object.is
+    const originalObjectIs = (globalThis as any).Object.is;
 
     delete (globalThis as any).Object.is;
 

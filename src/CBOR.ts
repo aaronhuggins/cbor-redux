@@ -1,9 +1,28 @@
 // deno-lint-ignore-file no-explicit-any no-unused-vars
-import type { CBOROptions, SimpleValueFunction, TaggedValueFunction } from './types.ts'
-import { SimpleValue } from './SimpleValue.ts'
-import { TaggedValue } from './TaggedValue.ts'
-import { objectIs, options } from './helpers.ts'
-import { CBOR_OPTIONS, DECODE_CHUNK_SIZE, kCborTag, kCborTagFloat32, kCborTagFloat64, kCborTagInt16, kCborTagInt32, kCborTagInt8, kCborTagUint16, kCborTagUint32, kCborTagUint8, POW_2_24, POW_2_32, POW_2_53 } from './constants.ts'
+import type {
+  CBOROptions,
+  SimpleValueFunction,
+  TaggedValueFunction,
+} from "./types.ts";
+import { SimpleValue } from "./SimpleValue.ts";
+import { TaggedValue } from "./TaggedValue.ts";
+import { objectIs, options } from "./helpers.ts";
+import {
+  CBOR_OPTIONS,
+  DECODE_CHUNK_SIZE,
+  kCborTag,
+  kCborTagFloat32,
+  kCborTagFloat64,
+  kCborTagInt16,
+  kCborTagInt32,
+  kCborTagInt8,
+  kCborTagUint16,
+  kCborTagUint32,
+  kCborTagUint8,
+  POW_2_24,
+  POW_2_32,
+  POW_2_53,
+} from "./constants.ts";
 
 /**
  * Converts a Concise Binary Object Representation (CBOR) buffer into an object.
