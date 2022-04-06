@@ -10,3 +10,4 @@ export interface CBOROptions {
 }
 
 export type CBORReviver = (key: any, value: any) => any;
+export type CBORReplacer = (key: any, value: any) => any;
