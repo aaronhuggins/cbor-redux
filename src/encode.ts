@@ -1,5 +1,6 @@
 // deno-lint-ignore-file no-unused-vars no-explicit-any
 import {
+  EMPTY_KEY,
   kCborTag,
   kCborTagFloat32,
   kCborTagFloat64,
@@ -9,6 +10,7 @@ import {
   kCborTagUint16,
   kCborTagUint32,
   kCborTagUint8,
+  OMIT_VALUE,
   POW_2_32,
   POW_2_53,
 } from "./constants.ts";
@@ -32,6 +34,9 @@ export function encode<T = any>(
   let byteView = new Uint8Array(data);
   let lastLength: number;
   let offset = 0;
+  let replacerFunction: CBORReplacer = (key, value) => value;
+
+  if (typeof replacer === "function") replacerFunction = replacer;
 
   function prepareWrite(length: number): DataView {
     let newByteLength = data.byteLength;
@@ -117,6 +122,7 @@ export function encode<T = any>(
   }
 
   function encodeItem(val: any) {
+    if (val === OMIT_VALUE) return;
     let i;
 
     if (val === false) return writeUint8(0xf4);
@@ -170,7 +176,9 @@ export function encode<T = any>(
         if (Array.isArray(val)) {
           length = val.length;
           writeTypeAndLength(4, length);
-          for (i = 0; i < length; i += 1) encodeItem(val[i]);
+          for (i = 0; i < length; i += 1) {
+            encodeItem(replacerFunction(i, val[i]));
+          }
         } // RFC8746 CBOR Tags
         else if (val instanceof Uint8Array) {
           writeVarUint(kCborTagUint8, kCborTag << 5);
@@ -225,8 +233,10 @@ export function encode<T = any>(
           length = val.size;
           writeTypeAndLength(5, length);
           for (const [key, value] of val.entries()) {
+            const result = replacerFunction(key, value);
+            if (result === OMIT_VALUE) continue;
             encodeItem(key);
-            encodeItem(value);
+            encodeItem(result);
           }
         } else {
           const keys = Object.keys(val);
@@ -234,15 +244,17 @@ export function encode<T = any>(
           writeTypeAndLength(5, length);
           for (i = 0; i < length; i += 1) {
             const key = keys[i];
+            const result = replacerFunction(key, val[key]);
+            if (result === OMIT_VALUE) continue;
             encodeItem(key);
-            encodeItem(val[key]);
+            encodeItem(result);
           }
         }
       }
     }
   }
 
-  encodeItem(value);
+  encodeItem(replacerFunction(EMPTY_KEY, value));
 
   if ("slice" in data) return data.slice(0, offset);
 
