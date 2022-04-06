@@ -15,13 +15,18 @@ import {
 import { objectIs } from "./helpers.ts";
 import { SimpleValue } from "./SimpleValue.ts";
 import { TaggedValue } from "./TaggedValue.ts";
+import { CBORReplacer } from "./types.ts";
 
 /**
  * Converts a JavaScript value to a Concise Binary Object Representation (CBOR) buffer.
  * @param value - A JavaScript value, usually an object or array, to be converted.
+ * @param replacer - A function that alters the behavior of the encoding process. If replacer is null or not provided, all properties of the object are included in the resulting CBOR buffer.
  * @returns The JavaScript value converted to CBOR format.
  */
-export function encode<T = any>(value: T): ArrayBuffer {
+export function encode<T = any>(
+  value: T,
+  replacer?: CBORReplacer | null,
+): ArrayBuffer {
   let data = new ArrayBuffer(256);
   let dataView = new DataView(data);
   let byteView = new Uint8Array(data);
