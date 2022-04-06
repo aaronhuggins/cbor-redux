@@ -1,8 +1,9 @@
 import type { CBOROptions } from "./types.ts";
 
-export const CBOR_OPTIONS: CBOROptions = {
+export const CBOR_OPTIONS = Object.freeze<CBOROptions>({
   dictionary: "object",
-};
+  mode: "strict",
+});
 
 export const POW_2_24 = 5.960464477539063e-8;
 export const POW_2_32 = 4294967296;

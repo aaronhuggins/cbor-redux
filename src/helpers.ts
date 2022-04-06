@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 import { CBOR_OPTIONS } from "./constants.ts";
-import type { CBOROptions, DictionaryOption } from "./types.ts";
+import type { CBOROptions, DictionaryOption, ModeOption } from "./types.ts";
 
 export function objectIs(x: any, y: any) {
   if (typeof Object.is === "function") return Object.is(x, y);
@@ -20,12 +20,24 @@ export function options(options?: CBOROptions): Readonly<CBOROptions> {
   function isDictionary(value: any): value is DictionaryOption {
     return typeof value === "string" && ["object", "map"].includes(value);
   }
-
-  if (typeof options === "object") {
-    CBOR_OPTIONS.dictionary = isDictionary(options.dictionary)
-      ? options.dictionary
-      : "object";
+  function isMode(value: any): value is ModeOption {
+    return typeof value === "string" && ["loose", "strict"].includes(value);
   }
 
-  return Object.freeze({ ...CBOR_OPTIONS });
+  const bag: CBOROptions = { ...CBOR_OPTIONS };
+
+  if (typeof options === "object") {
+    bag.dictionary = isDictionary(options.dictionary)
+      ? options.dictionary
+      : CBOR_OPTIONS.dictionary;
+    bag.mode = isMode(options.mode) ? options.mode : CBOR_OPTIONS.mode;
+    bag.tagger = typeof options.tagger === "function"
+      ? options.tagger
+      : undefined;
+    bag.simpleValue = typeof options.simpleValue === "function"
+      ? options.simpleValue
+      : undefined;
+  }
+
+  return Object.freeze(bag);
 }

@@ -1,6 +1,5 @@
 // deno-lint-ignore-file no-explicit-any no-unused-vars
 import {
-  CBOR_OPTIONS,
   DECODE_CHUNK_SIZE,
   kCborTagFloat32,
   kCborTagFloat64,
@@ -13,9 +12,14 @@ import {
   POW_2_24,
   POW_2_32,
 } from "./constants.ts";
+import { options } from "./helpers.ts";
 import { SimpleValue } from "./SimpleValue.ts";
 import { TaggedValue } from "./TaggedValue.ts";
-import { SimpleValueFunction, TaggedValueFunction } from "./types.ts";
+import {
+  CBOROptions,
+  SimpleValueFunction,
+  TaggedValueFunction,
+} from "./types.ts";
 
 /**
  * Converts a Concise Binary Object Representation (CBOR) buffer into an object.
@@ -26,9 +30,10 @@ import { SimpleValueFunction, TaggedValueFunction } from "./types.ts";
  */
 export function decode<T = any>(
   data: ArrayBuffer | SharedArrayBuffer,
-  tagger?: TaggedValueFunction,
-  simpleValue?: SimpleValueFunction,
+  reviver?: any, // TODO: Define reviver functionality.
+  cborOptions: CBOROptions = {},
 ): T {
+  const { dictionary, mode, tagger, simpleValue } = options(cborOptions);
   const dataView = new DataView(data);
   const ta = new Uint8Array(data);
   let offset = 0;
@@ -36,61 +41,6 @@ export function decode<T = any>(
     value: any,
     tag: number,
   ): any {
-    if (value instanceof Uint8Array) {
-      switch (tag) {
-        case kCborTagUint8:
-          return new Uint8Array(value);
-        case kCborTagInt8:
-          return new Int8Array(
-            value.buffer.slice(
-              value.byteOffset,
-              value.byteLength + value.byteOffset,
-            ),
-          );
-        case kCborTagUint16:
-          return new Uint16Array(
-            value.buffer.slice(
-              value.byteOffset,
-              value.byteLength + value.byteOffset,
-            ),
-          );
-        case kCborTagInt16:
-          return new Int16Array(
-            value.buffer.slice(
-              value.byteOffset,
-              value.byteLength + value.byteOffset,
-            ),
-          );
-        case kCborTagUint32:
-          return new Uint32Array(
-            value.buffer.slice(
-              value.byteOffset,
-              value.byteLength + value.byteOffset,
-            ),
-          );
-        case kCborTagInt32:
-          return new Int32Array(
-            value.buffer.slice(
-              value.byteOffset,
-              value.byteLength + value.byteOffset,
-            ),
-          );
-        case kCborTagFloat32:
-          return new Float32Array(
-            value.buffer.slice(
-              value.byteOffset,
-              value.byteLength + value.byteOffset,
-            ),
-          );
-        case kCborTagFloat64:
-          return new Float64Array(
-            value.buffer.slice(
-              value.byteOffset,
-              value.byteLength + value.byteOffset,
-            ),
-          );
-      }
-    }
     return new TaggedValue(value, tag);
   };
   let simpleValFunction: SimpleValueFunction = function (
@@ -158,14 +108,14 @@ export function decode<T = any>(
     if (additionalInformation === 26) return readUint32();
     if (additionalInformation === 27) return readUint64();
     if (additionalInformation === 31) return -1;
-    throw new Error("Invalid length encoding");
+    throw new Error("CBORError: Invalid length encoding");
   }
   function readIndefiniteStringLength(majorType: number): number {
     const initialByte = readUint8();
     if (initialByte === 0xff) return -1;
     const length = readLength(initialByte & 0x1f);
     if (length < 0 || initialByte >> 5 !== majorType) {
-      throw new Error("Invalid indefinite length element");
+      throw new Error("CBORError: Invalid indefinite length element");
     }
     return length;
   }
@@ -218,7 +168,7 @@ export function decode<T = any>(
 
     length = readLength(additionalInformation);
     if (length < 0 && (majorType < 2 || 6 < majorType)) {
-      throw new Error("Invalid length");
+      throw new Error("CBORError: Invalid length");
     }
 
     switch (majorType) {
@@ -274,10 +224,13 @@ export function decode<T = any>(
         return retArray;
       }
       case 5: {
-        if (CBOR_OPTIONS.dictionary === "map") {
+        if (dictionary === "map") {
           const retMap = new Map<any, any>();
           for (i = 0; i < length || (length < 0 && !readBreak()); ++i) {
             const key = decodeItem();
+            if (mode === "strict" && retMap.has(key)) {
+              throw new Error("CBORError: Duplicate key encountered");
+            }
             retMap.set(key, decodeItem());
           }
           return retMap;
@@ -285,12 +238,77 @@ export function decode<T = any>(
         const retObject: any = {};
         for (i = 0; i < length || (length < 0 && !readBreak()); ++i) {
           const key = decodeItem();
+          if (
+            mode === "strict" &&
+            Object.prototype.hasOwnProperty.call(retObject, key)
+          ) {
+            throw new Error("CBORError: Duplicate key encountered");
+          }
           retObject[key] = decodeItem();
         }
         return retObject;
       }
-      case 6:
+      case 6: {
+        const value = decodeItem();
+        const tag = length;
+        if (value instanceof Uint8Array) {
+          // Handles round-trip of typed arrays as they are a built-in JS language feature.
+          switch (tag) {
+            case kCborTagUint8:
+              return new Uint8Array(value);
+            case kCborTagInt8:
+              return new Int8Array(
+                value.buffer.slice(
+                  value.byteOffset,
+                  value.byteLength + value.byteOffset,
+                ),
+              );
+            case kCborTagUint16:
+              return new Uint16Array(
+                value.buffer.slice(
+                  value.byteOffset,
+                  value.byteLength + value.byteOffset,
+                ),
+              );
+            case kCborTagInt16:
+              return new Int16Array(
+                value.buffer.slice(
+                  value.byteOffset,
+                  value.byteLength + value.byteOffset,
+                ),
+              );
+            case kCborTagUint32:
+              return new Uint32Array(
+                value.buffer.slice(
+                  value.byteOffset,
+                  value.byteLength + value.byteOffset,
+                ),
+              );
+            case kCborTagInt32:
+              return new Int32Array(
+                value.buffer.slice(
+                  value.byteOffset,
+                  value.byteLength + value.byteOffset,
+                ),
+              );
+            case kCborTagFloat32:
+              return new Float32Array(
+                value.buffer.slice(
+                  value.byteOffset,
+                  value.byteLength + value.byteOffset,
+                ),
+              );
+            case kCborTagFloat64:
+              return new Float64Array(
+                value.buffer.slice(
+                  value.byteOffset,
+                  value.byteLength + value.byteOffset,
+                ),
+              );
+          }
+        }
         return tagValueFunction(decodeItem(), length);
+      }
       case 7:
         switch (length) {
           case 20:
@@ -308,6 +326,6 @@ export function decode<T = any>(
   }
 
   const ret = decodeItem();
-  if (offset !== data.byteLength) throw new Error("Remaining bytes");
+  if (offset !== data.byteLength) throw new Error("CBORError: Remaining bytes");
   return ret;
 }
