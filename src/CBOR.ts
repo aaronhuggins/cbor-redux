@@ -1,5 +1,21 @@
 // deno-lint-ignore-file no-explicit-any no-unused-vars
 
+type DictionaryOption = 'object' | 'map'
+
+export interface CBOROptions {
+  /** Set the dictionary type for supported environments; defaults to `object`. */
+  dictionary?: DictionaryOption;
+}
+
+/** A function that extracts tagged values. */
+export type TaggedValueFunction = (value: any, tag: number) => TaggedValue;
+/** A function that extracts simple values. */
+export type SimpleValueFunction = (value: any) => SimpleValue;
+
+const CBOR_OPTIONS: CBOROptions = {
+  dictionary: 'object'
+}
+
 const POW_2_24 = 5.960464477539063e-8;
 const POW_2_32 = 4294967296;
 const POW_2_53 = 9007199254740992;
@@ -32,11 +48,6 @@ function objectIs(x: any, y: any) {
   return x !== x && y !== y;
 }
 
-/** A function that extracts tagged values. */
-type TaggedValueFunction = (value: any, tag: number) => TaggedValue;
-/** A function that extracts simple values. */
-type SimpleValueFunction = (value: any) => SimpleValue;
-
 /** Convenience class for structuring a tagged value. */
 export class TaggedValue {
   constructor(value: any, tag: number) {
@@ -57,12 +68,24 @@ export class SimpleValue {
   value: any;
 }
 
+export function options (options?: CBOROptions): Readonly<CBOROptions> {
+  function isDictionary (value: any): value is DictionaryOption {
+    return typeof value === 'string' && ['object', 'map'].includes(value)
+  }
+
+  if (typeof options === 'object') {
+    CBOR_OPTIONS.dictionary = isDictionary(options.dictionary) ? options.dictionary : 'object'
+  }
+
+  return Object.freeze({ ...CBOR_OPTIONS })
+}
+
 /**
  * Converts a Concise Binary Object Representation (CBOR) buffer into an object.
- * @param {ArrayBuffer|SharedArrayBuffer} data - A valid CBOR buffer.
- * @param {Function} [tagger] - A function that extracts tagged values. This function is called for each member of the object.
- * @param {Function} [simpleValue] - A function that extracts simple values. This function is called for each member of the object.
- * @returns {any} The CBOR buffer converted to a JavaScript value.
+ * @param data - A valid CBOR buffer.
+ * @param tagger - A function that extracts tagged values. This function is called for each member of the object.
+ * @param simpleValue - A function that extracts simple values. This function is called for each member of the object.
+ * @returns The CBOR buffer converted to a JavaScript value.
  */
 export function decode<T = any>(
   data: ArrayBuffer | SharedArrayBuffer,
@@ -346,8 +369,8 @@ export function decode<T = any>(
 
 /**
  * Converts a JavaScript value to a Concise Binary Object Representation (CBOR) buffer.
- * @param {any} value - A JavaScript value, usually an object or array, to be converted.
- * @returns {ArrayBuffer} The JavaScript value converted to CBOR format.
+ * @param value - A JavaScript value, usually an object or array, to be converted.
+ * @returns The JavaScript value converted to CBOR format.
  */
 export function encode<T = any>(value: T): ArrayBuffer {
   let data = new ArrayBuffer(256);
@@ -584,7 +607,9 @@ export const CBOR: {
     simpleValue?: SimpleValueFunction,
   ) => T;
   encode: <T = any>(value: T) => ArrayBuffer;
+  options: (options?: CBOROptions) => Readonly<CBOROptions>;
 } = {
   decode,
   encode,
+  options,
 };
