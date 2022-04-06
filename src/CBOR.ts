@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any no-unused-vars
 
-type DictionaryOption = 'object' | 'map'
+type DictionaryOption = "object" | "map";
 
 export interface CBOROptions {
   /** Set the dictionary type for supported environments; defaults to `object`. */
@@ -13,8 +13,8 @@ export type TaggedValueFunction = (value: any, tag: number) => TaggedValue;
 export type SimpleValueFunction = (value: any) => SimpleValue;
 
 const CBOR_OPTIONS: CBOROptions = {
-  dictionary: 'object'
-}
+  dictionary: "object",
+};
 
 const POW_2_24 = 5.960464477539063e-8;
 const POW_2_32 = 4294967296;
@@ -68,16 +68,18 @@ export class SimpleValue {
   value: any;
 }
 
-export function options (options?: CBOROptions): Readonly<CBOROptions> {
-  function isDictionary (value: any): value is DictionaryOption {
-    return typeof value === 'string' && ['object', 'map'].includes(value)
+export function options(options?: CBOROptions): Readonly<CBOROptions> {
+  function isDictionary(value: any): value is DictionaryOption {
+    return typeof value === "string" && ["object", "map"].includes(value);
   }
 
-  if (typeof options === 'object') {
-    CBOR_OPTIONS.dictionary = isDictionary(options.dictionary) ? options.dictionary : 'object'
+  if (typeof options === "object") {
+    CBOR_OPTIONS.dictionary = isDictionary(options.dictionary)
+      ? options.dictionary
+      : "object";
   }
 
-  return Object.freeze({ ...CBOR_OPTIONS })
+  return Object.freeze({ ...CBOR_OPTIONS });
 }
 
 /**
@@ -337,13 +339,13 @@ export function decode<T = any>(
         return retArray;
       }
       case 5: {
-        if (CBOR_OPTIONS.dictionary === 'map') {
-          const retMap = new Map<any, any>()
+        if (CBOR_OPTIONS.dictionary === "map") {
+          const retMap = new Map<any, any>();
           for (i = 0; i < length || (length < 0 && !readBreak()); ++i) {
             const key = decodeItem();
             retMap.set(key, decodeItem());
           }
-          return retMap
+          return retMap;
         }
         const retObject: any = {};
         for (i = 0; i < length || (length < 0 && !readBreak()); ++i) {
