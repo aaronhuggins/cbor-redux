@@ -280,7 +280,7 @@ export function encode<T = any>(
 }
 
 /**
- * Converts a JavaScript value to a Concise Binary Object Representation (CBOR) buffer.
+ * Alias of `encode`. Converts a JavaScript value to a Concise Binary Object Representation (CBOR) buffer.
  * @param value - A JavaScript value, usually an object or array, to be converted.
  * @param replacer - A function that alters the behavior of the encoding process,
  * or an array of strings or numbers naming properties of value that should be included

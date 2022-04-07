@@ -292,6 +292,13 @@ export function decode<T = any>(
   return ret;
 }
 
+/**
+ * Alias of `decode`. Converts a Concise Binary Object Representation (CBOR) buffer into an object.
+ * @param data - A valid CBOR buffer.
+ * @param reviver - If a function, this prescribes how the value originally produced by parsing is transformed, before being returned.
+ * @param cborOptions - An options bag to specify the dictionary type and mode for the decoder.
+ * @returns The CBOR buffer converted to a JavaScript value.
+ */
 export function parse(
   data: ArrayBuffer | SharedArrayBuffer,
   reviver?: CBORReviver | null,
