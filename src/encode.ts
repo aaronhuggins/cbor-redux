@@ -22,7 +22,10 @@ import { CBORReplacer } from "./types.ts";
 /**
  * Converts a JavaScript value to a Concise Binary Object Representation (CBOR) buffer.
  * @param value - A JavaScript value, usually an object or array, to be converted.
- * @param replacer - A function that alters the behavior of the encoding process. If replacer is null or not provided, all properties of the object are included in the resulting CBOR buffer.
+ * @param replacer - A function that alters the behavior of the encoding process,
+ * or an array of strings or numbers naming properties of value that should be included
+ * in the output. If replacer is null or not provided, all properties of the object are
+ * included in the resulting CBOR buffer.
  * @returns The JavaScript value converted to CBOR format.
  */
 export function encode<T = any>(
@@ -262,4 +265,17 @@ export function encode<T = any>(
   const retView = new DataView(ret);
   for (let i = 0; i < offset; ++i) retView.setUint8(i, dataView.getUint8(i));
   return ret;
+}
+
+/** Converts a JavaScript value to a CBOR binary; extends the replacer to allow an array of `string` or `number`, just like `JSON.stringify`. */
+export function binarify (value: any, replacer?: CBORReplacer | Array<string | number> | null): ArrayBuffer {
+  if (Array.isArray(replacer)) {
+    const exclude = replacer.slice()
+    return encode(value, function replacer (key, value) {
+      if (exclude.includes(key)) return OMIT_VALUE
+      return value
+    })
+  }
+
+  return encode(value, replacer)
 }

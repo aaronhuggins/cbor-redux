@@ -291,3 +291,10 @@ export function decode<T = any>(
   if (offset !== data.byteLength) throw new Error("CBORError: Remaining bytes");
   return ret;
 }
+
+export function parse(
+  data: ArrayBuffer | SharedArrayBuffer,
+  reviver?: CBORReviver | null,
+): any {
+  return decode(data, reviver);
+}
