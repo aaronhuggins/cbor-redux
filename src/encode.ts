@@ -184,10 +184,13 @@ export function encode<T = any>(
         let length;
         let converted;
         if (Array.isArray(val)) {
-          length = val.length;
+          const prepared: any[] = val.filter((item, index) => {
+            return replacerFunction(index, item) !== OMIT_VALUE;
+          });
+          length = prepared.length;
           writeTypeAndLength(4, length);
           for (i = 0; i < length; i += 1) {
-            encodeItem(replacerFunction(i, val[i]));
+            encodeItem(prepared[i]);
           }
         } // RFC8746 CBOR Tags
         else if (val instanceof Uint8Array) {
@@ -239,25 +242,27 @@ export function encode<T = any>(
           encodeItem(val.value);
         } else if (val instanceof SimpleValue) {
           writeTypeAndLength(7, val.value);
-        } else if (val instanceof Map) {
-          length = val.size;
-          writeTypeAndLength(5, length);
-          for (const [key, value] of val.entries()) {
-            const result = replacerFunction(key, value);
-            if (result === OMIT_VALUE) continue;
-            encodeItem(key);
-            encodeItem(result);
-          }
         } else {
-          const keys = Object.keys(val);
-          length = keys.length;
-          writeTypeAndLength(5, length);
-          for (i = 0; i < length; i += 1) {
-            const key = keys[i];
-            const result = replacerFunction(key, val[key]);
-            if (result === OMIT_VALUE) continue;
-            encodeItem(key);
-            encodeItem(result);
+          const prepared: [any, any][] = [];
+          if (val instanceof Map) {
+            for (const [key, value] of val.entries()) {
+              const result = replacerFunction(key, value);
+              if (result === OMIT_VALUE) continue;
+              prepared.push([key, result]);
+            }
+          } else {
+            const keys = Object.keys(val);
+            for (let i = 0; i < keys.length; i += 1) {
+              const key = keys[i];
+              const result = replacerFunction(key, val[key]);
+              if (result === OMIT_VALUE) continue;
+              prepared.push([key, result]);
+            }
+          }
+          writeTypeAndLength(5, prepared.length);
+          for (let i = 0; i < prepared.length; i += 1) {
+            encodeItem(prepared[i][0]);
+            encodeItem(prepared[i][1]);
           }
         }
       }
