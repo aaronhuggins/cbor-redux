@@ -168,6 +168,27 @@ describe("CBOR", () => {
     );
   });
 
+  it("should use replacer array", () => {
+    const expected = { Hello: "World" };
+    const initial = { Hello: "World", how: "are you?" };
+    const encoded = CBOR.encode(initial, ["Hello"]);
+    const actual = CBOR.decode(encoded);
+
+    deepStrictEqual(actual, expected, "deepEqual");
+  });
+
+  it("should use replacer function", () => {
+    const expected = { Hello: "World", how: "do you do?" };
+    const initial = { Hello: "World", how: "are you?" };
+    const encoded = CBOR.encode(initial, (_key, value) => {
+      if (value === initial.how) return "do you do?";
+      return value;
+    });
+    const actual = CBOR.decode(encoded);
+
+    deepStrictEqual(actual, expected, "deepEqual");
+  });
+
   it("should return without slice method", () => {
     const object = { hello: "world!" };
     const expected = hex2arrayBuffer("a16568656c6c6f66776f726c6421");
