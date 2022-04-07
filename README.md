@@ -23,6 +23,33 @@ Rewritten in TypeScript for the browser, Deno, and Node.
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=aaronhuggins_cbor-redux&metric=security_rating)](https://sonarcloud.io/dashboard?id=aaronhuggins_cbor-redux)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=aaronhuggins_cbor-redux&metric=ncloc)](https://sonarcloud.io/dashboard?id=aaronhuggins_cbor-redux)
 
+## Supported Features
+
+- Concise Binary Object Representation
+  ([RFC 7049](https://www.rfc-editor.org/rfc/rfc7049), partial RFC 8949, see
+  below)
+- Typed Arrays ([RFC 8746](https://www.rfc-editor.org/rfc/rfc8746.html))
+- Tags ([RFC 8949](https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml))
+- Simple Values
+  ([RFC 8949](https://www.iana.org/assignments/cbor-simple-values/cbor-simple-values.xhtml))
+- Rejection with `mode: 'strict'` of duplicate keys in key/value dictionaries
+  ([RFC 8152](https://www.rfc-editor.org/rfc/rfc8152.html#section-14))
+
+### Planned features from (RFC 8949)[https://www.rfc-editor.org/rfc/rfc8949.html#name-changes-from-rfc-7049]
+
+These are not yet supported, but will come in a future release.
+
+- Precise support for distinct integer vs floating-point values, using `bigint`
+  and `number`
+- Conform to
+  ["preferred serialization"](https://www.rfc-editor.org/rfc/rfc8949.html#preferred)
+- Implement "deterministic encoding" per
+  [spec](https://www.rfc-editor.org/rfc/rfc8949.html#core-det)
+- Improved error messaging per
+  [Appendix F suggestions](https://www.rfc-editor.org/rfc/rfc8949.html#name-well-formedness-errors-and-)
+- Expanding `mode: 'strict'` to reject and fail on all byte sequences which are
+  not well-formed CBOR
+
 ## Usage
 
 Require `cbor-redux` in [Node](https://www.npmjs.com/package/cbor-redux):
