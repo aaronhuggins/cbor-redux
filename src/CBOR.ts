@@ -1,5 +1,5 @@
 import { decode, parse } from "./decode.ts";
-import { encode, binarify } from "./encode.ts";
+import { binarify, encode } from "./encode.ts";
 
 /**
  * An intrinsic object that provides functions to convert JavaScript values
