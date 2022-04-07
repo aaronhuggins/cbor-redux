@@ -180,11 +180,27 @@ describe("CBOR", () => {
   it("should use replacer function", () => {
     const expected = { Hello: "World", how: "do you do?" };
     const initial = { Hello: "World", how: "are you?" };
-    const encoded = CBOR.encode(initial, (_key, value) => {
+    const encoded = CBOR.binarify(initial, (_key, value) => {
       if (value === initial.how) return "do you do?";
       return value;
     });
-    const actual = CBOR.decode(encoded);
+    const actual = CBOR.parse(encoded);
+
+    deepStrictEqual(actual, expected, "deepEqual");
+  });
+
+  it("should use reviver function", () => {
+    const opts: CBOROptions = { dictionary: "map" };
+    const reviver = (key: any, tagged: any) => {
+      if (key === "tagged" && tagged instanceof TaggedValue) {
+        return tagged.value;
+      }
+      return tagged;
+    };
+    const expected = new Map([["tagged", "Greetings!"]]);
+    const initial = { tagged: new TaggedValue("Greetings!", 4294967297) };
+    const encoded = CBOR.encode(initial);
+    const actual = CBOR.decode(encoded, reviver, opts);
 
     deepStrictEqual(actual, expected, "deepEqual");
   });
