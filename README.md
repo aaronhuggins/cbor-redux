@@ -57,7 +57,7 @@ at
 - Rejection with `mode: 'strict'` of duplicate keys in key/value dictionaries
   ([RFC 8152](https://www.rfc-editor.org/rfc/rfc8152.html#section-14))
 
-### Planned features from (RFC 8949)[https://www.rfc-editor.org/rfc/rfc8949.html#name-changes-from-rfc-7049]
+### Planned features from [RFC 8949](https://www.rfc-editor.org/rfc/rfc8949.html#name-changes-from-rfc-7049)
 
 These are not yet supported, but are planned for the version 1.0.0 major
 release.
