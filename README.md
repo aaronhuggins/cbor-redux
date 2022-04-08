@@ -1,12 +1,9 @@
 # cbor-redux
 
 The Concise Binary Object Representation (CBOR) data format
-([RFC 7049](http://tools.ietf.org/html/rfc7049)) implemented in pure JavaScript,
-revived. Typed arrays such as Uint8Array, Int16Array or Float32Array are encoded
-with tags according to
-[RFC8746 CBOR tags for Typed Arrays](https://datatracker.ietf.org/doc/html/rfc8746).
-
-Rewritten in TypeScript for the browser, Deno, and Node.
+([RFC 7049](http://tools.ietf.org/html/rfc7049)) implemented in pure JavaScript
+with an API surface like the built-in JSON functions. Rewritten in TypeScript
+for the browser, Deno, and Node.
 
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://github.com/standard/eslint-config-standard-with-typescript)
 [![codecov](https://codecov.io/gh/aaronhuggins/cbor-redux/branch/master/graph/badge.svg)](https://codecov.io/gh/aaronhuggins/cbor-redux)
@@ -23,6 +20,31 @@ Rewritten in TypeScript for the browser, Deno, and Node.
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=aaronhuggins_cbor-redux&metric=security_rating)](https://sonarcloud.io/dashboard?id=aaronhuggins_cbor-redux)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=aaronhuggins_cbor-redux&metric=ncloc)](https://sonarcloud.io/dashboard?id=aaronhuggins_cbor-redux)
 
+## Using CBOR
+
+Like the JSON API, this library is synchronous. Simply import into your runtime:
+Deno, browser, Node ESM, or Node CommonJS. Browser imports can be handled via
+your favorite bundler, or using Skypack CDN.
+
+```TypeScript
+// This is an example Deno import statement.
+import { CBOR } from "https://deno.land/x/cbor_redux@1.0.0/mod.ts";
+
+const initial = { Hello: "World", how: "are you?" };
+const encoded = CBOR.encode(initial, ["Hello"]);
+const decoded = CBOR.decode(encoded);
+console.log(decoded); // Output: { Hello: "World" }
+```
+
+Unrecognized CBOR tags will be emitted as instances of `TaggedValue`, allowing
+an application to use custom handling. Simple values in CBOR that are reserved
+or unassigned will be emitted as instances of `SimpleValue` so that they may be
+handled directly.
+
+For users who need more power and control, the entire library API is documented
+at
+[doc.deno.land](https://doc.deno.land/https://deno.land/x/cbor_redux@1.0.0/mod.ts).
+
 ## Supported Features
 
 - Concise Binary Object Representation
@@ -37,7 +59,8 @@ Rewritten in TypeScript for the browser, Deno, and Node.
 
 ### Planned features from (RFC 8949)[https://www.rfc-editor.org/rfc/rfc8949.html#name-changes-from-rfc-7049]
 
-These are not yet supported, but will come in a future release.
+These are not yet supported, but are planned for the version 1.0.0 major
+release.
 
 - Precise support for distinct integer vs floating-point values, using `bigint`
   and `number`
@@ -49,68 +72,59 @@ These are not yet supported, but will come in a future release.
   [Appendix F suggestions](https://www.rfc-editor.org/rfc/rfc8949.html#name-well-formedness-errors-and-)
 - Expanding `mode: 'strict'` to reject and fail on all byte sequences which are
   not well-formed CBOR
+- CBOR Sequences ([RFC 8742](https://www.rfc-editor.org/rfc/rfc8742.html))
 
-## Usage
+## Contributing code and issues
 
-Require `cbor-redux` in [Node](https://www.npmjs.com/package/cbor-redux):
+### Issues
 
-```javascript
-const { CBOR } = require("cbor-redux");
-```
+Please report bugs! I maintain this library in my free time, so please do not
+expect immediate turn-around for your bug.
 
-or import in [Deno](https://deno.land/x/cbor_redux):
+Feel free to drop an issue abotu a missing feature of CBOR. Please reference the
+appropriate RFC number and explain how you believe the library should behave.
 
-```javascript
-import { CBOR } from "https://deno.land/x/cbor_redux@0.4.0/mod.ts";
-```
+No matter why you're opening an issue, please provide:
 
-or script on an [HTML page](https://www.skypack.dev/npm/cbor-redux):
+- The environment OS
+- The JavaScript runtime, and version
+- An example working piece of code that reproduces your issue.
 
-```html
-<script src="https://cdn.skypack.dev/cbor-redux@^0.4.0" type="text/javascript"></script>
-```
+### Code
 
-> For ES5 polyfill, use es5/CBOR.js in the npm package or else
-> `<script src="https://unpkg.com/cbor-redux@0.4.0/es5/CBOR.js"></script>`.
+This project accepts pull requests! If you have a fix for a bug or an
+implementation of a CBOR feature, bring it. You'll be credited here in the
+readme.
 
-Then you can use it via the `CBOR`-object in your code:
+Ground rules:
 
-```javascript
-const initial = { Hello: "World" };
-const encoded = CBOR.encode(initial);
-const decoded = CBOR.decode(encoded);
-```
+1. Please adhere to the
+   [Contributor Covenant v2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct/)
+2. Use vanilla TypeScript; no explicit Node, Deno, or browser references
+   permitted except for tests
+3. Reference an open issue; if one does not exist, please create one
 
-After running this example `initial` and `decoded` represent the same value.
+If you have a history of commits and would like maintianer status to help triage
+issues and deploy code faster, please open an issue requesting access. Don't be
+put off by the fact that this codebase targets Deno. It is compiled and released
+for browser and Node; Deno is not a hard prerequisite for contributing (but it
+does help).
 
-## API
+## Contributors
 
-The `CBOR`-object provides the following two functions:
-
-- **CBOR**._**decode**_(_data: ArrayBuffer_)
-
-  > Take the ArrayBuffer object _data_ and return it decoded as a JavaScript
-  > object.
-
-- **CBOR**._**encode**_(_data: any_)
-
-  > Take the JavaScript object _data_ and return it encoded as a ArrayBuffer
-  > object.
-
-For complete API details, visit the
-[documentation](https://aaronhuggins.github.io/cbor-redux/).
-
-## Combination with WebSocket
-
-The API was designed to play well with the `WebSocket` object in the browser:
-
-```javascript
-var websocket = new WebSocket(url);
-websocket.binaryType = "arraybuffer";
-...
-websocket.onmessage = function(event) {
-  var message = CBOR.decode(event.data);
-};
-...
-websocket.send(CBOR.encode(message));
-```
+- Patrick Gansterer ([paroga]()): Original author
+- Aaron Huggins ([aaronhuggins]()): Fork maintainer
+- Maik Riechert ([letmaik](https://github.com/letmaik)): Added support for Node
+- Sangwhan Moon ([cynthia](https://github.com/cynthia)): Performance
+  improvements
+- Kevin Wooten ([kdubb](https://github.com/kdubb)): Added TaggedValue feature
+- Glenn Engel ([glenne](https://github.com/glenne)): Support for Typed Arrays
+- Matt Vollrath ([mvollrath](https://github.com/mvollrath)): Optimized byte
+  array encoding
+- Sami Vaarala ([svaarala](https://github.com/svaarala)): Fixed bug in codepoint
+  handling
+- Timothy Cyrus ([tcyrus](https://github.com/tcyrus)): Various quality
+  improvements
+- Benny Neugebauer ([bennycode](https://github.com/bennycode)): Various quality
+  improvements
+- Tyler Young: Various quality improvements
