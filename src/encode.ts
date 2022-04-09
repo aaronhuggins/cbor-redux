@@ -130,6 +130,25 @@ export function encode<T = any>(
       writeUint64(length);
     }
   }
+  function writeArray (val: any[]) {
+    const startOffset = offset
+    const length = val.length;
+    let total = 0
+    writeTypeAndLength(4, length);
+    const typeLengthOffset = offset
+    for (let i = 0; i < length; i += 1) {
+      const result = replacerFunction(i, val[i]);
+      if (result === OMIT_VALUE) continue;
+      encodeItem(result);
+      total += 1
+    }
+    if (length > total) {
+      const encoded = byteView.slice(typeLengthOffset, offset)
+      offset = startOffset
+      writeTypeAndLength(4, total)
+      writeUint8Array(encoded)
+    }
+  }
   function writeDictionary (val: any) {
     const startOffset = offset
     let typeLengthOffset = offset
@@ -191,7 +210,7 @@ export function encode<T = any>(
 
       case "string": {
         const utf8data = [];
-        for (i = 0; i < val.length; ++i) {
+        for (let i = 0; i < val.length; ++i) {
           let charCode = val.charCodeAt(i);
           if (charCode < 0x80) {
             utf8data.push(charCode);
@@ -218,17 +237,9 @@ export function encode<T = any>(
         return writeUint8Array(utf8data);
       }
       default: {
-        let length;
         let converted;
         if (Array.isArray(val)) {
-          const prepared: any[] = val.filter((item, index) => {
-            return replacerFunction(index, item) !== OMIT_VALUE;
-          });
-          length = prepared.length;
-          writeTypeAndLength(4, length);
-          for (i = 0; i < length; i += 1) {
-            encodeItem(prepared[i]);
-          }
+          writeArray(val)
         } // RFC8746 CBOR Tags
         else if (val instanceof Uint8Array) {
           writeVarUint(kCborTagUint8, kCborTag << 5);
