@@ -17,3 +17,4 @@ export interface CBOROptions {
 export type CBORReviver = (key: any, value: any) => any;
 /** A function to modify the behavior of the encoder; to omit values, return the `OMIT_VALUE` symbol. */
 export type CBORReplacer = (key: any, value: any) => any;
+export type CBORReplacerUnion = CBORReplacer | Array<string | number> | null | undefined

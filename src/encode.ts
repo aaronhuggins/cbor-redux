@@ -17,7 +17,7 @@ import {
 import { objectIs } from "./helpers.ts";
 import { SimpleValue } from "./SimpleValue.ts";
 import { TaggedValue } from "./TaggedValue.ts";
-import { CBORReplacer } from "./types.ts";
+import { CBORReplacer, CBORReplacerUnion } from "./types.ts";
 
 /**
  * Converts a JavaScript value to a Concise Binary Object Representation (CBOR) buffer.
@@ -30,7 +30,7 @@ import { CBORReplacer } from "./types.ts";
  */
 export function encode<T = any>(
   value: T,
-  replacer?: CBORReplacer | Array<string | number> | null,
+  replacer?: CBORReplacerUnion,
 ): ArrayBuffer {
   let data = new ArrayBuffer(256);
   let dataView = new DataView(data);
@@ -290,7 +290,7 @@ export function encode<T = any>(
  */
 export function binarify(
   value: any,
-  replacer?: CBORReplacer | Array<string | number> | null,
+  replacer?: CBORReplacerUnion,
 ): ArrayBuffer {
   return encode(value, replacer);
 }
