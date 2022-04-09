@@ -130,6 +130,43 @@ export function encode<T = any>(
       writeUint64(length);
     }
   }
+  function writeDictionary (val: any) {
+    const startOffset = offset
+    let typeLengthOffset = offset
+    let keyCount = 0
+    let keyTotal = 0
+    if (val instanceof Map) {
+      keyCount = val.size
+      writeTypeAndLength(5, keyCount);
+      typeLengthOffset = offset
+      for (const [key, value] of val.entries()) {
+        const result = replacerFunction(key, value);
+        if (result === OMIT_VALUE) continue;
+        encodeItem(key);
+        encodeItem(result);
+        keyTotal += 1
+      }
+    } else {
+      const keys = Object.keys(val);
+      keyCount = keys.length
+      writeTypeAndLength(5, keyCount);
+      typeLengthOffset = offset
+      for (let i = 0; i < keys.length; i += 1) {
+        const key = keys[i];
+        const result = replacerFunction(key, val[key]);
+        if (result === OMIT_VALUE) continue;
+        encodeItem(key);
+        encodeItem(result);
+        keyTotal += 1
+      }
+    }
+    if (keyCount > keyTotal) {
+      const encoded = byteView.slice(typeLengthOffset, offset)
+      offset = startOffset
+      writeTypeAndLength(5, keyTotal)
+      writeUint8Array(encoded)
+    }
+  }
 
   function encodeItem(val: any) {
     if (val === OMIT_VALUE) return;
@@ -243,27 +280,7 @@ export function encode<T = any>(
         } else if (val instanceof SimpleValue) {
           writeTypeAndLength(7, val.value);
         } else {
-          const prepared: [any, any][] = [];
-          if (val instanceof Map) {
-            for (const [key, value] of val.entries()) {
-              const result = replacerFunction(key, value);
-              if (result === OMIT_VALUE) continue;
-              prepared.push([key, result]);
-            }
-          } else {
-            const keys = Object.keys(val);
-            for (let i = 0; i < keys.length; i += 1) {
-              const key = keys[i];
-              const result = replacerFunction(key, val[key]);
-              if (result === OMIT_VALUE) continue;
-              prepared.push([key, result]);
-            }
-          }
-          writeTypeAndLength(5, prepared.length);
-          for (let i = 0; i < prepared.length; i += 1) {
-            encodeItem(prepared[i][0]);
-            encodeItem(prepared[i][1]);
-          }
+          writeDictionary(val)
         }
       }
     }
