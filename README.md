@@ -56,6 +56,7 @@ at
   ([RFC 8949](https://www.iana.org/assignments/cbor-simple-values/cbor-simple-values.xhtml))
 - Rejection with `mode: 'strict'` of duplicate keys in key/value dictionaries
   ([RFC 8152](https://www.rfc-editor.org/rfc/rfc8152.html#section-14))
+- [Preferred serialization](https://www.rfc-editor.org/rfc/rfc8949.html#preferred)
 
 ### Planned features from [RFC 8949](https://www.rfc-editor.org/rfc/rfc8949.html#name-changes-from-rfc-7049)
 
@@ -64,14 +65,10 @@ release.
 
 - Precise support for distinct integer vs floating-point values, using `bigint`
   and `number`
-- Conform to
-  ["preferred serialization"](https://www.rfc-editor.org/rfc/rfc8949.html#preferred)
 - Implement "deterministic encoding" per
   [spec](https://www.rfc-editor.org/rfc/rfc8949.html#core-det)
 - Improved error messaging per
   [Appendix F suggestions](https://www.rfc-editor.org/rfc/rfc8949.html#name-well-formedness-errors-and-)
-- Expanding `mode: 'strict'` to reject and fail on all byte sequences which are
-  not well-formed CBOR
 - CBOR Sequences ([RFC 8742](https://www.rfc-editor.org/rfc/rfc8742.html))
 
 ## Contributing code and issues
