@@ -1,6 +1,9 @@
 // deno-lint-ignore-file no-explicit-any
 
-/** Convenience class for structuring a simple value. */
+/** Class for structuring a simple value. Unassigned or reserved simple values
+ * are emitted as an instance of this class during decoding. This allows an
+ * application to handle custom decoding in the `reviver` function of the decoder.
+ */
 export class SimpleValue {
   static create(value: boolean | number | null | undefined) {
     if (value === undefined) return new SimpleValue(23);
