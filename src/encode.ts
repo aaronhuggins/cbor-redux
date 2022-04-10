@@ -10,6 +10,7 @@ import {
   kCborTagUint16,
   kCborTagUint32,
   kCborTagUint8,
+  MAX_SAFE_INTEGER,
   OMIT_VALUE,
   POW_2_32,
   POW_2_53,
@@ -186,11 +187,27 @@ export function encode<T = any>(
       writeUint8Array(encoded)
     }
   }
+  function writeBigInteger (val: bigint) {
+    let type = 0
+    if (0 <= val && val <= MAX_SAFE_INTEGER) {
+      type = 0
+    } else if (-MAX_SAFE_INTEGER <= val && val < 0) {
+      type = 1
+      val = -(val)
+    } else {
+      throw new Error("CBORError: Encountered unsafe integer outside of valid CBOR range.")
+    }
+
+    if (val < 0x100000000n) {
+      return writeTypeAndLength(type, Number(val))
+    } else {
+      writeUint8((type << 5) | 27);
+      commitWrite(prepareWrite(8).setBigUint64(offset, val))
+    }
+  }
 
   function encodeItem(val: any) {
     if (val === OMIT_VALUE) return;
-    let i;
-
     if (val === false) return writeUint8(0xf4);
     if (val === true) return writeUint8(0xf5);
     if (val === null) return writeUint8(0xf6);
@@ -198,6 +215,8 @@ export function encode<T = any>(
     if (objectIs(val, -0)) return writeUint8Array([0xf9, 0x80, 0x00]);
 
     switch (typeof val) {
+      case "bigint":
+        return writeBigInteger(val)
       case "number":
         if (Math.floor(val) === val) {
           if (0 <= val && val <= POW_2_53) return writeTypeAndLength(0, val);
