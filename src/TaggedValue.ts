@@ -7,11 +7,11 @@
  * the `TaggedValue.value` property.
  */
 export class TaggedValue {
-  constructor(value: any, tag: number) {
+  constructor(value: any, tag: number | bigint) {
     this.value = value;
     this.tag = tag;
   }
 
   value: any;
-  tag: number;
+  tag: number | bigint;
 }

@@ -95,23 +95,27 @@ export function encode<T = any>(
     view.setUint32(offset + 4, low);
     commitWrite();
   }
-  function writeVarUint(val: number, mod: number) {
+  function writeBigUint64(val: bigint) {
+    commitWrite(prepareWrite(8).setBigUint64(offset, val));
+  }
+  function writeVarUint(val: number | bigint, mod: number) {
     if (val <= 0xff) {
       if (val < 24) {
-        writeUint8(val | mod);
+        writeUint8(Number(val) | mod);
       } else {
         writeUint8(0x18 | mod);
-        writeUint8(val);
+        writeUint8(Number(val));
       }
     } else if (val <= 0xffff) {
       writeUint8(0x19 | mod);
-      writeUint16(val);
+      writeUint16(Number(val));
     } else if (val <= 0xffffffff) {
       writeUint8(0x1a | mod);
-      writeUint32(val);
+      writeUint32(Number(val));
     } else {
       writeUint8(0x1b | mod);
-      writeUint64(val);
+      if (typeof val === "number") writeUint64(val);
+      else writeBigUint64(val);
     }
   }
   function writeTypeAndLength(type: number, length: number) {
@@ -131,78 +135,80 @@ export function encode<T = any>(
       writeUint64(length);
     }
   }
-  function writeArray (val: any[]) {
-    const startOffset = offset
+  function writeArray(val: any[]) {
+    const startOffset = offset;
     const length = val.length;
-    let total = 0
+    let total = 0;
     writeTypeAndLength(4, length);
-    const typeLengthOffset = offset
+    const typeLengthOffset = offset;
     for (let i = 0; i < length; i += 1) {
       const result = replacerFunction(i, val[i]);
       if (result === OMIT_VALUE) continue;
       encodeItem(result);
-      total += 1
+      total += 1;
     }
     if (length > total) {
-      const encoded = byteView.slice(typeLengthOffset, offset)
-      offset = startOffset
-      writeTypeAndLength(4, total)
-      writeUint8Array(encoded)
+      const encoded = byteView.slice(typeLengthOffset, offset);
+      offset = startOffset;
+      writeTypeAndLength(4, total);
+      writeUint8Array(encoded);
     }
   }
-  function writeDictionary (val: any) {
-    const startOffset = offset
-    let typeLengthOffset = offset
-    let keyCount = 0
-    let keyTotal = 0
+  function writeDictionary(val: any) {
+    const startOffset = offset;
+    let typeLengthOffset = offset;
+    let keyCount = 0;
+    let keyTotal = 0;
     if (val instanceof Map) {
-      keyCount = val.size
+      keyCount = val.size;
       writeTypeAndLength(5, keyCount);
-      typeLengthOffset = offset
+      typeLengthOffset = offset;
       for (const [key, value] of val.entries()) {
         const result = replacerFunction(key, value);
         if (result === OMIT_VALUE) continue;
         encodeItem(key);
         encodeItem(result);
-        keyTotal += 1
+        keyTotal += 1;
       }
     } else {
       const keys = Object.keys(val);
-      keyCount = keys.length
+      keyCount = keys.length;
       writeTypeAndLength(5, keyCount);
-      typeLengthOffset = offset
+      typeLengthOffset = offset;
       for (let i = 0; i < keys.length; i += 1) {
         const key = keys[i];
         const result = replacerFunction(key, val[key]);
         if (result === OMIT_VALUE) continue;
         encodeItem(key);
         encodeItem(result);
-        keyTotal += 1
+        keyTotal += 1;
       }
     }
     if (keyCount > keyTotal) {
-      const encoded = byteView.slice(typeLengthOffset, offset)
-      offset = startOffset
-      writeTypeAndLength(5, keyTotal)
-      writeUint8Array(encoded)
+      const encoded = byteView.slice(typeLengthOffset, offset);
+      offset = startOffset;
+      writeTypeAndLength(5, keyTotal);
+      writeUint8Array(encoded);
     }
   }
-  function writeBigInteger (val: bigint) {
-    let type = 0
+  function writeBigInteger(val: bigint) {
+    let type = 0;
     if (0 <= val && val <= MAX_SAFE_INTEGER) {
-      type = 0
+      type = 0;
     } else if (-MAX_SAFE_INTEGER <= val && val < 0) {
-      type = 1
-      val = -(val)
+      type = 1;
+      val = -(val + 1n);
     } else {
-      throw new Error("CBORError: Encountered unsafe integer outside of valid CBOR range.")
+      throw new Error(
+        "CBORError: Encountered unsafe integer outside of valid CBOR range.",
+      );
     }
 
     if (val < 0x100000000n) {
-      return writeTypeAndLength(type, Number(val))
+      return writeTypeAndLength(type, Number(val));
     } else {
       writeUint8((type << 5) | 27);
-      commitWrite(prepareWrite(8).setBigUint64(offset, val))
+      writeBigUint64(val);
     }
   }
 
@@ -216,7 +222,7 @@ export function encode<T = any>(
 
     switch (typeof val) {
       case "bigint":
-        return writeBigInteger(val)
+        return writeBigInteger(val);
       case "number":
         if (Math.floor(val) === val) {
           if (0 <= val && val <= POW_2_53) return writeTypeAndLength(0, val);
@@ -258,7 +264,7 @@ export function encode<T = any>(
       default: {
         let converted;
         if (Array.isArray(val)) {
-          writeArray(val)
+          writeArray(val);
         } // RFC8746 CBOR Tags
         else if (val instanceof Uint8Array) {
           writeVarUint(kCborTagUint8, kCborTag << 5);
@@ -310,7 +316,7 @@ export function encode<T = any>(
         } else if (val instanceof SimpleValue) {
           writeTypeAndLength(7, val.value);
         } else {
-          writeDictionary(val)
+          writeDictionary(val);
         }
       }
     }

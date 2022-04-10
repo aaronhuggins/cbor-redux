@@ -39,12 +39,12 @@ export const testcases: any[][] = [
   [
     "PositiveInteger64 9007199254740992",
     "1b0020000000000000",
-    9007199254740992,
+    9007199254740992n,
   ],
   [
     "PositiveInteger64 18446744073709551615",
     "1bffffffffffffffff",
-    18446744073709551615,
+    18446744073709551615n,
     true,
   ],
   ["NegativeIntegerFix -1", "20", -1],
@@ -64,7 +64,7 @@ export const testcases: any[][] = [
   [
     "NegativeInteger64 -18446744073709551616",
     "3bffffffffffffffff",
-    -18446744073709551616,
+    -18446744073709551616n,
     true,
   ],
   ["ByteString []", "40", generateArrayBuffer([])],

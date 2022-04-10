@@ -11,7 +11,7 @@ import {
   kCborTagUint32,
   kCborTagUint8,
   POW_2_24,
-  POW_2_32,
+  POW_2_53,
 } from "./constants.ts";
 import { options } from "./helpers.ts";
 import { SimpleValue } from "./SimpleValue.ts";
@@ -80,20 +80,24 @@ export function decode<T = any>(
   function readUint32(): number {
     return commitRead(4, dataView.getUint32(offset));
   }
-  function readUint64(): number {
-    return readUint32() * POW_2_32 + readUint32();
+  function readUint64(): bigint {
+    return commitRead(8, dataView.getBigUint64(offset));
   }
   function readBreak(): boolean {
     if (ta[offset] !== 0xff) return false;
     offset += 1;
     return true;
   }
-  function readLength(additionalInformation: number): number {
+  function readLength(additionalInformation: number): number | bigint {
     if (additionalInformation < 24) return additionalInformation;
     if (additionalInformation === 24) return readUint8();
     if (additionalInformation === 25) return readUint16();
     if (additionalInformation === 26) return readUint32();
-    if (additionalInformation === 27) return readUint64();
+    if (additionalInformation === 27) {
+      const integer = readUint64();
+      if (integer < POW_2_53) return Number(integer);
+      return integer;
+    }
     if (additionalInformation === 31) return -1;
     throw new Error("CBORError: Invalid length encoding");
   }
@@ -104,7 +108,7 @@ export function decode<T = any>(
     if (length < 0 || initialByte >> 5 !== majorType) {
       throw new Error("CBORError: Invalid indefinite length element");
     }
-    return length;
+    return Number(length);
   }
 
   function appendUtf16Data(utf16data: number[], length: number) {
@@ -162,7 +166,10 @@ export function decode<T = any>(
       case 0:
         return reviverFunction(EMPTY_KEY, length);
       case 1:
-        return reviverFunction(EMPTY_KEY, -1 - length);
+        if (typeof length === "number") {
+          return reviverFunction(EMPTY_KEY, -1 - length);
+        }
+        return reviverFunction(EMPTY_KEY, -1n - length);
       case 2: {
         if (length < 0) {
           const elements = [];
@@ -179,7 +186,7 @@ export function decode<T = any>(
           }
           return reviverFunction(EMPTY_KEY, fullArray);
         }
-        return reviverFunction(EMPTY_KEY, readArrayBuffer(length));
+        return reviverFunction(EMPTY_KEY, readArrayBuffer(length as number));
       }
       case 3: {
         const utf16data: number[] = [];
@@ -188,7 +195,7 @@ export function decode<T = any>(
             appendUtf16Data(utf16data, length);
           }
         } else {
-          appendUtf16Data(utf16data, length);
+          appendUtf16Data(utf16data, length as number);
         }
         let string = "";
         for (i = 0; i < utf16data.length; i += DECODE_CHUNK_SIZE) {
@@ -282,7 +289,10 @@ export function decode<T = any>(
           case 23:
             return reviverFunction(EMPTY_KEY, undefined);
           default:
-            return reviverFunction(EMPTY_KEY, new SimpleValue(length));
+            return reviverFunction(
+              EMPTY_KEY,
+              new SimpleValue(length as number),
+            );
         }
     }
   }
