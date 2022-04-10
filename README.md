@@ -50,6 +50,9 @@ at
 - Concise Binary Object Representation
   ([RFC 7049](https://www.rfc-editor.org/rfc/rfc7049), partial RFC 8949, see
   below)
+- Proper support for large integers; integers larger than a JavaScript `number`
+  may safely hold will be decoded as `bigint`. Values of `bigint` will be
+  encoded when provided by the application.
 - Typed Arrays ([RFC 8746](https://www.rfc-editor.org/rfc/rfc8746.html))
 - Tags ([RFC 8949](https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml))
 - Simple Values
@@ -63,12 +66,8 @@ at
 These are not yet supported, but are planned for the version 1.0.0 major
 release.
 
-- Precise support for distinct integer vs floating-point values, using `bigint`
-  and `number`
 - Implement "deterministic encoding" per
   [spec](https://www.rfc-editor.org/rfc/rfc8949.html#core-det)
-- Improved error messaging per
-  [Appendix F suggestions](https://www.rfc-editor.org/rfc/rfc8949.html#name-well-formedness-errors-and-)
 - CBOR Sequences ([RFC 8742](https://www.rfc-editor.org/rfc/rfc8742.html))
 
 ## Contributing code and issues
