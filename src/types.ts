@@ -14,7 +14,7 @@ export interface CBOROptions {
 }
 
 export interface CBORSequenceOptions extends CBOROptions {
-  mode: "sequence"
+  mode: "sequence";
 }
 
 /** A function to modify values which are encountered during decoding. */

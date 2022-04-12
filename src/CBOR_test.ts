@@ -1,6 +1,13 @@
 // deno-lint-ignore-file no-explicit-any
 import "https://raw.githubusercontent.com/aaronhuggins/deno_mocha/e6c179156821c626354a8c792518958625078a82/global_mocha.ts";
-import { CBOR, CBOROptions, decode, SimpleValue, TaggedValue } from "../mod.ts";
+import {
+  CBOR,
+  CBOROptions,
+  decode,
+  Sequence,
+  SimpleValue,
+  TaggedValue,
+} from "../mod.ts";
 import { testcases, TestTaggedValue } from "./testcases.ts";
 import {
   deepStrictEqual,
@@ -47,6 +54,26 @@ describe("CBOR", () => {
       }
     });
   }
+
+  it("CBOR Sequence (one or more concatenated CBOR values)", () => {
+    const sequenceData = [{ "1": 2, "3": 4 }, { "2": 1, "4": 5 }];
+    const expected = new Sequence(sequenceData);
+    const data = hex2arrayBuffer("a201020304a202010405");
+
+    myDeepEqual(
+      CBOR.decode(data, null, { mode: "sequence" }),
+      expected,
+      "Decoding",
+    );
+
+    const encoded = CBOR.encode(expected);
+
+    myDeepEqual(
+      CBOR.decode(encoded, null, { mode: "sequence" }),
+      expected,
+      "Encoding (deepEqual)",
+    );
+  });
 
   it("Big Array", () => {
     const value = new Array(0x10001);

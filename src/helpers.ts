@@ -21,7 +21,8 @@ export function options(options?: CBOROptions): Readonly<CBOROptions> {
     return typeof value === "string" && ["object", "map"].includes(value);
   }
   function isMode(value: any): value is ModeOption {
-    return typeof value === "string" && ["loose", "strict", "sequence"].includes(value);
+    return typeof value === "string" &&
+      ["loose", "strict", "sequence"].includes(value);
   }
 
   const bag: CBOROptions = { ...CBOR_OPTIONS };

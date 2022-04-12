@@ -30,19 +30,19 @@ export function decode<T = any>(
   data: ArrayBuffer | SharedArrayBuffer,
   reviver: CBORReviver | null | undefined,
   cborOptions: CBORSequenceOptions,
-): Sequence<T>
- export function decode<T = any>(
+): Sequence<T>;
+export function decode<T = any>(
   data: ArrayBuffer | SharedArrayBuffer,
   reviver?: CBORReviver | null,
   cborOptions?: CBOROptions,
-): T
+): T;
 export function decode<T = any>(
   data: ArrayBuffer | SharedArrayBuffer,
   reviver?: CBORReviver | null,
   cborOptions: CBOROptions = {},
 ): T {
   const { dictionary, mode } = options(cborOptions);
-  const isStrict = mode === "sequence" || mode === "strict"
+  const isStrict = mode === "sequence" || mode === "strict";
   const dataView = new DataView(data);
   const ta = new Uint8Array(data);
   let offset = 0;
@@ -311,16 +311,16 @@ export function decode<T = any>(
 
   const ret = reviverFunction(EMPTY_KEY, decodeItem());
   if (offset !== data.byteLength) {
-    if (mode !== 'sequence') throw new Error("CBORError: Remaining bytes")
+    if (mode !== "sequence") throw new Error("CBORError: Remaining bytes");
 
-    const seq = new Sequence<any>([ret])
+    const seq = new Sequence<any>([ret]);
     for (let i = offset; i < data.byteLength; i += offset) {
-      seq.add(reviverFunction(EMPTY_KEY, decodeItem()))
+      seq.add(reviverFunction(EMPTY_KEY, decodeItem()));
     }
 
-    return seq as any
+    return seq as any;
   }
-  return mode === 'sequence' ? new Sequence<any>([ret]) : ret;
+  return mode === "sequence" ? new Sequence<any>([ret]) : ret;
 }
 
 /**
