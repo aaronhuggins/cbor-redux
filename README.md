@@ -50,6 +50,7 @@ at
 - Concise Binary Object Representation
   ([RFC 7049](https://www.rfc-editor.org/rfc/rfc7049), partial RFC 8949, see
   below)
+- CBOR Sequences ([RFC 8742](https://www.rfc-editor.org/rfc/rfc8742.html))
 - Proper support for large integers; integers larger than a JavaScript `number`
   may safely hold will be decoded as `bigint`. Values of `bigint` will be
   encoded when provided by the application.
@@ -61,14 +62,20 @@ at
   ([RFC 8152](https://www.rfc-editor.org/rfc/rfc8152.html#section-14))
 - [Preferred serialization](https://www.rfc-editor.org/rfc/rfc8949.html#preferred)
 
-### Planned features from [RFC 8949](https://www.rfc-editor.org/rfc/rfc8949.html#name-changes-from-rfc-7049)
+### Unsupported features from [RFC 8949](https://www.rfc-editor.org/rfc/rfc8949.html#name-changes-from-rfc-7049)
 
-These are not yet supported, but are planned for the version 1.0.0 major
-release.
+Implementing "deterministic encoding" per
+[spec in RFC 8949](https://www.rfc-editor.org/rfc/rfc8949.html#core-det) is
+mostly done. The only missing piece is lexicographical sorting of binary keys in
+CBOR dictionaries. This is potentially a prohibitively expensive encoding
+operation, as all keys must be encoded and sorted before the map is added to the
+resulting CBOR value output. With the current encoder, the most obvious,
+clearly-readable path is to iterate over all the keys before accessing the data,
+which would be a second iteration over the finalized sorted array of keys.
 
-- Implement "deterministic encoding" per
-  [spec](https://www.rfc-editor.org/rfc/rfc8949.html#core-det)
-- CBOR Sequences ([RFC 8742](https://www.rfc-editor.org/rfc/rfc8742.html))
+If anyone has ideas, input, or would like to contribute code to this effort,
+please do. This is the only missing piece from RFC 8949 of which we are
+currently aware.
 
 ## Contributing code and issues
 
