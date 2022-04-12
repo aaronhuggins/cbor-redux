@@ -2,8 +2,8 @@
 
 /** Indicates that the decorder should use either Object or Map as the key/value dictionary. */
 export type DictionaryOption = "object" | "map";
-/** Indicates that the decoder should loosely accept all keys, or striictly fail on duplicate keys. */
-export type ModeOption = "loose" | "strict";
+/** Indicates that the decoder should loosely accept all keys, striictly fail on duplicate keys, or strictly decode CBOR Sequences (RFC 8742). */
+export type ModeOption = "loose" | "strict" | "sequence";
 
 /** Options for the decoder. */
 export interface CBOROptions {
