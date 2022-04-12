@@ -35,4 +35,8 @@ export class Sequence<T = unknown> {
   get data(): T[] {
     return Array.from(this.#data);
   }
+
+  get size(): number {
+    return this.#data.length;
+  }
 }

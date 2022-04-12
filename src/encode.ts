@@ -16,6 +16,7 @@ import {
   POW_2_53,
 } from "./constants.ts";
 import { objectIs } from "./helpers.ts";
+import { Sequence } from "./Sequence.ts";
 import { SimpleValue } from "./SimpleValue.ts";
 import { TaggedValue } from "./TaggedValue.ts";
 import { CBORReplacer } from "./types.ts";
@@ -315,6 +316,12 @@ export function encode<T = any>(
           encodeItem(val.value);
         } else if (val instanceof SimpleValue) {
           writeTypeAndLength(7, val.value);
+        } else if (val instanceof Sequence) {
+          if (offset !== 0) {
+            throw new Error("CBORError: A CBOR Sequence may not be nested.");
+          }
+          const length = val.size;
+          for (let i = 0; i < length; i += 1) encodeItem(val.get(i));
         } else {
           writeDictionary(val);
         }
