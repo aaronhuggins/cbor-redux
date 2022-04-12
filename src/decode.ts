@@ -14,9 +14,10 @@ import {
   POW_2_53,
 } from "./constants.ts";
 import { options } from "./helpers.ts";
+import { Sequence } from "./Sequence.ts";
 import { SimpleValue } from "./SimpleValue.ts";
 import { TaggedValue } from "./TaggedValue.ts";
-import { CBOROptions, CBORReviver } from "./types.ts";
+import { CBOROptions, CBORReviver, CBORSequenceOptions } from "./types.ts";
 
 /**
  * Converts a Concise Binary Object Representation (CBOR) buffer into an object.
@@ -27,10 +28,21 @@ import { CBOROptions, CBORReviver } from "./types.ts";
  */
 export function decode<T = any>(
   data: ArrayBuffer | SharedArrayBuffer,
+  reviver: CBORReviver | null | undefined,
+  cborOptions: CBORSequenceOptions,
+): Sequence<T>
+ export function decode<T = any>(
+  data: ArrayBuffer | SharedArrayBuffer,
+  reviver?: CBORReviver | null,
+  cborOptions?: CBOROptions,
+): T
+export function decode<T = any>(
+  data: ArrayBuffer | SharedArrayBuffer,
   reviver?: CBORReviver | null,
   cborOptions: CBOROptions = {},
 ): T {
   const { dictionary, mode } = options(cborOptions);
+  const isStrict = mode === "sequence" || mode === "strict"
   const dataView = new DataView(data);
   const ta = new Uint8Array(data);
   let offset = 0;
@@ -227,7 +239,7 @@ export function decode<T = any>(
           const retMap = new Map<any, any>();
           for (i = 0; i < length || (length < 0 && !readBreak()); ++i) {
             const key = decodeItem();
-            if (mode === "strict" && retMap.has(key)) {
+            if (isStrict && retMap.has(key)) {
               throw new Error("CBORError: Duplicate key encountered");
             }
             retMap.set(key, reviverFunction(key, decodeItem()));
@@ -238,7 +250,7 @@ export function decode<T = any>(
         for (i = 0; i < length || (length < 0 && !readBreak()); ++i) {
           const key = decodeItem();
           if (
-            mode === "strict" &&
+            isStrict &&
             Object.prototype.hasOwnProperty.call(retObject, key)
           ) {
             throw new Error("CBORError: Duplicate key encountered");
@@ -298,8 +310,17 @@ export function decode<T = any>(
   }
 
   const ret = reviverFunction(EMPTY_KEY, decodeItem());
-  if (offset !== data.byteLength) throw new Error("CBORError: Remaining bytes");
-  return ret;
+  if (offset !== data.byteLength) {
+    if (mode !== 'sequence') throw new Error("CBORError: Remaining bytes")
+
+    const seq = new Sequence<any>([ret])
+    for (let i = offset; i < data.byteLength; i += offset) {
+      seq.add(reviverFunction(EMPTY_KEY, decodeItem()))
+    }
+
+    return seq as any
+  }
+  return mode === 'sequence' ? new Sequence<any>([ret]) : ret;
 }
 
 /**

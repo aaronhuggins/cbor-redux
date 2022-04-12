@@ -13,6 +13,10 @@ export interface CBOROptions {
   mode?: ModeOption;
 }
 
+export interface CBORSequenceOptions extends CBOROptions {
+  mode: "sequence"
+}
+
 /** A function to modify values which are encountered during decoding. */
 export type CBORReviver = (key: any, value: any) => any;
 /** A function to modify the behavior of the encoder; to omit values, return the `OMIT_VALUE` symbol. */
