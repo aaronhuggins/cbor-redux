@@ -24,6 +24,8 @@ jobs:
         run: sudo apt install -y lcov
       - name: Run tests and coverage
         run: deno task cover
+      - name: Fix LCOV output for SonarCloud
+        run: sed -i 's@'$GITHUB_WORKSPACE'@/github/workspace/@g' coverage/report.lcov
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
