@@ -248,8 +248,15 @@ describe("CBOR", () => {
     const initial2 = ["42", "eighteen"];
     const encoded2 = CBOR.encode(initial2, [0]);
     const actual2 = CBOR.decode(encoded2);
-    console.log(actual2, expected2, "deepEqual");
+
     deepStrictEqual(actual2, expected2, "deepEqual");
+
+    const expected3 = new Map(Object.entries(expected));
+    const initial3 = new Map(Object.entries(initial));
+    const encoded3 = CBOR.encode(initial3, ["Hello"]);
+    const actual3 = CBOR.decode(encoded3, null, { dictionary: 'map' });
+
+    deepStrictEqual(actual3, expected3, "deepEqual");
   });
 
   it("should use replacer function", () => {
