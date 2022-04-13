@@ -20,6 +20,8 @@ jobs:
         with:
          node-version: '16.x'
          registry-url: 'https://registry.npmjs.org'
+      - name: Setup LCOV
+        run: sudo apt install -y lcov
       - name: Run tests and coverage
         run: deno task cover
       - name: SonarCloud Scan
