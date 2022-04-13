@@ -3,7 +3,7 @@
     // Allows shorthand test command with permissions baked in.
     "test": "deno test --allow-read --coverage=coverage --ignore=src/testcases.ts",
     "lcov": "deno coverage coverage --lcov --output=coverage/report.lcov",
-    "cover": "deno task test && deno task lcov && genhtml -o coverage/html coverage/report.lcov",
+    "cover": "deno task clean && deno task test && deno task lcov && genhtml -o coverage/html coverage/report.lcov",
     // Command to build for npm.
     "build": "deno run -A scripts/build_npm.ts",
     // Command to publish to npm repository.
