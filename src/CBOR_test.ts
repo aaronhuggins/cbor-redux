@@ -247,7 +247,7 @@ describe("CBOR", () => {
   });
 
   it("should use objectIs polyfill", () => {
-    const object = { hello: "world!", greetings: -0 };
+    const object = { hello: "world!", greetings: -0, isNaN: NaN };
     const originalObjectIs = (globalThis as any).Object.is;
 
     delete (globalThis as any).Object.is;
