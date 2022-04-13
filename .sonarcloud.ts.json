@@ -1,0 +1,17 @@
+{
+  "files": [
+    "mod.ts",
+    "polyfill.ts",
+    "src/**/*.ts"
+  ],
+  "include": [
+    "mod.ts",
+    "polyfill.ts",
+    "src/**"
+  ],
+  "exclude": [
+    "scripts/**",
+    "src/testcases.ts",
+    "src/CBOR_test.ts"
+  ]
+}

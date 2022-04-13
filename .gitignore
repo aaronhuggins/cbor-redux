@@ -1,5 +1,6 @@
 npm/
 bower_components
+.scannerwork
 .nyc_output
 coverage
 node_modules

@@ -18,7 +18,6 @@ for the browser, Deno, and Node.
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=aaronhuggins_cbor-redux&metric=alert_status)](https://sonarcloud.io/dashboard?id=aaronhuggins_cbor-redux)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=aaronhuggins_cbor-redux&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=aaronhuggins_cbor-redux)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=aaronhuggins_cbor-redux&metric=security_rating)](https://sonarcloud.io/dashboard?id=aaronhuggins_cbor-redux)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=aaronhuggins_cbor-redux&metric=ncloc)](https://sonarcloud.io/dashboard?id=aaronhuggins_cbor-redux)
 
 ## Using CBOR
 
