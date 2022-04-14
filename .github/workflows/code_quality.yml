@@ -5,6 +5,14 @@ on:
       - main
       - prerelease
       - release
+  pull_request_target:
+    types:
+      - opened
+      - ready_for_review
+    branches:
+      - main
+      - prerelease
+      - release
 jobs:
   cover:
     runs-on: ubuntu-latest
