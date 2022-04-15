@@ -55,9 +55,6 @@ jobs:
         run: |
           deno task build -- --${{ env.VERSION_FLAG }}
           echo "VERSION_NUM=$(cat .version)" >> $GITHUB_ENV
-      - name: Commit new version number to ${{ github.event.pull_request.head.ref }}
-        if: env.VERSION_FLAG != '' && env.VERSION_NUM != ''
-        uses: stefanzweifel/git-auto-commit-action@v4
       - name: Commit new version number to ${{ github.event.pull_request.base.ref }}
         if: env.VERSION_FLAG != '' && env.VERSION_NUM != ''
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -68,7 +65,12 @@ jobs:
         if: env.VERSION_FLAG == 'premajor' || env.VERSION_FLAG == 'preminor' || env.VERSION_FLAG == 'prepatch'
         run: |
           echo "VERSION_TAG=prerelease" >> $GITHUB_ENV
+      - name: Add NPMRC file
+        if: env.VERSION_FLAG != '' && env.VERSION_NUM != ''
+        run: |
+          echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > ./npm/.npmrc
       - name: Publish code to NPM
+        if: env.VERSION_FLAG != '' && env.VERSION_NUM != ''
         run: |
           cd ./npm
           npm publish --tag=${{ env.VERSION_TAG }}
