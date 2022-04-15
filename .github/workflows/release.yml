@@ -55,10 +55,14 @@ jobs:
         run: |
           deno task build -- --${{ env.VERSION_FLAG }}
           echo "VERSION_NUM=$(cat .version)" >> $GITHUB_ENV
-      - name: Commit new version number
+      - name: Commit new version number to ${{ github.event.pull_request.head.ref }}
+        if: env.VERSION_FLAG != '' && env.VERSION_NUM != ''
+        uses: stefanzweifel/git-auto-commit-action@v4
+      - name: Commit new version number to ${{ github.event.pull_request.base.ref }}
         if: env.VERSION_FLAG != '' && env.VERSION_NUM != ''
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
+          branch: ${{ github.event.pull_request.base.ref }}
           tagging_message: ${{ env.VERSION_NUM }}
       - name: Setup NPM tag
         if: env.VERSION_FLAG == 'premajor' || env.VERSION_FLAG == 'preminor' || env.VERSION_FLAG == 'prepatch'
@@ -66,6 +70,7 @@ jobs:
           echo "VERSION_TAG=prerelease" >> $GITHUB_ENV
       - name: Publish code to NPM
         run: |
-          deno task publish -- --tag=${{ env.VERSION_TAG }}
+          cd ./npm
+          npm publish --tag=${{ env.VERSION_TAG }}
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}      
