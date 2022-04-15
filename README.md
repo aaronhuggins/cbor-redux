@@ -5,12 +5,10 @@ The Concise Binary Object Representation (CBOR) data format
 with an API surface like the built-in JSON functions. Rewritten in TypeScript
 for the browser, Deno, and Node.
 
-[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://github.com/standard/eslint-config-standard-with-typescript)
-[![codecov](https://codecov.io/gh/aaronhuggins/cbor-redux/branch/master/graph/badge.svg)](https://codecov.io/gh/aaronhuggins/cbor-redux)
 ![GitHub last commit](https://img.shields.io/github/last-commit/aaronhuggins/cbor-redux)
 ![GitHub contributors](https://img.shields.io/github/contributors/aaronhuggins/cbor-redux)
-![npm collaborators](https://img.shields.io/npm/collaborators/cbor-redux)<br />
-![GitHub top language](https://img.shields.io/github/languages/top/aaronhuggins/cbor-redux)
+![npm collaborators](https://img.shields.io/npm/collaborators/cbor-redux)
+![GitHub top language](https://img.shields.io/github/languages/top/aaronhuggins/cbor-redux)<br />
 ![npm bundle size](https://img.shields.io/bundlephobia/min/cbor-redux)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/aaronhuggins/cbor-redux)
 ![npm](https://img.shields.io/npm/dw/cbor-redux)
@@ -18,7 +16,7 @@ for the browser, Deno, and Node.
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=aaronhuggins_cbor-redux&metric=alert_status)](https://sonarcloud.io/dashboard?id=aaronhuggins_cbor-redux)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=aaronhuggins_cbor-redux&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=aaronhuggins_cbor-redux)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=aaronhuggins_cbor-redux&metric=security_rating)](https://sonarcloud.io/dashboard?id=aaronhuggins_cbor-redux)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=aaronhuggins_cbor-redux&metric=ncloc)](https://sonarcloud.io/dashboard?id=aaronhuggins_cbor-redux)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=aaronhuggins_cbor-redux&metric=coverage)](https://sonarcloud.io/summary/new_code?id=aaronhuggins_cbor-redux)
 
 ## Using CBOR
 

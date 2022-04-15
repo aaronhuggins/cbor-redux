@@ -28,7 +28,7 @@ function versionHandler(): string {
   return version;
 }
 
-const versionFile = "./.npm_version";
+const versionFile = "./.version";
 const version = await Deno.readTextFile(versionFile);
 const argsOpts: ParseOptions = {
   boolean: true,

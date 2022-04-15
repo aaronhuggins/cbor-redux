@@ -4,6 +4,7 @@ import {
   CBOR,
   CBOROptions,
   decode,
+  OMIT_VALUE,
   Sequence,
   SimpleValue,
   TaggedValue,
@@ -16,6 +17,7 @@ import {
   strictEqual,
   throws,
 } from "https://deno.land/std@0.133.0/node/assert.ts";
+import { MAX_SAFE_INTEGER } from "./constants.ts";
 
 declare let process: any;
 
@@ -134,6 +136,11 @@ describe("CBOR", () => {
 
     ok(decoded[2] instanceof SimpleValue, "third item is a SimpleValue");
     strictEqual(decoded[2].value, 0xf0, "third item tag");
+
+    const tag = new TaggedValue('example', 0xffffffffffn)
+    doesNotThrow(() => {
+      CBOR.encode(tag)
+    })
   });
 
   it("should encode string edge cases", () => {
@@ -195,6 +202,40 @@ describe("CBOR", () => {
     );
   });
 
+  it("should encode and decode arbitrary valid BigInt", () => {
+    doesNotThrow(() => {
+      CBOR.encode(MAX_SAFE_INTEGER)
+    })
+    doesNotThrow(() => {
+      CBOR.encode(0x90000000n)
+    })
+    throws(() => {
+      CBOR.encode(MAX_SAFE_INTEGER + 100n)
+    })
+  });
+
+  it("should encode a data view", () => {
+    const buffer = new ArrayBuffer(8);
+    const view = new DataView(buffer);
+
+    view.setBigUint64(0, 42n);
+
+    doesNotThrow(() => {
+      CBOR.encode(view);
+    });
+  });
+
+  it("should reject a nested CBOR sequence", () => {
+    const sequence = new Sequence<any>();
+    sequence.add(42);
+    sequence.add({ key: "value" });
+    sequence.add(new Sequence([1, 2, 3]));
+
+    throws(() => {
+      CBOR.encode(sequence);
+    });
+  });
+
   it("should use replacer array", () => {
     const expected = { Hello: "World" };
     const initial = { Hello: "World", how: "are you?" };
@@ -202,13 +243,28 @@ describe("CBOR", () => {
     const actual = CBOR.decode(encoded);
 
     deepStrictEqual(actual, expected, "deepEqual");
+
+    const expected2 = ["42"];
+    const initial2 = ["42", "eighteen"];
+    const encoded2 = CBOR.encode(initial2, [0]);
+    const actual2 = CBOR.decode(encoded2);
+
+    deepStrictEqual(actual2, expected2, "deepEqual");
+
+    const expected3 = new Map(Object.entries(expected));
+    const initial3 = new Map(Object.entries(initial));
+    const encoded3 = CBOR.encode(initial3, ["Hello"]);
+    const actual3 = CBOR.decode(encoded3, null, { dictionary: 'map' });
+
+    deepStrictEqual(actual3, expected3, "deepEqual");
   });
 
   it("should use replacer function", () => {
     const expected = { Hello: "World", how: "do you do?" };
-    const initial = { Hello: "World", how: "are you?" };
-    const encoded = CBOR.binarify(initial, (_key, value) => {
+    const initial = { Hello: "World", how: "are you?", deleteMe: "okay" };
+    const encoded = CBOR.binarify(initial, (key, value) => {
       if (value === initial.how) return "do you do?";
+      if (key === "deleteMe") return OMIT_VALUE;
       return value;
     });
     const actual = CBOR.parse(encoded);
@@ -247,7 +303,7 @@ describe("CBOR", () => {
   });
 
   it("should use objectIs polyfill", () => {
-    const object = { hello: "world!", greetings: -0 };
+    const object = { hello: "world!", greetings: -0, isNaN: NaN };
     const originalObjectIs = (globalThis as any).Object.is;
 
     delete (globalThis as any).Object.is;
