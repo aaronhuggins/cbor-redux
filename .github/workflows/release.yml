@@ -53,19 +53,19 @@ jobs:
       - name: Build for NPM using dnt
         if: env.VERSION_FLAG != ''
         run: |
-          deno task build -- --{{ env.VERSION_FLAG }}
+          deno task build -- --${{ env.VERSION_FLAG }}
           echo "VERSION_NUM=$(cat .version)" >> $GITHUB_ENV
       - name: Commit new version number
         if: env.VERSION_FLAG != '' && env.VERSION_NUM != ''
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          tagging_message: '{{ env.VERSION_NUM }}'
+          tagging_message: ${{ env.VERSION_NUM }}
       - name: Setup NPM tag
         if: env.VERSION_FLAG == 'premajor' || env.VERSION_FLAG == 'preminor' || env.VERSION_FLAG == 'prepatch'
         run: |
           echo "VERSION_TAG=prerelease" >> $GITHUB_ENV
       - name: Publish code to NPM
         run: |
-          deno task publish -- --tag={{ env.VERSION_TAG }}
+          deno task publish -- --tag=${{ env.VERSION_TAG }}
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}      
