@@ -137,10 +137,10 @@ describe("CBOR", () => {
     ok(decoded[2] instanceof SimpleValue, "third item is a SimpleValue");
     strictEqual(decoded[2].value, 0xf0, "third item tag");
 
-    const tag = new TaggedValue('example', 0xffffffffffn)
+    const tag = new TaggedValue("example", 0xffffffffffn);
     doesNotThrow(() => {
-      CBOR.encode(tag)
-    })
+      CBOR.encode(tag);
+    });
   });
 
   it("should encode string edge cases", () => {
@@ -204,14 +204,14 @@ describe("CBOR", () => {
 
   it("should encode and decode arbitrary valid BigInt", () => {
     doesNotThrow(() => {
-      CBOR.encode(MAX_SAFE_INTEGER)
-    })
+      CBOR.encode(MAX_SAFE_INTEGER);
+    });
     doesNotThrow(() => {
-      CBOR.encode(0x90000000n)
-    })
+      CBOR.encode(0x90000000n);
+    });
     throws(() => {
-      CBOR.encode(MAX_SAFE_INTEGER + 100n)
-    })
+      CBOR.encode(MAX_SAFE_INTEGER + 100n);
+    });
   });
 
   it("should encode a data view", () => {
@@ -254,7 +254,7 @@ describe("CBOR", () => {
     const expected3 = new Map(Object.entries(expected));
     const initial3 = new Map(Object.entries(initial));
     const encoded3 = CBOR.encode(initial3, ["Hello"]);
-    const actual3 = CBOR.decode(encoded3, null, { dictionary: 'map' });
+    const actual3 = CBOR.decode(encoded3, null, { dictionary: "map" });
 
     deepStrictEqual(actual3, expected3, "deepEqual");
   });
