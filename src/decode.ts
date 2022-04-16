@@ -344,7 +344,7 @@ export function decode<T = any>(
     if (mode !== "sequence") throw new Error("CBORError: Remaining bytes");
 
     const seq = new Sequence<any>([ret]);
-    for (let i = offset; i < data.byteLength; i += offset) {
+    while (offset < data.byteLength) {
       seq.add(reviverFunction(EMPTY_KEY, decodeItem()));
     }
 

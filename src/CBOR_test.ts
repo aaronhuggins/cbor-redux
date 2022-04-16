@@ -236,6 +236,18 @@ describe("CBOR", () => {
     });
   });
 
+  it("should encode and decode a CBOR Sequence", () => {
+    const expected = new Sequence<any>([
+      { a: "c", b: "d" },
+      "Sample text.",
+      9912800498001200n,
+    ]);
+    const encoded = CBOR.encode(expected);
+    const actual = CBOR.decode(encoded, null, { mode: "sequence" });
+
+    deepStrictEqual(actual, expected)
+  })
+
   it("should use replacer array", () => {
     const expected = { Hello: "World" };
     const initial = { Hello: "World", how: "are you?" };

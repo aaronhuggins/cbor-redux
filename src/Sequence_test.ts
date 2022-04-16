@@ -50,7 +50,7 @@ describe("Sequence", () => {
   });
 
   it("should get an inspected object", () => {
-    const expected = "Sequence(1) {\n  13\n}";
+    const expected = "Sequence(1) [ 13 ]";
     const actual = Deno.inspect(sequence);
 
     strictEqual(actual, expected);

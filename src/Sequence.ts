@@ -4,26 +4,26 @@ export class Sequence<T = unknown> {
     return new Sequence(Array.from(iterable));
   }
 
-  #data: T[];
+  private _data: T[];
 
   constructor(data?: T[]) {
-    if (data) this.#data = data;
-    else this.#data = [];
+    if (data) this._data = data;
+    else this._data = [];
   }
 
   /** Add data to the sequence and return the index of the item. */
   add(item: T): number {
-    return this.#data.push(item) - 1;
+    return this._data.push(item) - 1;
   }
 
   /** Removes an item from the sequence, returning the value. */
   remove(index: number): T {
-    return this.#data.splice(index, 1)[0];
+    return this._data.splice(index, 1)[0];
   }
 
   /** Get an item from the sequence by index. */
   get(index: number): T {
-    return this.#data[index];
+    return this._data[index];
   }
 
   /** Get a shallow clone of this CBOR Sequence. */
@@ -33,30 +33,18 @@ export class Sequence<T = unknown> {
 
   /** Get a copy of the CBOR sequence data array. */
   get data(): T[] {
-    return Array.from(this.#data);
+    return Array.from(this._data);
   }
 
   get size(): number {
-    return this.#data.length;
+    return this._data.length;
   }
 
   [Symbol.toStringTag]() {
     return "Sequence";
   }
 
-  [Symbol.for("Deno.customInspect")]() {
-    const tag = `Sequence(${this.size})`;
-    // deno-lint-ignore no-explicit-any
-    const mapper = (val: any) => {
-      if (val === null || val === undefined) return `${val}`;
-      if (typeof val[Symbol.for("Deno.customInspect")] === "function") {
-        return val[Symbol.for("Deno.customInspect")]();
-      }
-      return Deno.inspect(val, { depth: 2, iterableLimit: 10 });
-    };
-
-    if (this.size === 0) return `${tag} {}`;
-
-    return `${tag} {\n  ${this.#data.map(mapper).join(",\n  ")}\n}`;
+  [Symbol.for("Deno.customInspect")](inspect: typeof Deno.inspect) {
+    return `Sequence(${this.size}) ${inspect(this._data)}`;
   }
 }
