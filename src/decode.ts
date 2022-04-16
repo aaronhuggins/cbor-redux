@@ -21,6 +21,21 @@ import { CBOROptions, CBORReviver, CBORSequenceOptions } from "./types.ts";
 
 /**
  * Converts a Concise Binary Object Representation (CBOR) buffer into an object.
+ * 
+ * ```typescript
+ * const buffer = new Uint8Array([0xa2, 0x01, 0x02, 0x03, 0x04]).buffer
+ * const decoded = decode(buffer)
+ * console.log(decoded) // Expect: { "1": 2, "3": 4 }
+ * ```
+ * 
+ * If maps which preserve the key data types are desired, use `dictionary: "map"`.
+ * 
+ * ```typescript
+ * const buffer = new Uint8Array([0xa2, 0x01, 0x02, 0x03, 0x04]).buffer
+ * const decoded = decode(buffer, null, { dictionary: "map" })
+ * console.log(decoded) // Expect: Map { 1 => 2, 3 => 4 }
+ * ```
+ * 
  * @param data - A valid CBOR buffer.
  * @param reviver - If a function, this prescribes how the value originally produced by parsing is transformed, before being returned.
  * @param cborOptions - An options bag to specify the dictionary type and mode for the decoder.
