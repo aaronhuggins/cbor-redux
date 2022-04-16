@@ -3,8 +3,10 @@ on:
   push:
     branches:
       - main
-      - prerelease
-      - release
+    paths:
+      - 'src/**/.*.ts'
+      - 'mod.ts'
+      - 'polyfill.ts'
   pull_request_target:
     types:
       - opened

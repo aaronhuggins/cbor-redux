@@ -50,27 +50,41 @@ jobs:
         if: contains(github.event.pull_request.labels.*.name, 'version_prepatch')
         run: |
           echo "VERSION_FLAG=prepatch" >> $GITHUB_ENV
+      - name: Check prerelease version
+        if: contains(github.event.pull_request.labels.*.name, 'version_prerelease')
+        run: |
+          echo "VERSION_FLAG=prerelease" >> $GITHUB_ENV
       - name: Build for NPM using dnt
         if: env.VERSION_FLAG != ''
         run: |
           deno task build -- --${{ env.VERSION_FLAG }}
           echo "VERSION_NUM=$(cat .version)" >> $GITHUB_ENV
-      - name: Commit new version number to ${{ github.event.pull_request.head.ref }}
+      - name: Setup NPM tag
+        if: env.VERSION_FLAG == 'premajor' || env.VERSION_FLAG == 'preminor' || env.VERSION_FLAG == 'prepatch' || env.VERSION_FLAG == 'prerelease'
+        run: |
+          echo "VERSION_TAG=prerelease" >> $GITHUB_ENV
+      - name: Add NPMRC file
         if: env.VERSION_FLAG != '' && env.VERSION_NUM != ''
-        uses: stefanzweifel/git-auto-commit-action@v4
+        run: |
+          echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > ./npm/.npmrc
+      - name: Publish code to NPM
+        if: env.VERSION_FLAG != '' && env.VERSION_NUM != ''
+        run: |
+          cd ./npm
+          npm publish --tag=${{ env.VERSION_TAG }}
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Commit new version number to ${{ github.event.pull_request.base.ref }}
         if: env.VERSION_FLAG != '' && env.VERSION_NUM != ''
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           branch: ${{ github.event.pull_request.base.ref }}
           tagging_message: ${{ env.VERSION_NUM }}
-      - name: Setup NPM tag
-        if: env.VERSION_FLAG == 'premajor' || env.VERSION_FLAG == 'preminor' || env.VERSION_FLAG == 'prepatch'
-        run: |
-          echo "VERSION_TAG=prerelease" >> $GITHUB_ENV
-      - name: Publish code to NPM
-        run: |
-          cd ./npm
-          npm publish --tag=${{ env.VERSION_TAG }}
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}      
+      - name: Merge branch ${{ github.event.pull_request.base.ref }} into main
+        if: env.VERSION_FLAG != '' && env.VERSION_NUM != ''
+        uses: devmasx/merge-branch@1.4.0
+        with:
+          type: now
+          from_branch: ${{ github.event.pull_request.base.ref }}
+          target_branch: main
+          github_token: ${{ secrets.GITHUB_TOKEN }}
