@@ -14,6 +14,7 @@
  * ```typescript
  * const { buffer } = new Uint8Array([0xa1,0x61,0x61,0x61,0x63,0xa1,0x61,0x62,0x61,0x64])
  * const decoded = decode(buffer, null, { mode: "sequence" })
+ * console.log(decoded)
  * // Expect: Sequence(2) [ { a: "c" }, { b: "d" } ]
  * ```
  */
