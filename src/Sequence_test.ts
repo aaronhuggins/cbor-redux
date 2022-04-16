@@ -48,4 +48,11 @@ describe("Sequence", () => {
 
     notDeepStrictEqual(clone.data, sequence.data);
   });
+
+  it("should get an inspected object", () => {
+    const expected = "Sequence(1) {\n  13\n}";
+    const actual = Deno.inspect(sequence);
+
+    strictEqual(actual, expected);
+  });
 });
