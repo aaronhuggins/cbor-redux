@@ -1,4 +1,22 @@
-/** Class for containing a CBOR Sequence. */
+/** Class for containing a CBOR Sequence; used for encoding and decoding.
+ *
+ * ```typescript
+ * const sequence = new Sequence([
+ *   { a: "c", b: "d" },
+ *   "Sample text.",
+ *   9912800498001200n
+ * ])
+ * const encoded = encode(sequence)
+ * ```
+ *
+ * When expecting data back as a CBOR Sequence, call `decode` with `mode: "sequence"`.
+ *
+ * ```typescript
+ * const { buffer } = new Uint8Array([0xa1,0x61,0x61,0x61,0x63,0xa1,0x61,0x62,0x61,0x64])
+ * const decoded = decode(buffer, null, { mode: "sequence" })
+ * // Expect: Sequence(2) [ { a: "c" }, { b: "d" } ]
+ * ```
+ */
 export class Sequence<T = unknown> {
   static from<T = unknown>(iterable: Iterable<T> | ArrayLike<T>): Sequence<T> {
     return new Sequence(Array.from(iterable));
