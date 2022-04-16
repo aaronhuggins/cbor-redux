@@ -4,7 +4,7 @@ on:
     branches:
       - main
     paths:
-      - 'src/**/.*.ts'
+      - 'src/**/*.ts'
       - 'mod.ts'
       - 'polyfill.ts'
   pull_request_target:
