@@ -330,9 +330,20 @@ export function decode<T = any>(
  * @param cborOptions - An options bag to specify the dictionary type and mode for the decoder.
  * @returns The CBOR buffer converted to a JavaScript value.
  */
+ export function parse(
+  data: ArrayBuffer | SharedArrayBuffer,
+  reviver: CBORReviver | null | undefined,
+  cborOptions: CBORSequenceOptions,
+): Sequence<any>;
 export function parse(
   data: ArrayBuffer | SharedArrayBuffer,
   reviver?: CBORReviver | null,
+  cborOptions?: CBOROptions,
+): any;
+export function parse(
+  data: ArrayBuffer | SharedArrayBuffer,
+  reviver: CBORReviver | null | undefined,
+  cborOptions: CBOROptions | undefined,
 ): any {
-  return decode(data, reviver);
+  return decode(data, reviver, cborOptions);
 }
