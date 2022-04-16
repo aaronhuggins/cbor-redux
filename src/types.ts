@@ -13,6 +13,7 @@ export interface CBOROptions {
   mode?: ModeOption;
 }
 
+/** Narrow options for the decoder when using CBOR Sequences. */
 export interface CBORSequenceOptions extends CBOROptions {
   mode: "sequence";
 }

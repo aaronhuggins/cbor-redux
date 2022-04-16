@@ -137,10 +137,10 @@ describe("CBOR", () => {
     ok(decoded[2] instanceof SimpleValue, "third item is a SimpleValue");
     strictEqual(decoded[2].value, 0xf0, "third item tag");
 
-    const tag = new TaggedValue('example', 0xffffffffffn)
+    const tag = new TaggedValue("example", 0xffffffffffn);
     doesNotThrow(() => {
-      CBOR.encode(tag)
-    })
+      CBOR.encode(tag);
+    });
   });
 
   it("should encode string edge cases", () => {
@@ -204,14 +204,14 @@ describe("CBOR", () => {
 
   it("should encode and decode arbitrary valid BigInt", () => {
     doesNotThrow(() => {
-      CBOR.encode(MAX_SAFE_INTEGER)
-    })
+      CBOR.encode(MAX_SAFE_INTEGER);
+    });
     doesNotThrow(() => {
-      CBOR.encode(0x90000000n)
-    })
+      CBOR.encode(0x90000000n);
+    });
     throws(() => {
-      CBOR.encode(MAX_SAFE_INTEGER + 100n)
-    })
+      CBOR.encode(MAX_SAFE_INTEGER + 100n);
+    });
   });
 
   it("should encode a data view", () => {
@@ -236,6 +236,18 @@ describe("CBOR", () => {
     });
   });
 
+  it("should encode and decode a CBOR Sequence", () => {
+    const expected = new Sequence<any>([
+      { a: "c", b: "d" },
+      "Sample text.",
+      9912800498001200n,
+    ]);
+    const encoded = CBOR.encode(expected);
+    const actual = CBOR.decode(encoded, null, { mode: "sequence" });
+
+    deepStrictEqual(actual, expected);
+  });
+
   it("should use replacer array", () => {
     const expected = { Hello: "World" };
     const initial = { Hello: "World", how: "are you?" };
@@ -254,7 +266,7 @@ describe("CBOR", () => {
     const expected3 = new Map(Object.entries(expected));
     const initial3 = new Map(Object.entries(initial));
     const encoded3 = CBOR.encode(initial3, ["Hello"]);
-    const actual3 = CBOR.decode(encoded3, null, { dictionary: 'map' });
+    const actual3 = CBOR.decode(encoded3, null, { dictionary: "map" });
 
     deepStrictEqual(actual3, expected3, "deepEqual");
   });
@@ -286,6 +298,15 @@ describe("CBOR", () => {
     const actual = CBOR.decode(encoded, reviver, opts);
 
     deepStrictEqual(actual, expected, "deepEqual");
+  });
+
+  it("should call reviver function only once", () => {
+    let called = 0;
+    decode(new Uint8Array([0]).buffer, () => {
+      called += 1;
+    });
+
+    strictEqual(called, 1);
   });
 
   it("should return without slice method", () => {

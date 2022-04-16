@@ -24,7 +24,7 @@ Like the JSON API, this library is synchronous. Simply import into your runtime:
 Deno, browser, Node ESM, or Node CommonJS. Browser imports can be handled via
 your favorite bundler, or using Skypack CDN.
 
-```TypeScript
+```typescript
 // This is an example Deno import statement.
 import { CBOR } from "https://deno.land/x/cbor_redux@1.0.0/mod.ts";
 
