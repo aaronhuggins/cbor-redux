@@ -22,8 +22,11 @@
  * Use this class when encoding custom tags.
  *
  * ```typescript
- * const tagged = new Map([["url", new TaggedValue("http://site.com/", 32)]])
- * const encoded = encode(tagged)
+ * const tagged = new Map([["url", new URL("http://site.com/")]])
+ * const encoded = encode(tagged, (key, value) => {
+ *   if (value instanceof URL) return new TaggedValue(value.toString(), 32)
+ *   return value
+ * })
  * ```
  */
 export class TaggedValue {
