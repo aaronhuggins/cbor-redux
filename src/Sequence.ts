@@ -39,4 +39,24 @@ export class Sequence<T = unknown> {
   get size(): number {
     return this.#data.length;
   }
+
+  [Symbol.toStringTag]() {
+    return "Sequence";
+  }
+
+  [Symbol.for("Deno.customInspect")]() {
+    const tag = `Sequence(${this.size})`;
+    // deno-lint-ignore no-explicit-any
+    const mapper = (val: any) => {
+      if (val === null || val === undefined) return `${val}`;
+      if (typeof val[Symbol.for("Deno.customInspect")] === "function") {
+        return val[Symbol.for("Deno.customInspect")]();
+      }
+      return Deno.inspect(val, { depth: 2, iterableLimit: 10 });
+    };
+
+    if (this.size === 0) return `${tag} {}`;
+
+    return `${tag} {\n  ${this.#data.map(mapper).join(",\n  ")}\n}`;
+  }
 }
