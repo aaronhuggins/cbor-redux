@@ -49,9 +49,7 @@ await build({
   entryPoints: ["./mod.ts", "./polyfill.ts"],
   outDir: "./npm",
   shims: {
-    deno: {
-      test: "dev",
-    },
+    deno: true,
   },
   package: {
     name: "cbor-redux",

@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 /** Class for containing a CBOR Sequence; used for encoding and decoding.
  *
  * ```typescript
@@ -63,7 +64,15 @@ export class Sequence<T = unknown> {
     return "Sequence";
   }
 
-  [Symbol.for("Deno.customInspect")](inspect: typeof Deno.inspect) {
+  #toInspectString(inspect: (...args: any[]) => string) {
     return `Sequence(${this.size}) ${inspect(this._data)}`;
+  }
+
+  [Symbol.for("Deno.customInspect")](inspect: typeof Deno.inspect) {
+    return this.#toInspectString(inspect);
+  }
+
+  [Symbol.for("nodejs.util.inspect.custom")](_depth: any, _opts: any, inspect: (input: any) => string) {
+    return this.#toInspectString(inspect);
   }
 }
