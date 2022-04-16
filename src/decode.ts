@@ -339,7 +339,7 @@ export function decode<T = any>(
     }
   }
 
-  const ret = reviverFunction(EMPTY_KEY, decodeItem());
+  const ret = decodeItem();
   if (offset !== data.byteLength) {
     if (mode !== "sequence") throw new Error("CBORError: Remaining bytes");
 

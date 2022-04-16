@@ -300,6 +300,15 @@ describe("CBOR", () => {
     deepStrictEqual(actual, expected, "deepEqual");
   });
 
+  it("should call reviver function only once", () => {
+    let called = 0;
+    decode(new Uint8Array([0]).buffer, () => {
+      called += 1;
+    });
+
+    strictEqual(called, 1);
+  });
+
   it("should return without slice method", () => {
     const object = { hello: "world!" };
     const expected = hex2arrayBuffer("a16568656c6c6f66776f726c6421");
