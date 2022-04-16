@@ -245,8 +245,8 @@ describe("CBOR", () => {
     const encoded = CBOR.encode(expected);
     const actual = CBOR.decode(encoded, null, { mode: "sequence" });
 
-    deepStrictEqual(actual, expected)
-  })
+    deepStrictEqual(actual, expected);
+  });
 
   it("should use replacer array", () => {
     const expected = { Hello: "World" };
