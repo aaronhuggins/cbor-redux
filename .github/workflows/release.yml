@@ -50,6 +50,10 @@ jobs:
         if: contains(github.event.pull_request.labels.*.name, 'version_prepatch')
         run: |
           echo "VERSION_FLAG=prepatch" >> $GITHUB_ENV
+      - name: Check prerelease version
+        if: contains(github.event.pull_request.labels.*.name, 'version_prerelease')
+        run: |
+          echo "VERSION_FLAG=prerelease" >> $GITHUB_ENV
       - name: Build for NPM using dnt
         if: env.VERSION_FLAG != ''
         run: |
@@ -62,7 +66,7 @@ jobs:
           branch: ${{ github.event.pull_request.base.ref }}
           tagging_message: ${{ env.VERSION_NUM }}
       - name: Setup NPM tag
-        if: env.VERSION_FLAG == 'premajor' || env.VERSION_FLAG == 'preminor' || env.VERSION_FLAG == 'prepatch'
+        if: env.VERSION_FLAG == 'premajor' || env.VERSION_FLAG == 'preminor' || env.VERSION_FLAG == 'prepatch' || env.VERSION_FLAG == 'prerelease'
         run: |
           echo "VERSION_TAG=prerelease" >> $GITHUB_ENV
       - name: Add NPMRC file
