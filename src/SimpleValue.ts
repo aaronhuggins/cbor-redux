@@ -17,8 +17,11 @@
  * Simple values can alsoe be encoded.
  *
  * ```typescript
- * const simple = [new SimpleValue(100)]
- * const encoded = encode(simple)
+ * const example = [NaN]
+ * const encoded = encode(example, (key, value) => {
+ *   if (Number.isNaN(value)) return new SimpleValue(100)
+ *   return value
+ * })
  * console.log(new Uint8Array(encoded)) // Expect: Uint8Array(3) [ 129, 248, 100 ]
  * ```
  */
