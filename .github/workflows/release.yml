@@ -59,19 +59,6 @@ jobs:
         run: |
           deno task build -- --${{ env.VERSION_FLAG }}
           echo "VERSION_NUM=$(cat .version)" >> $GITHUB_ENV
-      - name: Commit new version number to ${{ github.event.pull_request.base.ref }}
-        if: env.VERSION_FLAG != '' && env.VERSION_NUM != ''
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          branch: ${{ github.event.pull_request.base.ref }}
-          tagging_message: ${{ env.VERSION_NUM }}
-      - name: Merge branch ${{ github.event.pull_request.base.ref }} into main
-        uses: devmasx/merge-branch@1.4.0
-        with:
-          type: now
-          from_branch: ${{ github.event.pull_request.base.ref }}
-          target_branch: main
-          github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup NPM tag
         if: env.VERSION_FLAG == 'premajor' || env.VERSION_FLAG == 'preminor' || env.VERSION_FLAG == 'prepatch' || env.VERSION_FLAG == 'prerelease'
         run: |
@@ -87,3 +74,17 @@ jobs:
           npm publish --tag=${{ env.VERSION_TAG }}
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Commit new version number to ${{ github.event.pull_request.base.ref }}
+        if: env.VERSION_FLAG != '' && env.VERSION_NUM != ''
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: ${{ github.event.pull_request.base.ref }}
+          tagging_message: ${{ env.VERSION_NUM }}
+      - name: Merge branch ${{ github.event.pull_request.base.ref }} into main
+        if: env.VERSION_FLAG != '' && env.VERSION_NUM != ''
+        uses: devmasx/merge-branch@1.4.0
+        with:
+          type: now
+          from_branch: ${{ github.event.pull_request.base.ref }}
+          target_branch: main
+          github_token: ${{ secrets.GITHUB_TOKEN }}
