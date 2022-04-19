@@ -246,6 +246,12 @@ describe("CBOR", () => {
     const actual = CBOR.decode(encoded, null, { mode: "sequence" });
 
     deepStrictEqual(actual, expected);
+
+    const expected2 = new Sequence([13])
+    const encoded2 = CBOR.encode(expected2);
+    const actual2 = CBOR.decode(encoded2, null, { mode: "sequence" });
+
+    deepStrictEqual(actual2, expected2);
   });
 
   it("should use replacer array", () => {
