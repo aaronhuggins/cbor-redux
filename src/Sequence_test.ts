@@ -56,7 +56,11 @@ describe("Sequence", () => {
     strictEqual(actual, expected);
 
     // deno-lint-ignore no-explicit-any
-    const actual2 = (sequence as any)[Symbol.for("nodejs.util.inspect.custom")](null, null, Deno.inspect)
+    const actual2 = (sequence as any)[Symbol.for("nodejs.util.inspect.custom")](
+      null,
+      null,
+      Deno.inspect,
+    );
 
     strictEqual(actual2, expected);
   });

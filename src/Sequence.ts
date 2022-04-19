@@ -72,7 +72,11 @@ export class Sequence<T = unknown> {
     return this.#toInspectString(inspect);
   }
 
-  [Symbol.for("nodejs.util.inspect.custom")](_depth: any, _opts: any, inspect: (input: any) => string) {
+  [Symbol.for("nodejs.util.inspect.custom")](
+    _depth: any,
+    _opts: any,
+    inspect: (input: any) => string,
+  ) {
     return this.#toInspectString(inspect);
   }
 }

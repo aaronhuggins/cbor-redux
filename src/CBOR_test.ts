@@ -247,7 +247,7 @@ describe("CBOR", () => {
 
     deepStrictEqual(actual, expected);
 
-    const expected2 = new Sequence([13])
+    const expected2 = new Sequence([13]);
     const encoded2 = CBOR.encode(expected2);
     const actual2 = CBOR.decode(encoded2, null, { mode: "sequence" });
 
