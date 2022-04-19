@@ -1,9 +1,9 @@
 # cbor-redux
 
 The Concise Binary Object Representation (CBOR) data format
-([RFC 7049](http://tools.ietf.org/html/rfc7049)) implemented in pure JavaScript
-with an API surface like the built-in JSON functions. Rewritten in TypeScript
-for the browser, Deno, and Node.
+([RFC 8949](https://www.rfc-editor.org/rfc/rfc8949.html)) implemented in pure
+JavaScript with an API surface like the built-in JSON functions. Rewritten in
+TypeScript for the browser, Deno, and Node.
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/aaronhuggins/cbor-redux)
 ![GitHub contributors](https://img.shields.io/github/contributors/aaronhuggins/cbor-redux)
@@ -46,8 +46,7 @@ at
 ## Supported Features
 
 - Concise Binary Object Representation
-  ([RFC 7049](https://www.rfc-editor.org/rfc/rfc7049), partial RFC 8949, see
-  below)
+  ([RFC 8949](https://www.rfc-editor.org/rfc/rfc8949.html))
 - CBOR Sequences ([RFC 8742](https://www.rfc-editor.org/rfc/rfc8742.html))
 - Proper support for large integers; integers larger than a JavaScript `number`
   may safely hold will be decoded as `bigint`. Values of `bigint` will be
@@ -59,21 +58,8 @@ at
 - Rejection with `mode: 'strict'` of duplicate keys in key/value dictionaries
   ([RFC 8152](https://www.rfc-editor.org/rfc/rfc8152.html#section-14))
 - [Preferred serialization](https://www.rfc-editor.org/rfc/rfc8949.html#preferred)
-
-### Unsupported features from [RFC 8949](https://www.rfc-editor.org/rfc/rfc8949.html#name-changes-from-rfc-7049)
-
-Implementing "deterministic encoding" per
-[spec in RFC 8949](https://www.rfc-editor.org/rfc/rfc8949.html#core-det) is
-mostly done. The only missing piece is lexicographical sorting of binary keys in
-CBOR dictionaries. This is potentially a prohibitively expensive encoding
-operation, as all keys must be encoded and sorted before the map is added to the
-resulting CBOR value output. With the current encoder, the most obvious,
-clearly-readable path is to iterate over all the keys before accessing the data,
-which would be a second iteration over the finalized sorted array of keys.
-
-If anyone has ideas, input, or would like to contribute code to this effort,
-please do. This is the only missing piece from RFC 8949 of which we are
-currently aware.
+- "deterministic encoding" per
+  [spec in RFC 8949](https://www.rfc-editor.org/rfc/rfc8949.html#core-det)
 
 ## Contributing code and issues
 
