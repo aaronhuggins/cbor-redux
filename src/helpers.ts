@@ -36,3 +36,12 @@ export function options(options?: CBOROptions): Readonly<CBOROptions> {
 
   return Object.freeze(bag);
 }
+
+export function lexicographicalCompare(left: Uint8Array, right: Uint8Array) {
+  const minLength = Math.min(left.byteLength, right.byteLength);
+  for (let i = 0; i < minLength; i++) {
+    const result = left[i] - right[i];
+    if (result !== 0) return result;
+  }
+  return left.byteLength - right.byteLength;
+}

@@ -15,7 +15,7 @@ import {
   POW_2_32,
   POW_2_53,
 } from "./constants.ts";
-import { objectIs } from "./helpers.ts";
+import { lexicographicalCompare, objectIs } from "./helpers.ts";
 import { Sequence } from "./Sequence.ts";
 import { SimpleValue } from "./SimpleValue.ts";
 import { TaggedValue } from "./TaggedValue.ts";
@@ -171,6 +171,7 @@ export function encode<T = any>(
     }
   }
   function writeDictionary(val: any) {
+    const encodedMap: [Uint8Array, Uint8Array][] = [];
     const startOffset = offset;
     let typeLengthOffset = offset;
     let keyCount = 0;
@@ -182,29 +183,59 @@ export function encode<T = any>(
       for (const [key, value] of val.entries()) {
         const result = replacerFunction(key, value);
         if (result === OMIT_VALUE) continue;
+        let cursor = offset;
         encodeItem(key);
+        const keyBytes = byteView.slice(cursor, offset);
+        cursor = offset;
         encodeItem(result);
+        const valueBytes = byteView.slice(cursor, offset);
         keyTotal += 1;
+        encodedMap.push([keyBytes, valueBytes]);
       }
     } else {
       const keys = Object.keys(val);
       keyCount = keys.length;
       writeTypeAndLength(5, keyCount);
       typeLengthOffset = offset;
-      for (let i = 0; i < keys.length; i += 1) {
+      for (let i = 0; i < keyCount; i += 1) {
         const key = keys[i];
         const result = replacerFunction(key, val[key]);
         if (result === OMIT_VALUE) continue;
+        let cursor = offset;
         encodeItem(key);
+        const keyBytes = byteView.slice(cursor, offset);
+        cursor = offset;
         encodeItem(result);
+        const valueBytes = byteView.slice(cursor, offset);
         keyTotal += 1;
+        encodedMap.push([keyBytes, valueBytes]);
+      }
+    }
+    function sortEncodedKeys(length: number) {
+      offset = startOffset;
+      writeTypeAndLength(5, keyTotal);
+      encodedMap.sort(([keyA], [keyB]) => lexicographicalCompare(keyA, keyB));
+      for (let i = 0; i < length; i += 1) {
+        const [encodedKey, encodedValue] = encodedMap[i];
+        writeUint8Array(encodedKey);
+        writeUint8Array(encodedValue);
       }
     }
     if (keyCount > keyTotal) {
-      const encoded = byteView.slice(typeLengthOffset, offset);
-      offset = startOffset;
-      writeTypeAndLength(5, keyTotal);
-      writeUint8Array(encoded);
+      const encodedMapLength = encodedMap.length;
+      if (encodedMapLength > 1) {
+        sortEncodedKeys(encodedMapLength);
+      } else {
+        const encoded = byteView.slice(typeLengthOffset, offset);
+        offset = startOffset;
+        writeTypeAndLength(5, keyTotal);
+        writeUint8Array(encoded);
+      }
+    } else {
+      const encodedMapLength = encodedMap.length;
+      if (encodedMapLength > 1) {
+        sortEncodedKeys(encodedMapLength);
+      }
     }
   }
   function writeBigInteger(val: bigint) {
@@ -251,7 +282,8 @@ export function encode<T = any>(
 
       case "string": {
         const utf8data = [];
-        for (let i = 0; i < val.length; ++i) {
+        const strLength = val.length;
+        for (let i = 0; i < strLength; ++i) {
           let charCode = val.charCodeAt(i);
           if (charCode < 0x80) {
             utf8data.push(charCode);

@@ -65,14 +65,18 @@ export class Sequence<T = unknown> {
   }
 
   #toInspectString(inspect: (...args: any[]) => string) {
-    return `Sequence(${this.size}) ${inspect(this._data)}`;
+    return `${this[Symbol.toStringTag]()}(${this.size}) ${inspect(this._data)}`;
   }
 
   [Symbol.for("Deno.customInspect")](inspect: typeof Deno.inspect) {
     return this.#toInspectString(inspect);
   }
 
-  [Symbol.for("nodejs.util.inspect.custom")](_depth: any, _opts: any, inspect: (input: any) => string) {
+  [Symbol.for("nodejs.util.inspect.custom")](
+    _depth: any,
+    _opts: any,
+    inspect: (input: any) => string,
+  ) {
     return this.#toInspectString(inspect);
   }
 }

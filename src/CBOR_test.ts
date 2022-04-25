@@ -225,6 +225,27 @@ describe("CBOR", () => {
     });
   });
 
+  it("should encode a map in lexicographical key-order", () => {
+    // Key order example taken from https://www.rfc-editor.org/rfc/rfc8949.html#core-det
+    const keyOrder = [10, 100, -1, "z", "aa", [100], [-1], false];
+    const shuffled = shuffleArray(Array.from(keyOrder));
+    const map = new Map<any, number>();
+
+    for (let i = 0; i < shuffled.length; i += 1) map.set(shuffled[i], i);
+
+    const encoded = CBOR.encode(map);
+    const decoded: Map<any, number> = CBOR.decode(encoded, null, {
+      dictionary: "map",
+    });
+    let i = 0;
+
+    for (const [key, value] of decoded.entries()) {
+      deepStrictEqual(key, keyOrder[i]);
+      ok(typeof value === "number");
+      i += 1;
+    }
+  });
+
   it("should reject a nested CBOR sequence", () => {
     const sequence = new Sequence<any>();
     sequence.add(42);
@@ -246,6 +267,12 @@ describe("CBOR", () => {
     const actual = CBOR.decode(encoded, null, { mode: "sequence" });
 
     deepStrictEqual(actual, expected);
+
+    const expected2 = new Sequence([13]);
+    const encoded2 = CBOR.encode(expected2);
+    const actual2 = CBOR.decode(encoded2, null, { mode: "sequence" });
+
+    deepStrictEqual(actual2, expected2);
   });
 
   it("should use replacer array", () => {
@@ -386,4 +413,13 @@ function hex2arrayBuffer(data: string) {
   }
 
   return ret.buffer;
+}
+
+/* Randomize array in-place using Durstenfeld shuffle algorithm. (https://stackoverflow.com/a/12646864/14048160) */
+function shuffleArray(array: any[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
