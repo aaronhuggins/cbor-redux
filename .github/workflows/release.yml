@@ -57,7 +57,7 @@ jobs:
       - name: Build for NPM using dnt
         if: env.VERSION_FLAG != ''
         run: |
-          deno task build -- --${{ env.VERSION_FLAG }}
+          deno task build:npm -- --${{ env.VERSION_FLAG }}
           echo "VERSION_NUM=$(cat .version)" >> $GITHUB_ENV
       - name: Setup NPM tag
         if: env.VERSION_FLAG == 'premajor' || env.VERSION_FLAG == 'preminor' || env.VERSION_FLAG == 'prepatch' || env.VERSION_FLAG == 'prerelease'
