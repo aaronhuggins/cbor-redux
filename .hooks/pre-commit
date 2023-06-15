@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/hook.sh"
+
+deno fmt
+deno task build:web
+git add web/mod.js web/polyfill.js
