@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import * as CBORImpl from './mod.ts'
+import * as CBORImpl from "./mod.ts";
 
 declare global {
   interface Window {
@@ -8,7 +8,7 @@ declare global {
 
   let CBOR: typeof CBORImpl;
   // deno-lint-ignore no-var
-  var window: Window & typeof globalThis
+  var window: Window & typeof globalThis;
 }
 
 // dnt-shim-ignore
