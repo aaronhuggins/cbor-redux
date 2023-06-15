@@ -11,11 +11,15 @@ declare global {
   var window: Window & typeof globalThis;
 }
 
-// dnt-shim-ignore
-if (typeof window === "object") {
+export function polyfill() {
   // dnt-shim-ignore
-  window.CBOR = CBORImpl;
-} else {
-  // dnt-shim-ignore
-  (globalThis as any).CBOR = CBORImpl;
+  if (typeof window === "object") {
+    // dnt-shim-ignore
+    window.CBOR = CBORImpl;
+  } else {
+    // dnt-shim-ignore
+    (globalThis as any).CBOR = CBORImpl;
+  }
 }
+
+polyfill();

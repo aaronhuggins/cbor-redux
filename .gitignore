@@ -14,3 +14,4 @@ sauce_connect.log
 debug.log
 **/debug.log
 deno.lock
+.DS_Store

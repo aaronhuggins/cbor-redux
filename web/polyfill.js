@@ -777,10 +777,15 @@
     encode,
     binarify,
   };
-  if (typeof window === "object") {
-    window.CBOR = mod;
-  } else {
-    globalThis.CBOR = mod;
+  function polyfill() {
+    if (typeof window === "object") {
+      window.CBOR = mod;
+    } else {
+      globalThis.CBOR = mod;
+    }
   }
-  return {};
+  polyfill();
+  return {
+    polyfill: polyfill,
+  };
 })();

@@ -363,17 +363,25 @@ describe("CBOR", () => {
   });
 
   it("Polyfill adds CBOR to global scope", async () => {
+    Object.defineProperty(globalThis, "window", {
+      configurable: true,
+      enumerable: true,
+      writable: true,
+      value: undefined,
+    });
     const { polyfill } = await import(polyfillFile);
 
     await polyfill();
 
     strictEqual((globalThis as any).CBOR.decode.name, decode.name);
-    if (typeof (globalThis as any).window === "undefined") {
-      (globalThis as any).window = {} as any;
-      await polyfill();
-
-      strictEqual((globalThis as any).window.CBOR.decode.name, decode.name);
-    }
+    Object.defineProperty(globalThis, "window", {
+      configurable: true,
+      enumerable: true,
+      writable: true,
+      value: globalThis,
+    });
+    await polyfill();
+    strictEqual((globalThis as any).window.CBOR.decode.name, decode.name);
   });
 });
 

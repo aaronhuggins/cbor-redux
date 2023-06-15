@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/hook.sh"
 
+deno task clean
 WEB_FILES=$(deno task --quiet build:web)
 if [ -n "$WEB_FILES" ]; then
   echo "generated web, adding files $WEB_FILES"
