@@ -1,5 +1,6 @@
 name: Run Code Quality
 on:
+  workflow_dispatch: {}
   push:
     branches:
       - main
