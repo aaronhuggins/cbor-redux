@@ -8,7 +8,7 @@ on:
       - 'src/**/*.ts'
       - 'mod.ts'
       - 'polyfill.ts'
-  pull_request_target:
+  pull_request:
     types:
       - opened
       - synchronize
