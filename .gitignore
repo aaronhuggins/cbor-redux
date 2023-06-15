@@ -1,4 +1,6 @@
+npm/
 bower_components
+.scannerwork
 .nyc_output
 coverage
 node_modules
@@ -9,3 +11,6 @@ es5
 cbor-js.zip
 cbor.min.js
 sauce_connect.log
+debug.log
+**/debug.log
+deno.lock

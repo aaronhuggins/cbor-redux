@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/hook.sh"
+
+WEB_FILES=$(deno task --quiet build:web)
+if [ -n "$WEB_FILES" ]; then
+  echo "generated web, adding files $WEB_FILES"
+  echo "$WEB_FILES" | xargs git add
+fi
+FMT_FILES=$(deno fmt 2>&1 | sed '$d')
+if [ -n "$FMT_FILES" ]; then
+  echo "formatted, adding files $FMT_FILES"
+  echo "$FMT_FILES" | xargs git add
+fi
