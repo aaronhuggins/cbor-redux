@@ -21,8 +21,7 @@ TypeScript for the browser, Deno, and Node.
 ## Using CBOR
 
 Like the JSON API, this library is synchronous. Simply import into your runtime:
-Deno, browser, Node ESM, or Node CommonJS. Browser imports can be handled via
-your favorite bundler, or using Skypack CDN.
+Deno, browser, Node ESM, or Node CommonJS.
 
 ```typescript
 // This is an example Deno import statement.
@@ -38,6 +37,11 @@ Unrecognized CBOR tags will be emitted as instances of `TaggedValue`, allowing
 an application to use custom handling. Simple values in CBOR that are reserved
 or unassigned will be emitted as instances of `SimpleValue` so that they may be
 handled directly.
+
+Browser imports are provided in the `web` directory; `web/mod.js` uses module
+exports and `web/polyfill.js` is classic JS that attaches as a global variable
+`CBOR`. Recommended installation is self-hosted, but versioned releases can be
+script-tagged or imported from https://deno.land/x/cbor_redux for development.
 
 For users who need more power and control, the entire library API is documented
 at
