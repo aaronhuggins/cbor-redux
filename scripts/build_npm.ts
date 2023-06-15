@@ -1,9 +1,9 @@
 import {
   parse,
   ParseOptions,
-} from "https://deno.land/std@0.133.0/flags/mod.ts";
-import { inc as increment } from "https://deno.land/x/semver@v1.4.0/mod.ts";
-import { build, emptyDir } from "https://deno.land/x/dnt@0.22.0/mod.ts";
+} from "https://deno.land/std@0.191.0/flags/mod.ts";
+import { inc as increment } from "https://deno.land/x/semver@v1.4.1/mod.ts";
+import { build, emptyDir } from "https://deno.land/x/dnt@0.37.0/mod.ts";
 
 await emptyDir("./npm");
 

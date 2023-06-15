@@ -1,4 +1,4 @@
-// deno-lint-ignore-file no-explicit-any no-unused-vars
+// deno-lint-ignore-file no-explicit-any
 import {
   DECODE_CHUNK_SIZE,
   EMPTY_KEY,
@@ -76,7 +76,7 @@ export function decode<T = any>(
   const dataView = new DataView(data);
   const ta = new Uint8Array(data);
   let offset = 0;
-  let reviverFunction: CBORReviver = function (key, value) {
+  let reviverFunction: CBORReviver = function (_key, value) {
     return value;
   };
   if (typeof reviver === "function") reviverFunction = reviver;

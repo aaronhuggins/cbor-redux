@@ -1,4 +1,5 @@
-import type { CBOR as CBORImpl } from "./src/CBOR.ts";
+// deno-lint-ignore-file no-explicit-any
+import * as CBORImpl from "./mod.ts";
 
 declare global {
   interface Window {
@@ -6,17 +7,18 @@ declare global {
   }
 
   let CBOR: typeof CBORImpl;
+  // deno-lint-ignore no-var
+  var window: Window & typeof globalThis;
 }
 
-/** Method for polyfilling CBOR instead of intentionally importing. */
-export async function polyfill() {
+export function polyfill() {
   // dnt-shim-ignore
   if (typeof window === "object") {
     // dnt-shim-ignore
-    window.CBOR = await import("./mod.ts");
+    window.CBOR = CBORImpl;
   } else {
     // dnt-shim-ignore
-    (globalThis as any).CBOR = await import("./mod.ts");
+    (globalThis as any).CBOR = CBORImpl;
   }
 }
 

@@ -4,11 +4,17 @@
     "test": "deno test --allow-read --coverage=coverage --ignore=src/testcases.ts",
     "lcov": "deno coverage coverage --lcov --output=coverage/report.lcov",
     "cover": "deno task clean && deno task test && deno task lcov && genhtml -o coverage/html coverage/report.lcov",
+    // Command to build for npm and web.
+    "build": "deno task clean && deno task build:npm && deno task build:web",
     // Command to build for npm.
-    "build": "deno run -A scripts/build_npm.ts",
+    "build:npm": "deno run -A scripts/build_npm.ts",
+    // Command to build for web.
+    "build:web": "deno run -A scripts/build_web.ts",
     // Command to publish to npm repository.
     "publish": "cd ./npm && npm publish",
     // Clean up the npm dir arbitrarily.
-    "clean": "rm -rf ./npm ./coverage"
+    "clean": "rm -rf ./npm ./coverage",
+    // Add hook support.
+    "hook": "deno run --allow-read --allow-run --allow-write https://deno.land/x/deno_hooks@0.1.1/mod.ts"
   }
 }

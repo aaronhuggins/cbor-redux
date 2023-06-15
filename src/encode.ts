@@ -1,4 +1,4 @@
-// deno-lint-ignore-file no-unused-vars no-explicit-any
+// deno-lint-ignore-file no-explicit-any
 import {
   EMPTY_KEY,
   kCborTag,
@@ -54,7 +54,7 @@ export function encode<T = any>(
   let byteView = new Uint8Array(data);
   let lastLength: number;
   let offset = 0;
-  let replacerFunction: CBORReplacer = (key, value) => value;
+  let replacerFunction: CBORReplacer = (_key, value) => value;
 
   if (typeof replacer === "function") replacerFunction = replacer;
   if (Array.isArray(replacer)) {
@@ -83,7 +83,7 @@ export function encode<T = any>(
     lastLength = length;
     return dataView;
   }
-  function commitWrite(...args: any[]) {
+  function commitWrite(..._args: any[]) {
     offset += lastLength;
   }
   function writeFloat64(val: number) {
