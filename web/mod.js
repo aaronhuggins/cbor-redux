@@ -151,7 +151,7 @@ function decode(data, reviver, cborOptions = {}) {
     const dataView = new DataView(data);
     const ta = new Uint8Array(data);
     let offset = 0;
-    let reviverFunction = function(key, value) {
+    let reviverFunction = function(_key, value) {
         return value;
     };
     if (typeof reviver === "function") reviverFunction = reviver;
@@ -415,7 +415,7 @@ function encode(value, replacer) {
     let byteView = new Uint8Array(data);
     let lastLength;
     let offset = 0;
-    let replacerFunction = (key, value)=>value;
+    let replacerFunction = (_key, value)=>value;
     if (typeof replacer === "function") replacerFunction = replacer;
     if (Array.isArray(replacer)) {
         const exclusive = replacer.slice();
@@ -441,7 +441,7 @@ function encode(value, replacer) {
         lastLength = length;
         return dataView;
     }
-    function commitWrite(...args) {
+    function commitWrite(..._args) {
         offset += lastLength;
     }
     function writeFloat64(val) {
