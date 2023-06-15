@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 import type { CBOR as CBORImpl } from "./src/CBOR.ts";
 
 declare global {
@@ -6,6 +7,8 @@ declare global {
   }
 
   let CBOR: typeof CBORImpl;
+  // deno-lint-ignore no-var
+  var window: Window & typeof globalThis
 }
 
 /** Method for polyfilling CBOR instead of intentionally importing. */
