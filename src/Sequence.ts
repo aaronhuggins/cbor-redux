@@ -68,7 +68,7 @@ export class Sequence<T = unknown> {
     return `${this[Symbol.toStringTag]()}(${this.size}) ${inspect(this._data)}`;
   }
 
-  [Symbol.for("Deno.customInspect")](inspect: typeof Deno.inspect) {
+  [Symbol.for("Deno.customInspect")](inspect: (input: any) => string) {
     return this.#toInspectString(inspect);
   }
 

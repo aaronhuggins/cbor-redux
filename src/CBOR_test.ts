@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import "https://raw.githubusercontent.com/aaronhuggins/deno_mocha/e6c179156821c626354a8c792518958625078a82/global_mocha.ts";
+import "https://deno.land/x/deno_mocha@0.3.1/global.ts";
 import {
   CBOR,
   CBOROptions,

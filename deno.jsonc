@@ -12,6 +12,7 @@
     "build:web": "deno run -A scripts/build_web.ts",
     // Command to publish to npm repository.
     "publish": "cd ./npm && npm publish",
+    "pack": "cd ./npm && npm pack",
     // Clean up the npm dir arbitrarily.
     "clean": "rm -rf ./npm ./coverage",
     // Add hook support.

@@ -4,6 +4,32 @@ import {
 } from "https://deno.land/std@0.191.0/flags/mod.ts";
 import { inc as increment } from "https://deno.land/x/semver@v1.4.1/mod.ts";
 import { build, emptyDir } from "https://deno.land/x/dnt@0.37.0/mod.ts";
+import { join } from "https://deno.land/std@0.191.0/path/mod.ts";
+
+async function getFiles() {
+  const keep: string[] = [];
+  const subdirs = ["esm", "script"];
+  const exts = [".d.ts", ".js"];
+  const isKeeper = (name: string) =>
+    !name.startsWith("testcase") && name.endsWith(".ts") &&
+    !name.endsWith("_test.ts");
+  const mapName = (name: string, parent?: string) =>
+    subdirs.map((dir) =>
+      exts.map((ext) =>
+        parent ? join(dir, parent, `${name}${ext}`) : join(dir, `${name}${ext}`)
+      )
+    ).flat();
+  for (const dir of ["", "src"]) {
+    for await (const entry of Deno.readDir(`./${dir}`)) {
+      if (isKeeper(entry.name)) {
+        keep.push(
+          ...mapName(entry.name.substring(0, entry.name.length - 3), dir),
+        );
+      }
+    }
+  }
+  return keep.sort();
+}
 
 await emptyDir("./npm");
 
@@ -49,7 +75,7 @@ await build({
   entryPoints: ["./mod.ts", "./polyfill.ts"],
   outDir: "./npm",
   shims: {
-    deno: true,
+    deno: "dev",
   },
   package: {
     name: "cbor-redux",
@@ -69,6 +95,7 @@ await build({
       type: "git",
       url: "https://github.com/aaronhuggins/cbor-redux.git",
     },
+    files: await getFiles(),
   },
 });
 
